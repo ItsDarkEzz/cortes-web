@@ -20,10 +20,39 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist"),
     emptyOutDir: true,
+    // Optimize chunks
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom'],
+          'vendor-motion': ['framer-motion'],
+          'vendor-ui': ['@radix-ui/react-accordion', '@radix-ui/react-dialog', '@radix-ui/react-tooltip'],
+        },
+      },
+    },
+    // Minification
+    minify: 'esbuild',
   },
   server: {
     port: 5000,
     host: true,
-    allowedHosts: ["thecortes.ru", 'www.thecortes.ru'],
+    allowedHosts: ["thecortes.ru", "www.thecortes.ru"],
+    // Оптимизация для dev
+    warmup: {
+      clientFiles: [
+        "./src/pages/LandingPage.tsx",
+        "./src/components/cortes/Hero.tsx",
+      ],
+    },
+  },
+  optimizeDeps: {
+    // Pre-bundle heavy dependencies
+    include: [
+      "react",
+      "react-dom",
+      "framer-motion",
+      "wouter",
+      "@tanstack/react-query",
+    ],
   },
 });
