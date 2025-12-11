@@ -9,6 +9,7 @@ import LandingPage from "@/pages/LandingPage";
 import About from "@/pages/About";
 import Documentation from "@/pages/Documentation";
 import Support from "@/pages/Support";
+import Token from "@/pages/Token";
 // TODO: Включить когда будут готовы
 // import Pricing from "@/pages/Pricing";
 // import Commands from "@/pages/Commands";
@@ -22,6 +23,7 @@ function Router() {
             <Route path="/about" component={About} />
             <Route path="/documentation" component={Documentation} />
             <Route path="/support" component={Support} />
+            <Route path="/token" component={Token} />
             {/* TODO: Включить когда будут готовы */}
             {/* <Route path="/pricing" component={Pricing} /> */}
             {/* <Route path="/commands" component={Commands} /> */}

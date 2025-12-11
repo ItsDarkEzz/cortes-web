@@ -47,7 +47,7 @@ const schemas = {
     "@type": "Organization",
     "name": "Cortes AI",
     "url": "https://thecortes.ru",
-    "logo": "https://thecortes.ru/cortes.webp",
+    "logo": "https://thecortes.ru/favicon.webp",
     "sameAs": [
       "https://t.me/thecortesbot",
       "https://t.me/TheCortesChat"
@@ -176,4 +176,96 @@ export function LandingPageSchemas() {
       <SEOSchema type="howto" />
     </>
   );
+}
+
+// Token page schemas
+const tokenSchemas = {
+  token: {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "$CORTES Token — Мем-токен комьюнити Cortes",
+    "description": "Официальная страница токена $CORTES на Solana. Участвуйте в Airdrop Season 1, получайте награды за активность.",
+    "url": "https://thecortes.ru/token",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "Cortes",
+      "url": "https://thecortes.ru"
+    },
+    "about": {
+      "@type": "DigitalDocument",
+      "name": "$CORTES",
+      "description": "Мем-токен на блокчейне Solana для комьюнити бота Cortes"
+    }
+  },
+  tokenFaq: {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Что такое $CORTES?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Это мем-токен на блокчейне Solana, созданный для комьюнити бота Cortes. Это не инвестиционный инструмент — просто фан-валюта для награждения активных участников сообщества."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Как получить токены $CORTES?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Подключите Solana-кошелёк, выполните задания (добавьте бота в группу, взаимодействуйте с ним, пригласите друзей) и получите награду в рамках сезонного airdrop."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Какой кошелёк нужен для $CORTES?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Любой Solana-кошелёк: Phantom, Solflare или Slope. Можно использовать расширение для браузера или мобильное приложение."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Сколько токенов $CORTES можно получить?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "В Season 1 максимальная награда — 50,000 $CORTES на участника. Базовый claim даёт 1,000 токенов, дополнительные награды за активность, рефералов и контент."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Когда будет листинг $CORTES на бирже?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Листинг на DEX (Raydium/Orca) запланирован в Phase 3 дорожной карты. Следите за анонсами в социальных сетях проекта."
+        }
+      }
+    ]
+  }
+};
+
+export function TokenPageSchemas() {
+  useEffect(() => {
+    // Add token page schema
+    const tokenScript = document.createElement("script");
+    tokenScript.type = "application/ld+json";
+    tokenScript.setAttribute("data-schema", "token");
+    tokenScript.textContent = JSON.stringify(tokenSchemas.token);
+    document.head.appendChild(tokenScript);
+
+    // Add token FAQ schema
+    const faqScript = document.createElement("script");
+    faqScript.type = "application/ld+json";
+    faqScript.setAttribute("data-schema", "tokenFaq");
+    faqScript.textContent = JSON.stringify(tokenSchemas.tokenFaq);
+    document.head.appendChild(faqScript);
+
+    return () => {
+      tokenScript.remove();
+      faqScript.remove();
+    };
+  }, []);
+
+  return null;
 }

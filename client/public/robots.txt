@@ -13,5 +13,5 @@ Disallow: /*.json$
 Disallow: /*?*
 
 # Allow important resources
-Allow: /cortes.webp
+Allow: /favicon.webp
 Allow: /opengraph.jpg

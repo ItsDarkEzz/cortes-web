@@ -131,7 +131,7 @@ export default function NotFound() {
           <div className="w-32 h-32 rounded-full bg-gradient-to-br from-primary to-purple-600 p-1 shadow-[0_0_40px_rgba(139,92,246,0.4)]">
             <div className="w-full h-full rounded-full bg-background flex items-center justify-center overflow-hidden">
               <img 
-                src="/cortes.webp" 
+                src="/favicon.webp" 
                 alt="Cortes AI бот" 
                 className="w-full h-full object-cover"
               />
