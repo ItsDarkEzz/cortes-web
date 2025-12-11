@@ -5,9 +5,10 @@ interface SEOProps {
   description: string;
   canonical?: string;
   ogImage?: string;
+  favicon?: string;
 }
 
-export function useSEO({ title, description, canonical, ogImage }: SEOProps) {
+export function useSEO({ title, description, canonical, ogImage, favicon }: SEOProps) {
   useEffect(() => {
     const baseUrl = "https://thecortes.ru";
     const fullTitle = `${title} | Cortes`;
@@ -36,5 +37,20 @@ export function useSEO({ title, description, canonical, ogImage }: SEOProps) {
     if (canonicalEl) {
       canonicalEl.setAttribute("href", url);
     }
-  }, [title, description, canonical, ogImage]);
+
+    // Update favicon if provided
+    if (favicon) {
+      const faviconEl = document.querySelector('link[rel="icon"]') as HTMLLinkElement;
+      const appleTouchIcon = document.querySelector('link[rel="apple-touch-icon"]') as HTMLLinkElement;
+      
+      if (faviconEl) faviconEl.href = favicon;
+      if (appleTouchIcon) appleTouchIcon.href = favicon;
+      
+      // Cleanup: restore original favicon when leaving page
+      return () => {
+        if (faviconEl) faviconEl.href = "/cortes.webp";
+        if (appleTouchIcon) appleTouchIcon.href = "/cortes.webp";
+      };
+    }
+  }, [title, description, canonical, ogImage, favicon]);
 }

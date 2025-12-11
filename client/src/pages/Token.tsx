@@ -11,6 +11,7 @@ export default function Token() {
     title: "$CORTES Token — Мем-токен комьюнити Cortes | Airdrop Season 1",
     description: "Официальная страница токена $CORTES на блокчейне Solana. Участвуйте в Airdrop Season 1, получайте награды за активность. Токеномика, roadmap и правила участия.",
     canonical: "/token",
+    favicon: "/token.png",
   });
 
   return (
