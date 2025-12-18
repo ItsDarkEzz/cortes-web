@@ -14,6 +14,15 @@ const About = lazy(() => import("@/pages/About"));
 const Documentation = lazy(() => import("@/pages/Documentation"));
 const Support = lazy(() => import("@/pages/Support"));
 const Token = lazy(() => import("@/pages/Token"));
+const Login = lazy(() => import("@/pages/Login"));
+const Dashboard = lazy(() => import("@/pages/Dashboard"));
+const DashboardChats = lazy(() => import("@/pages/dashboard/Chats"));
+const DashboardRPG = lazy(() => import("@/pages/dashboard/RPG"));
+const DashboardAchievements = lazy(() => import("@/pages/dashboard/Achievements"));
+const DashboardSettings = lazy(() => import("@/pages/dashboard/Settings"));
+const DashboardChatDetail = lazy(() => import("@/pages/dashboard/ChatDetail"));
+const DashboardProfile = lazy(() => import("@/pages/dashboard/Profile"));
+const DashboardNotifications = lazy(() => import("@/pages/dashboard/Notifications"));
 const NotFound = lazy(() => import("@/pages/not-found"));
 
 // Loading fallback
@@ -36,6 +45,15 @@ function Router() {
                     <Route path="/documentation" component={Documentation} />
                     <Route path="/support" component={Support} />
                     <Route path="/token" component={Token} />
+                    <Route path="/login" component={Login} />
+                    <Route path="/dashboard" component={Dashboard} />
+                    <Route path="/dashboard/chats" component={DashboardChats} />
+                    <Route path="/dashboard/rpg" component={DashboardRPG} />
+                    <Route path="/dashboard/achievements" component={DashboardAchievements} />
+                    <Route path="/dashboard/settings" component={DashboardSettings} />
+                    <Route path="/dashboard/chats/:id" component={DashboardChatDetail} />
+                    <Route path="/dashboard/profile" component={DashboardProfile} />
+                    <Route path="/dashboard/notifications" component={DashboardNotifications} />
                     <Route component={NotFound} />
                 </Switch>
             </Suspense>
