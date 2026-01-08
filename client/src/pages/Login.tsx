@@ -93,7 +93,7 @@ export default function Login() {
       setStep("waiting");
       
       // Open Telegram bot with auth token
-      const botUrl = `https://t.me/CortesAiBot?start=auth_${result.auth_token}`;
+      const botUrl = `https://t.me/TheCortesBot?start=auth_${result.auth_token}`;
       window.open(botUrl, "_blank");
     } catch (err) {
       setError("Не удалось начать авторизацию. Попробуйте позже.");
