@@ -11,7 +11,7 @@ const schemas = {
     "@type": "WebSite",
     "name": "Cortes",
     "url": "https://thecortes.ru",
-    "description": "Умный AI-бот для Telegram с RPG-системой",
+    "description": "Умный AI-бот для Telegram с характером",
     "potentialAction": {
       "@type": "SearchAction",
       "target": "https://thecortes.ru/search?q={search_term_string}",
@@ -29,7 +29,7 @@ const schemas = {
       "price": "0",
       "priceCurrency": "RUB"
     },
-    "description": "Умный AI-бот для Telegram с RPG-системой, который понимает контекст и не спамит. Геймификация, квесты, достижения.",
+    "description": "Умный AI-бот для Telegram с характером, который понимает контекст и не спамит. Модерация, память, собственное мнение.",
     "aggregateRating": {
       "@type": "AggregateRating",
       "ratingValue": "4.9",
@@ -100,7 +100,7 @@ const schemas = {
         "name": "Какие функции есть у Cortes?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Cortes предлагает: контекстное понимание сообщений, RPG-систему с XP и достижениями, квесты и дуэли, автоматическую адаптацию к культуре чата, модерацию без спама, молниеносную реакцию менее 50ms."
+          "text": "Cortes предлагает: контекстное понимание сообщений, память о разговорах, собственное мнение по темам, автоматическую адаптацию к культуре чата, модерацию без спама, молниеносную реакцию."
         }
       }
     ]

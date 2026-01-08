@@ -2,36 +2,75 @@
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5" />
     
-    <title>Cortes — Умный AI-бот для Telegram</title>
-    <meta name="description" content="Cortes — интеллектуальный Telegram-бот, который понимает контекст и становится частью вашего сообщества. Без спама, только польза." />
-    <meta name="keywords" content="Telegram бот, AI бот, искусственный интеллект, чат-бот, Cortes, умный бот" />
-    <meta name="author" content="ItsDarkEz" />
-    <meta name="robots" content="index, follow" />
+    <title>Cortes — Умный AI-бот для Telegram с RPG-системой | Бесплатно</title>
+    <meta name="description" content="Cortes — интеллектуальный Telegram-бот с AI. Понимает контекст, не спамит, добавляет RPG-систему с квестами и достижениями. Добавьте бесплатно за 30 секунд." />
+    <meta name="keywords" content="Cortes, Cortes бот, Cortes AI, Cortes Telegram, ИИ бот Telegram, AI бот Telegram, умный бот для Telegram, бот с искусственным интеллектом, Telegram бот с нейросетью, чат-бот Telegram, бот для группы Telegram, RPG бот Telegram, геймификация Telegram, бот модератор, бот помощник, нейросеть бот, GPT бот Telegram, бесплатный AI бот, бот с квестами, интеллектуальный бот" />
+    <meta name="author" content="Шахриёр" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <link rel="canonical" href="https://thecortes.ru/" />
+    
+    <!-- Additional SEO meta tags -->
+    <meta name="theme-color" content="#8B5CF6" />
+    <meta name="application-name" content="Cortes" />
+    <meta name="apple-mobile-web-app-title" content="Cortes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="mobile-web-app-capable" content="yes" />
 
-    <meta property="og:title" content="Cortes — Умный AI-бот для Telegram" />
-    <meta property="og:description" content="Интеллектуальный Telegram-бот, который понимает контекст и становится частью вашего сообщества. Без спама, только польза." />
+    <!-- Open Graph -->
+    <meta property="og:title" content="Cortes — Умный AI-бот для Telegram с RPG-системой" />
+    <meta property="og:description" content="Интеллектуальный Telegram-бот с AI. Понимает контекст, не спамит, добавляет RPG-систему с квестами. Бесплатно." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://thecortes.ru/" />
     <meta property="og:image" content="https://thecortes.ru/opengraph.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Cortes — AI-бот для Telegram" />
     <meta property="og:locale" content="ru_RU" />
     <meta property="og:site_name" content="Cortes" />
     
+    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Cortes — Умный AI-бот для Telegram" />
-    <meta name="twitter:description" content="Интеллектуальный Telegram-бот, который понимает контекст и становится частью вашего сообщества." />
+    <meta name="twitter:title" content="Cortes — Умный AI-бот для Telegram с RPG-системой" />
+    <meta name="twitter:description" content="Интеллектуальный Telegram-бот с AI. Понимает контекст, не спамит, добавляет RPG-систему." />
     <meta name="twitter:image" content="https://thecortes.ru/opengraph.jpg" />
+    <meta name="twitter:image:alt" content="Cortes — AI-бот для Telegram" />
 
-    <link rel="icon" type="image/webp" href="/cortes.webp" />
-    <link rel="apple-touch-icon" href="/cortes.webp" />
+    <!-- Favicons -->
+    <link rel="icon" type="image/webp" href="/favicon.webp" />
+    <link rel="apple-touch-icon" href="/favicon.webp" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.webp" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon.webp" />
+    <!-- Preconnect to fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Fonts: Space Grotesk for headers, JetBrains Mono for tech details, Inter for body -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
-    <script type="module" crossorigin src="/assets/index-D3Mh0zzU.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-Crbq4947.css">
+    
+    <!-- Fonts with display=swap for faster rendering -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"></noscript>
+ 
+
+    <!-- Yandex.Metrika counter 
+    <script type="text/javascript">
+      (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+      })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=105813967', 'ym');
+
+      ym(105813967, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true});
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/105813967" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+    <script type="module" crossorigin src="/assets/index-aSmLva6P.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/vendor-react-Bzgz95E1.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-motion-D0gEqtNn.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-ui-Uwvs5CZw.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-CLRhFx5v.css">
   </head>
   <body>
     <div id="root"></div>

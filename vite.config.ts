@@ -37,6 +37,14 @@ export default defineConfig({
     port: 5000,
     host: true,
     allowedHosts: ["thecortes.ru", "www.thecortes.ru"],
+    // Proxy API requests to backend
+    proxy: {
+      '/v1': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        ws: true, // Enable WebSocket proxy
+      },
+    },
     // Оптимизация для dev
     warmup: {
       clientFiles: [

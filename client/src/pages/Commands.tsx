@@ -1,13 +1,13 @@
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { Footer } from "@/components/cortes/Footer";
-import { ArrowLeft, Terminal, Gamepad2, Trophy, MessageSquare, Settings, Sparkles } from "lucide-react";
+import { ArrowLeft, Terminal, Brain, Shield, MessageSquare, Settings, Sparkles } from "lucide-react";
 import { useSEO } from "@/hooks/use-seo";
 
 export default function Commands() {
     useSEO({
         title: "Команды бота — Полный список команд Cortes",
-        description: "Все команды AI-бота Cortes для Telegram: RPG-система, квесты, дуэли, достижения, настройки. Полное руководство с примерами использования.",
+        description: "Все команды AI-бота Cortes для Telegram: модерация, настройки, AI-функции. Полное руководство с примерами использования.",
         canonical: "/commands",
     });
 
@@ -20,29 +20,28 @@ export default function Commands() {
                 { cmd: "@Cortes", desc: "Обратиться к боту напрямую", example: "@Cortes что думаешь об этом?" },
                 { cmd: "/start", desc: "Начать работу с ботом", example: "/start" },
                 { cmd: "/help", desc: "Показать список команд", example: "/help" },
-                { cmd: "/stats", desc: "Статистика чата", example: "/stats" }
+                { cmd: "/about", desc: "Информация о боте", example: "/about" }
             ]
         },
         {
-            name: "RPG Система",
-            icon: Gamepad2,
+            name: "Профиль",
+            icon: Brain,
             color: "text-purple-400",
             commands: [
-                { cmd: "/profile", desc: "Показать свой профиль с XP и уровнем", example: "/profile" },
-                { cmd: "/top", desc: "Таблица лидеров чата", example: "/top" },
-                { cmd: "/daily", desc: "Получить ежедневную награду", example: "/daily" },
-                { cmd: "/inventory", desc: "Показать инвентарь", example: "/inventory" }
+                { cmd: "/profile", desc: "Показать свой профиль", example: "/profile" },
+                { cmd: "/setname [имя]", desc: "Установить отображаемое имя", example: "/setname Иван" },
+                { cmd: "/stats", desc: "Статистика AI", example: "/stats" }
             ]
         },
         {
-            name: "Квесты и Дуэли",
-            icon: Trophy,
+            name: "Модерация",
+            icon: Shield,
             color: "text-yellow-400",
             commands: [
-                { cmd: "/quest", desc: "Показать текущий квест", example: "/quest" },
-                { cmd: "/duel @user", desc: "Вызвать пользователя на дуэль", example: "/duel @username" },
-                { cmd: "/accept", desc: "Принять вызов на дуэль", example: "/accept" },
-                { cmd: "/achievements", desc: "Список достижений", example: "/achievements" }
+                { cmd: "/ban @user", desc: "Забанить пользователя", example: "/ban @username" },
+                { cmd: "/mute @user [время]", desc: "Замутить пользователя", example: "/mute @user 1h" },
+                { cmd: "/warn @user", desc: "Выдать предупреждение", example: "/warn @user спам" },
+                { cmd: "/kick @user", desc: "Кикнуть пользователя", example: "/kick @username" }
             ]
         },
         {
@@ -50,9 +49,10 @@ export default function Commands() {
             icon: Sparkles,
             color: "text-cyan-400",
             commands: [
-                { cmd: "/ask [вопрос]", desc: "Задать вопрос AI", example: "/ask как работает квантовый компьютер?" },
-                { cmd: "/summarize", desc: "Краткое содержание обсуждения", example: "/summarize" },
-                { cmd: "/translate [текст]", desc: "Перевести текст", example: "/translate Hello world" }
+                { cmd: "Упоминание", desc: "Просто упомяните бота в сообщении", example: "@Cortes расскажи про квантовые компьютеры" },
+                { cmd: "Ответ", desc: "Ответьте на сообщение бота", example: "Ответить на сообщение Cortes" },
+                { cmd: "/observer", desc: "Статистика Observer", example: "/observer" },
+                { cmd: "/epoch", desc: "Статистика эпох чата", example: "/epoch" }
             ]
         },
         {
@@ -60,10 +60,8 @@ export default function Commands() {
             icon: Settings,
             color: "text-green-400",
             commands: [
-                { cmd: "/settings", desc: "Настройки бота (только админы)", example: "/settings" },
-                { cmd: "/mute @user [время]", desc: "Замутить пользователя", example: "/mute @user 1h" },
-                { cmd: "/warn @user", desc: "Выдать предупреждение", example: "/warn @user" },
-                { cmd: "/rules", desc: "Показать правила чата", example: "/rules" }
+                { cmd: "/cortes_mode", desc: "Режим работы бота", example: "/cortes_mode passive" },
+                { cmd: "Dashboard", desc: "Настройки через веб-панель", example: "thecortes.ru" }
             ]
         }
     ];
@@ -101,7 +99,7 @@ export default function Commands() {
                             Команды <span className="text-gradient-primary">Cortes</span>
                         </h1>
                         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                            Полный список команд AI-бота для Telegram. RPG-система, квесты, дуэли и многое другое.
+                            Полный список команд AI-бота для Telegram. Модерация, настройки и многое другое.
                         </p>
                     </motion.div>
                 </div>
@@ -161,8 +159,8 @@ export default function Commands() {
                         {[
                             { title: "Обращайтесь по имени", desc: "Cortes лучше реагирует, когда вы обращаетесь к нему напрямую через @Cortes" },
                             { title: "Используйте контекст", desc: "Бот понимает контекст разговора — не нужно повторять всю историю" },
-                            { title: "RPG каждый день", desc: "Не забывайте про /daily — ежедневные награды накапливаются" },
-                            { title: "Дуэли с друзьями", desc: "Дуэли — отличный способ развлечь чат и заработать XP" }
+                            { title: "Настройте под себя", desc: "Используйте Dashboard для настройки поведения и мнений бота" },
+                            { title: "Модерация", desc: "Сделайте бота админом для полноценной модерации чата" }
                         ].map((tip, idx) => (
                             <motion.div
                                 key={idx}

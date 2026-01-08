@@ -5,6 +5,10 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ScrollToTop } from "@/components/ScrollToTop";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
+import { LanguageProvider } from "@/contexts/LanguageContext";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 // Eager load main page for fast initial render
 import LandingPage from "@/pages/LandingPage";
@@ -17,12 +21,18 @@ const Token = lazy(() => import("@/pages/Token"));
 const Login = lazy(() => import("@/pages/Login"));
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
 const DashboardChats = lazy(() => import("@/pages/dashboard/Chats"));
-const DashboardRPG = lazy(() => import("@/pages/dashboard/RPG"));
-const DashboardAchievements = lazy(() => import("@/pages/dashboard/Achievements"));
 const DashboardSettings = lazy(() => import("@/pages/dashboard/Settings"));
 const DashboardChatDetail = lazy(() => import("@/pages/dashboard/ChatDetail"));
 const DashboardProfile = lazy(() => import("@/pages/dashboard/Profile"));
-const DashboardNotifications = lazy(() => import("@/pages/dashboard/Notifications"));
+// Owner Panel
+const OwnerPanel = lazy(() => import("@/pages/dashboard/owner/OwnerPanel"));
+const OwnerLogs = lazy(() => import("@/pages/dashboard/owner/OwnerLogs"));
+const OwnerBans = lazy(() => import("@/pages/dashboard/owner/OwnerBans"));
+const OwnerChats = lazy(() => import("@/pages/dashboard/owner/OwnerChats"));
+const OwnerChatDetails = lazy(() => import("@/pages/dashboard/owner/OwnerChatDetails"));
+const OwnerSubscriptions = lazy(() => import("@/pages/dashboard/owner/OwnerSubscriptions"));
+const OwnerBroadcast = lazy(() => import("@/pages/dashboard/owner/OwnerBroadcast"));
+// const DashboardNotifications = lazy(() => import("@/pages/dashboard/Notifications")); // временно отключено
 const NotFound = lazy(() => import("@/pages/not-found"));
 
 // Loading fallback
@@ -46,14 +56,48 @@ function Router() {
                     <Route path="/support" component={Support} />
                     <Route path="/token" component={Token} />
                     <Route path="/login" component={Login} />
-                    <Route path="/dashboard" component={Dashboard} />
-                    <Route path="/dashboard/chats" component={DashboardChats} />
-                    <Route path="/dashboard/rpg" component={DashboardRPG} />
-                    <Route path="/dashboard/achievements" component={DashboardAchievements} />
-                    <Route path="/dashboard/settings" component={DashboardSettings} />
-                    <Route path="/dashboard/chats/:id" component={DashboardChatDetail} />
-                    <Route path="/dashboard/profile" component={DashboardProfile} />
-                    <Route path="/dashboard/notifications" component={DashboardNotifications} />
+                    <Route path="/dashboard">
+                        <ProtectedRoute><Dashboard /></ProtectedRoute>
+                    </Route>
+                    <Route path="/dashboard/chats">
+                        <ProtectedRoute><DashboardChats /></ProtectedRoute>
+                    </Route>
+                    <Route path="/dashboard/settings">
+                        <ProtectedRoute><DashboardSettings /></ProtectedRoute>
+                    </Route>
+                    <Route path="/dashboard/chats/:id">
+                        <ProtectedRoute><DashboardChatDetail /></ProtectedRoute>
+                    </Route>
+                    <Route path="/dashboard/profile">
+                        <ProtectedRoute><DashboardProfile /></ProtectedRoute>
+                    </Route>
+                    {/* Owner Panel */}
+                    <Route path="/dashboard/owner">
+                        <ProtectedRoute><OwnerPanel /></ProtectedRoute>
+                    </Route>
+                    <Route path="/dashboard/owner/logs">
+                        <ProtectedRoute><OwnerLogs /></ProtectedRoute>
+                    </Route>
+                    <Route path="/dashboard/owner/bans">
+                        <ProtectedRoute><OwnerBans /></ProtectedRoute>
+                    </Route>
+                    <Route path="/dashboard/owner/chats">
+                        <ProtectedRoute><OwnerChats /></ProtectedRoute>
+                    </Route>
+                    <Route path="/dashboard/owner/chats/:chatId">
+                        <ProtectedRoute><OwnerChatDetails /></ProtectedRoute>
+                    </Route>
+                    <Route path="/dashboard/owner/subscriptions">
+                        <ProtectedRoute><OwnerSubscriptions /></ProtectedRoute>
+                    </Route>
+                    <Route path="/dashboard/owner/broadcast">
+                        <ProtectedRoute><OwnerBroadcast /></ProtectedRoute>
+                    </Route>
+                    {/* Notifications - временно отключено
+                    <Route path="/dashboard/notifications">
+                        <ProtectedRoute><DashboardNotifications /></ProtectedRoute>
+                    </Route>
+                    */}
                     <Route component={NotFound} />
                 </Switch>
             </Suspense>
@@ -64,10 +108,16 @@ function Router() {
 function App() {
     return (
         <QueryClientProvider client={queryClient}>
-            <TooltipProvider>
-                <Toaster />
-                <Router />
-            </TooltipProvider>
+            <ThemeProvider>
+                <LanguageProvider>
+                    <AuthProvider>
+                        <TooltipProvider>
+                            <Toaster />
+                            <Router />
+                        </TooltipProvider>
+                    </AuthProvider>
+                </LanguageProvider>
+            </ThemeProvider>
         </QueryClientProvider>
     );
 }

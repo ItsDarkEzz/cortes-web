@@ -15,7 +15,7 @@ export default function Token() {
   });
 
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-x-hidden selection:bg-primary selection:text-white">
+    <div className="min-h-screen bg-[#0a0a0b] overflow-x-hidden selection:bg-primary selection:text-white force-dark">
       <TokenPageSchemas />
       <TokenHero />
       <TokenomicsSection />

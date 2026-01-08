@@ -3,36 +3,34 @@ import { useSEO } from "@/hooks/use-seo";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { 
-  User, Camera, Save, Calendar, Trophy, MessageCircle,
-  Star, Crown, Edit2, Check, X
+  User, Calendar, MessageCircle,
+  Edit2, Check, X, Loader2, Users
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuthContext } from "@/contexts/AuthContext";
+import { useUserStats, useUpdateUserName } from "@/hooks/use-user";
 
-const mockUser = {
-  name: "Шахриёр",
-  username: "@shahriyor_dev",
-  bio: "Разработчик и энтузиаст AI технологий",
-  avatar: "🧑‍💻",
-  telegramId: "123456789",
-  joinedAt: "15 марта 2024",
-  level: 42,
-  xp: 125000,
-  rank: "Легенда чата",
-  chatsCount: 4,
-  messagesCount: 12847,
-  achievementsCount: 23,
-};
-
-const avatarOptions = ["🧑‍💻", "👨‍💻", "👩‍💻", "🧔", "👨‍🎨", "👩‍🎨", "🦸‍♂️", "🦸‍♀️", "🧙‍♂️", "🧙‍♀️", "🤖", "👽"];
+const API_BASE = import.meta.env.VITE_API_URL || '';
 
 export default function Profile() {
+  const { user } = useAuthContext();
+  const { data: stats, isLoading: statsLoading } = useUserStats();
+  const updateName = useUpdateUserName();
+
   const [isEditing, setIsEditing] = useState(false);
-  const [showAvatarPicker, setShowAvatarPicker] = useState(false);
   const [formData, setFormData] = useState({
-    name: mockUser.name,
-    bio: mockUser.bio,
-    avatar: mockUser.avatar,
+    name: "",
+    bio: "",
   });
+
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        name: user.name || user.username || "",
+        bio: "",
+      });
+    }
+  }, [user]);
 
   useSEO({
     title: "Профиль | Cortes AI",
@@ -40,19 +38,35 @@ export default function Profile() {
     canonical: "/dashboard/profile",
   });
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    if (formData.name !== user?.name) {
+      await updateName.mutateAsync(formData.name);
+    }
     setIsEditing(false);
-    // Здесь будет API запрос
   };
 
   const handleCancel = () => {
     setFormData({
-      name: mockUser.name,
-      bio: mockUser.bio,
-      avatar: mockUser.avatar,
+      name: user?.name || user?.username || "",
+      bio: "",
     });
     setIsEditing(false);
   };
+
+  if (statsLoading) {
+    return (
+      <DashboardLayout>
+        <div className="flex-1 flex items-center justify-center">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  const displayName = user?.name || user?.username || "Пользователь";
+  const username = user?.username ? `@${user.username}` : `ID: ${user?.id}`;
+  const joinedAt = user?.created_at ? new Date(user.created_at).toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" }) : "—";
+  const avatarUrl = user?.id ? `${API_BASE}/user/avatar/${user.id}` : null;
 
   return (
     <DashboardLayout>
@@ -72,12 +86,12 @@ export default function Profile() {
           </Button>
         ) : (
           <div className="flex gap-2">
-            <Button variant="outline" onClick={handleCancel} className="border-white/10">
+            <Button variant="outline" onClick={handleCancel} className="border-white/10" disabled={updateName.isPending}>
               <X size={16} className="mr-2" />
               Отмена
             </Button>
-            <Button onClick={handleSave} className="bg-green-500 hover:bg-green-600">
-              <Check size={16} className="mr-2" />
+            <Button onClick={handleSave} className="bg-green-500 hover:bg-green-600" disabled={updateName.isPending}>
+              {updateName.isPending ? <Loader2 size={16} className="mr-2 animate-spin" /> : <Check size={16} className="mr-2" />}
               Сохранить
             </Button>
           </div>
@@ -96,43 +110,21 @@ export default function Profile() {
             <div className="flex items-start gap-6">
               {/* Avatar */}
               <div className="relative">
-                <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-5xl shadow-lg shadow-primary/20">
-                  {formData.avatar}
+                <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center overflow-hidden shadow-lg shadow-primary/20">
+                  {avatarUrl ? (
+                    <img 
+                      src={avatarUrl} 
+                      alt={displayName} 
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                        const fallback = e.currentTarget.parentElement?.querySelector('.fallback-emoji');
+                        if (fallback) fallback.classList.remove('hidden');
+                      }}
+                    />
+                  ) : null}
+                  <span className={`fallback-emoji text-5xl ${avatarUrl ? 'hidden' : ''}`}>👤</span>
                 </div>
-                {isEditing && (
-                  <button
-                    onClick={() => setShowAvatarPicker(!showAvatarPicker)}
-                    className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full bg-primary flex items-center justify-center hover:bg-primary/90 transition-colors"
-                  >
-                    <Camera size={14} />
-                  </button>
-                )}
-                
-                {/* Avatar Picker */}
-                {showAvatarPicker && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="absolute top-full left-0 mt-2 p-3 rounded-xl bg-card border border-white/10 shadow-xl z-10"
-                  >
-                    <div className="grid grid-cols-4 gap-2">
-                      {avatarOptions.map((emoji) => (
-                        <button
-                          key={emoji}
-                          onClick={() => {
-                            setFormData(prev => ({ ...prev, avatar: emoji }));
-                            setShowAvatarPicker(false);
-                          }}
-                          className={`w-10 h-10 rounded-lg flex items-center justify-center text-xl hover:bg-white/10 transition-colors ${
-                            formData.avatar === emoji ? "bg-primary/20 ring-2 ring-primary" : ""
-                          }`}
-                        >
-                          {emoji}
-                        </button>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
               </div>
 
               {/* Info */}
@@ -161,11 +153,10 @@ export default function Profile() {
                 ) : (
                   <>
                     <div className="flex items-center gap-2 mb-1">
-                      <h2 className="text-2xl font-bold">{formData.name}</h2>
-                      <Crown className="w-5 h-5 text-yellow-400" />
+                      <h2 className="text-2xl font-bold">{displayName}</h2>
                     </div>
-                    <p className="text-muted-foreground mb-2">{mockUser.username}</p>
-                    <p className="text-sm text-white/70">{formData.bio}</p>
+                    <p className="text-muted-foreground mb-2">{username}</p>
+                    <p className="text-sm text-white/70">{formData.bio || "Нет описания"}</p>
                   </>
                 )}
               </div>
@@ -176,18 +167,18 @@ export default function Profile() {
           <div className="grid grid-cols-3 gap-3">
             <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-center">
               <MessageCircle className="w-5 h-5 text-blue-400 mx-auto mb-2" />
-              <p className="text-xl font-bold">{mockUser.messagesCount.toLocaleString()}</p>
+              <p className="text-xl font-bold">{(stats?.messages_total ?? 0).toLocaleString()}</p>
               <p className="text-xs text-muted-foreground">Сообщений</p>
             </div>
             <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-center">
-              <Trophy className="w-5 h-5 text-yellow-400 mx-auto mb-2" />
-              <p className="text-xl font-bold">{mockUser.achievementsCount}</p>
-              <p className="text-xs text-muted-foreground">Достижений</p>
+              <Users className="w-5 h-5 text-primary mx-auto mb-2" />
+              <p className="text-xl font-bold">{stats?.chats_count ?? 0}</p>
+              <p className="text-xs text-muted-foreground">Чатов</p>
             </div>
             <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-center">
-              <Star className="w-5 h-5 text-primary mx-auto mb-2" />
-              <p className="text-xl font-bold">{mockUser.chatsCount}</p>
-              <p className="text-xs text-muted-foreground">Чатов</p>
+              <Calendar className="w-5 h-5 text-green-400 mx-auto mb-2" />
+              <p className="text-xl font-bold">{stats?.days_active ?? 0}</p>
+              <p className="text-xs text-muted-foreground">Дней</p>
             </div>
           </div>
 
@@ -197,75 +188,56 @@ export default function Profile() {
             <div className="space-y-3">
               <div className="flex justify-between py-2 border-b border-white/5">
                 <span className="text-sm text-muted-foreground">Telegram ID</span>
-                <span className="text-sm font-mono">{mockUser.telegramId}</span>
+                <span className="text-sm font-mono">{user?.id ?? "—"}</span>
               </div>
               <div className="flex justify-between py-2 border-b border-white/5">
                 <span className="text-sm text-muted-foreground">Username</span>
-                <span className="text-sm">{mockUser.username}</span>
+                <span className="text-sm">{username}</span>
+              </div>
+              <div className="flex justify-between py-2 border-b border-white/5">
+                <span className="text-sm text-muted-foreground">Дней активности</span>
+                <span className="text-sm">{stats?.days_active ?? 0}</span>
               </div>
               <div className="flex justify-between py-2">
                 <span className="text-sm text-muted-foreground">Дата регистрации</span>
                 <span className="text-sm flex items-center gap-1">
                   <Calendar size={12} />
-                  {mockUser.joinedAt}
+                  {joinedAt}
                 </span>
               </div>
             </div>
           </div>
         </motion.div>
 
-        {/* Sidebar - Level & Rank */}
+        {/* Sidebar - Stats Summary */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
           className="space-y-4"
         >
-          {/* Level Card */}
-          <div className="p-4 rounded-xl bg-gradient-to-br from-yellow-500/20 to-orange-500/20 border border-yellow-500/20">
+          {/* Activity Card */}
+          <div className="p-4 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 border border-blue-500/20">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-xl bg-yellow-500/20 flex items-center justify-center">
-                <Star className="w-6 h-6 text-yellow-400" />
+              <div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
+                <MessageCircle className="w-6 h-6 text-blue-400" />
               </div>
               <div>
-                <p className="text-2xl font-bold">Уровень {mockUser.level}</p>
-                <p className="text-xs text-yellow-400">{mockUser.rank}</p>
+                <p className="text-2xl font-bold">{(stats?.messages_total ?? 0).toLocaleString()}</p>
+                <p className="text-xs text-blue-400">Всего сообщений</p>
               </div>
             </div>
-            <div className="space-y-2">
-              <div className="flex justify-between text-xs">
-                <span className="text-muted-foreground">Всего XP</span>
-                <span className="text-yellow-400">{mockUser.xp.toLocaleString()}</span>
-              </div>
-              <div className="h-2 rounded-full bg-white/10 overflow-hidden">
-                <div className="h-full w-3/4 rounded-full bg-gradient-to-r from-yellow-400 to-orange-400" />
-              </div>
+            <div className="text-sm text-muted-foreground">
+              Активен в {stats?.chats_count ?? 0} чатах
             </div>
           </div>
 
-          {/* Rank Progress */}
+          {/* Quests Card */}
           <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-            <h3 className="font-semibold text-sm mb-3">Путь к следующему рангу</h3>
-            <div className="space-y-2">
-              {[
-                { name: "Новичок", level: 1, done: true },
-                { name: "Активист", level: 10, done: true },
-                { name: "Ветеран", level: 25, done: true },
-                { name: "Легенда", level: 40, done: true },
-                { name: "Мастер", level: 50, done: false, current: true },
-              ].map((rank, idx) => (
-                <div key={idx} className="flex items-center gap-2">
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs ${
-                    rank.done ? "bg-green-500/20 text-green-400" : 
-                    rank.current ? "bg-primary/20 text-primary" : "bg-white/10 text-muted-foreground"
-                  }`}>
-                    {rank.done ? "✓" : rank.level}
-                  </div>
-                  <span className={`text-sm ${rank.current ? "text-primary font-medium" : rank.done ? "text-white" : "text-muted-foreground"}`}>
-                    {rank.name}
-                  </span>
-                </div>
-              ))}
+            <h3 className="font-semibold text-sm mb-3">Квесты</h3>
+            <div className="text-center py-4">
+              <p className="text-3xl font-bold text-primary">{stats?.quests_completed ?? 0}</p>
+              <p className="text-xs text-muted-foreground">Выполнено квестов</p>
             </div>
           </div>
         </motion.div>

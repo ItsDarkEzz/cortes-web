@@ -2,6 +2,31 @@
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant light (&:is(.light *));
+
+:root {
+  /* Theme-aware overlay colors */
+  --overlay-5: rgba(255, 255, 255, 0.05);
+  --overlay-10: rgba(255, 255, 255, 0.1);
+  --overlay-20: rgba(255, 255, 255, 0.2);
+  --border-subtle: rgba(255, 255, 255, 0.1);
+  --text-primary: hsl(0 0% 100%);
+  --text-muted: hsl(240 5% 65%);
+  --bg-main: hsl(240 10% 4%);
+  --bg-card: hsl(240 10% 7%);
+}
+
+:root.light {
+  /* Светлая тема с хорошей читаемостью */
+  --overlay-5: rgba(100, 80, 160, 0.05);
+  --overlay-10: rgba(100, 80, 160, 0.08);
+  --overlay-20: rgba(100, 80, 160, 0.14);
+  --border-subtle: rgba(100, 80, 160, 0.12);
+  --text-primary: hsl(250 40% 15%);
+  --text-muted: hsl(250 20% 40%);
+  --bg-main: hsl(250 25% 97%);
+  --bg-card: hsl(0 0% 100%);
+}
 
 @theme inline {
   --radius-sm: 8px;
@@ -15,33 +40,32 @@
   --font-mono: 'JetBrains Mono', monospace;
 
   /* Color Palette: Dark Luxury / Glassmorphism */
+  --color-background: var(--bg-main);
+  --color-foreground: var(--text-primary);
   
-  --color-background: hsl(240 10% 4%);    /* #0a0a0b - Very dark grey/black */
-  --color-foreground: hsl(0 0% 95%);      /* #f2f2f2 */
+  --color-card: var(--bg-card);
+  --color-card-foreground: var(--text-primary);
   
-  --color-card: hsl(240 10% 7%);
-  --color-card-foreground: hsl(0 0% 95%);
+  --color-popover: var(--bg-card);
+  --color-popover-foreground: var(--text-primary);
   
-  --color-popover: hsl(240 10% 4%);
-  --color-popover-foreground: hsl(0 0% 95%);
-  
-  --color-primary: hsl(250 100% 70%);     /* Soft Electric Purple */
+  --color-primary: hsl(250 100% 70%);
   --color-primary-foreground: hsl(0 0% 100%);
   
-  --color-secondary: hsl(190 100% 50%);   /* Cyan accent */
+  --color-secondary: hsl(190 100% 50%);
   --color-secondary-foreground: hsl(240 10% 4%);
   
-  --color-muted: hsl(240 5% 15%);
-  --color-muted-foreground: hsl(240 5% 65%);
+  --color-muted: var(--overlay-10);
+  --color-muted-foreground: var(--text-muted);
   
-  --color-accent: hsl(240 5% 15%);
-  --color-accent-foreground: hsl(0 0% 95%);
+  --color-accent: var(--overlay-10);
+  --color-accent-foreground: var(--text-primary);
   
   --color-destructive: hsl(0 62.8% 30.6%);
   --color-destructive-foreground: hsl(0 0% 98%);
   
-  --color-border: hsl(240 5% 15%);        /* Subtle borders */
-  --color-input: hsl(240 5% 15%);
+  --color-border: var(--border-subtle);
+  --color-input: var(--overlay-10);
   --color-ring: hsl(250 100% 70%);
 
   --color-chart-1: hsl(250 100% 70%);
@@ -57,13 +81,30 @@
   * {
     @apply border-border;
   }
+  
   body {
-    @apply font-sans antialiased bg-background text-foreground;
+    @apply font-sans antialiased;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+  }
+  
+  /* Dark theme background (default) */
+  :root:not(.light) body {
     background-image: 
       radial-gradient(circle at 50% 0%, rgba(120, 119, 198, 0.1), transparent 40%),
       linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px),
       linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px);
     background-size: 100% 100%, 40px 40px, 40px 40px;
+    background-attachment: fixed;
+  }
+  
+  /* Light theme background */
+  :root.light body {
+    background-color: var(--bg-main);
+    background-image: 
+      radial-gradient(circle at 50% 0%, rgba(140, 120, 200, 0.08), transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(120, 160, 200, 0.05), transparent 40%);
+    background-size: 100% 100%;
     background-attachment: fixed;
   }
   
@@ -73,15 +114,27 @@
 
   /* Glassmorphism Utilities */
   .glass-panel {
-    @apply bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl;
+    background-color: var(--overlay-5);
+    backdrop-filter: blur(24px);
+    border: 1px solid var(--border-subtle);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   }
   
   .glass-card {
-    @apply bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-md border border-white/10 hover:border-primary/30 transition-colors duration-300;
+    background: linear-gradient(to bottom, var(--overlay-10), var(--overlay-5));
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-subtle);
+    transition: border-color 0.3s;
+  }
+  
+  .glass-card:hover {
+    border-color: hsl(250 100% 70% / 0.3);
   }
 
+  /* Text gradient - theme aware */
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white/50;
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(to right, var(--text-primary), var(--text-primary), var(--text-primary));
   }
   
   .text-gradient-primary {
@@ -91,7 +144,7 @@
   /* Custom Scrollbar */
   .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+    scrollbar-color: var(--overlay-10) transparent;
   }
   
   .scrollbar-thin::-webkit-scrollbar {
@@ -104,11 +157,202 @@
   }
   
   .scrollbar-thin::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--overlay-10);
     border-radius: 3px;
   }
   
   .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--overlay-20);
   }
+}
+
+/* Theme-aware utility overrides */
+@layer utilities {
+  /* Background overlays */
+  .bg-white\/5 {
+    background-color: var(--overlay-5) !important;
+  }
+  
+  .bg-white\/10 {
+    background-color: var(--overlay-10) !important;
+  }
+  
+  .bg-white\/20 {
+    background-color: var(--overlay-20) !important;
+  }
+  
+  .bg-white\/\[0\.07\] {
+    background-color: var(--overlay-5) !important;
+  }
+  
+  .bg-white\/\[0\.08\] {
+    background-color: var(--overlay-10) !important;
+  }
+  
+  .hover\:bg-white\/5:hover {
+    background-color: var(--overlay-5) !important;
+  }
+  
+  .hover\:bg-white\/10:hover {
+    background-color: var(--overlay-10) !important;
+  }
+  
+  .hover\:bg-white\/\[0\.07\]:hover {
+    background-color: var(--overlay-10) !important;
+  }
+  
+  /* Border overlays */
+  .border-white\/10 {
+    border-color: var(--border-subtle) !important;
+  }
+  
+  .border-white\/5 {
+    border-color: var(--overlay-5) !important;
+  }
+  
+  .border-white\/20 {
+    border-color: var(--overlay-20) !important;
+  }
+  
+  .hover\:border-white\/20:hover {
+    border-color: var(--overlay-20) !important;
+  }
+  
+  /* Text colors */
+  .text-white {
+    color: var(--text-primary) !important;
+  }
+  
+  /* Exception: white text on colored backgrounds */
+  .bg-primary .text-white,
+  .bg-primary.text-white,
+  button.bg-primary,
+  .bg-green-500 .text-white,
+  .bg-green-500.text-white,
+  .bg-red-500 .text-white,
+  .bg-purple-500 .text-white,
+  .bg-purple-500.text-white {
+    color: white !important;
+  }
+  
+  .hover\:text-white:hover {
+    color: var(--text-primary) !important;
+  }
+  
+  .text-white\/70 {
+    color: color-mix(in srgb, var(--text-primary) 70%, transparent) !important;
+  }
+  
+  .text-white\/80 {
+    color: color-mix(in srgb, var(--text-primary) 80%, transparent) !important;
+  }
+  
+  .text-white\/50 {
+    color: color-mix(in srgb, var(--text-primary) 50%, transparent) !important;
+  }
+  
+  /* Background with opacity */
+  .bg-background\/80 {
+    background-color: color-mix(in srgb, var(--bg-main) 80%, transparent) !important;
+  }
+  
+  .bg-background\/90 {
+    background-color: color-mix(in srgb, var(--bg-main) 90%, transparent) !important;
+  }
+  
+  /* Black overlays for light theme modals */
+  .bg-black\/60 {
+    background-color: rgba(0, 0, 0, 0.6) !important;
+  }
+  
+  .bg-black\/20 {
+    background-color: var(--overlay-10) !important;
+  }
+}
+
+/* Light theme enhancements */
+:root.light {
+  /* Cards get subtle purple shadows */
+  .glass-panel,
+  .glass-card,
+  .rounded-xl,
+  .rounded-2xl {
+    box-shadow: 0 2px 12px rgba(100, 80, 160, 0.06);
+  }
+  
+  /* Better contrast for muted text */
+  .text-muted-foreground {
+    color: var(--text-muted) !important;
+  }
+  
+  /* Input fields */
+  input, textarea, select {
+    background-color: var(--bg-card) !important;
+    border-color: var(--border-subtle) !important;
+    color: var(--text-primary) !important;
+  }
+  
+  input::placeholder, textarea::placeholder {
+    color: var(--text-muted) !important;
+  }
+  
+  /* Buttons */
+  .bg-primary {
+    box-shadow: 0 2px 8px rgba(120, 80, 200, 0.25);
+  }
+  
+  /* Active nav button - white text on purple */
+  .bg-white\/10.text-white,
+  button.bg-white\/10 {
+    color: white !important;
+  }
+  
+  /* Header/Nav */
+  header {
+    background-color: color-mix(in srgb, var(--bg-main) 90%, transparent) !important;
+    border-color: var(--border-subtle) !important;
+  }
+  
+  /* Modal backdrop */
+  .backdrop-blur-sm {
+    background-color: rgba(100, 80, 160, 0.3) !important;
+  }
+}
+
+/* Force dark theme for specific pages (Token page) */
+.force-dark,
+.force-dark * {
+  --overlay-5: rgba(255, 255, 255, 0.05) !important;
+  --overlay-10: rgba(255, 255, 255, 0.1) !important;
+  --overlay-20: rgba(255, 255, 255, 0.2) !important;
+  --border-subtle: rgba(255, 255, 255, 0.1) !important;
+  --text-primary: hsl(0 0% 100%) !important;
+  --text-muted: hsl(240 5% 65%) !important;
+  --bg-main: hsl(240 10% 4%) !important;
+  --bg-card: hsl(240 10% 7%) !important;
+}
+
+.force-dark .text-white,
+.force-dark.text-white {
+  color: white !important;
+}
+
+.force-dark .text-white\/40,
+.force-dark .text-white\/50,
+.force-dark .text-white\/60,
+.force-dark .text-white\/70,
+.force-dark .text-white\/80 {
+  color: rgba(255, 255, 255, var(--tw-text-opacity, 1)) !important;
+}
+
+.force-dark .bg-white\/5 {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.force-dark .bg-white\/10 {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.force-dark .border-white\/10 {
+  border-color: rgba(255, 255, 255, 0.1) !important;
 }

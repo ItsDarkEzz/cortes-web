@@ -2,7 +2,6 @@ import { Hero } from "@/components/cortes/Hero";
 import { Philosophy } from "@/components/cortes/Philosophy";
 import { Architecture } from "@/components/cortes/Architecture";
 import { ChatDemo } from "@/components/cortes/ChatDemo";
-import { RpgSystem } from "@/components/cortes/RpgSystem";
 import { UseCases } from "@/components/cortes/UseCases";
 import { Features } from "@/components/cortes/Features";
 import { FAQ } from "@/components/cortes/FAQ";
@@ -12,8 +11,8 @@ import { LandingPageSchemas } from "@/components/SEOSchema";
 
 export default function LandingPage() {
   useSEO({
-    title: "Умный AI-бот для Telegram с RPG-системой | Бесплатно",
-    description: "Cortes — интеллектуальный Telegram-бот с AI. Понимает контекст, не спамит, добавляет RPG-систему с квестами и достижениями. Добавьте бесплатно за 30 секунд.",
+    title: "Умный AI-бот для Telegram | Бесплатно",
+    description: "Cortes — интеллектуальный Telegram-бот с AI. Понимает контекст, не спамит, имеет характер и собственное мнение. Добавьте бесплатно за 30 секунд.",
     canonical: "/",
   });
 
@@ -24,7 +23,6 @@ export default function LandingPage() {
       <Philosophy />
       <Architecture />
       <ChatDemo />
-      <RpgSystem />
       <UseCases />
       <Features />
       <FAQ />

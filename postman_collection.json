@@ -1,0 +1,186 @@
+{
+  "info": {
+    "_postman_id": "cortes-dashboard-api",
+    "name": "Cortes Dashboard API",
+    "description": "Полная коллекция API для тестирования через Newman",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {"key": "base_url", "value": "http://localhost:3000/v1"},
+    {"key": "access_token", "value": ""},
+    {"key": "refresh_token", "value": ""},
+    {"key": "auth_token", "value": ""},
+    {"key": "chat_id", "value": "-1001234567890"},
+    {"key": "user_id", "value": "123456789"},
+    {"key": "notification_id", "value": "1"},
+    {"key": "bot_secret", "value": ""}
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{"key": "token", "value": "{{access_token}}"}]
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "POST /auth/init",
+          "event": [{"listen": "test", "script": {"exec": [
+            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+            "var json = pm.response.json();",
+            "pm.test('Has auth_token', () => pm.expect(json.auth_token).to.exist);",
+            "pm.collectionVariables.set('auth_token', json.auth_token);"
+          ]}}],
+          "request": {"method": "POST", "url": "{{base_url}}/auth/init"}
+        },
+        {
+          "name": "GET /auth/status/{auth_token}",
+          "request": {"method": "GET", "url": "{{base_url}}/auth/status/{{auth_token}}"}
+        },
+        {
+          "name": "POST /auth/confirm/{auth_token}",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "X-Bot-Secret", "value": "{{bot_secret}}"}],
+            "url": {"raw": "{{base_url}}/auth/confirm/{{auth_token}}?user_id={{user_id}}", "host": ["{{base_url}}"], "path": ["auth", "confirm", "{{auth_token}}"], "query": [{"key": "user_id", "value": "{{user_id}}"}]}
+          }
+        },
+        {
+          "name": "POST /auth/refresh",
+          "event": [{"listen": "test", "script": {"exec": [
+            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+            "var json = pm.response.json();",
+            "if(json.access_token) pm.collectionVariables.set('access_token', json.access_token);"
+          ]}}],
+          "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\"refresh_token\": \"{{refresh_token}}\"}"}, "url": "{{base_url}}/auth/refresh"}
+        },
+        {
+          "name": "POST /auth/logout",
+          "request": {"method": "POST", "url": "{{base_url}}/auth/logout"}
+        }
+      ]
+    }
+,
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "GET /user/me",
+          "event": [{"listen": "test", "script": {"exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));", "pm.test('Has user id', () => pm.expect(pm.response.json().id).to.exist);"]}}],
+          "request": {"method": "GET", "url": "{{base_url}}/user/me"}
+        },
+        {
+          "name": "GET /user/stats",
+          "request": {"method": "GET", "url": "{{base_url}}/user/stats"}
+        },
+        {
+          "name": "PATCH /user/profile/name",
+          "request": {"method": "PATCH", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\"display_name\": \"Test User\"}"}, "url": "{{base_url}}/user/profile/name"}
+        }
+      ]
+    },
+    {
+      "name": "Chats",
+      "item": [
+        {
+          "name": "GET /chats",
+          "event": [{"listen": "test", "script": {"exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));", "pm.test('Has chats array', () => pm.expect(pm.response.json().chats).to.be.an('array'));"]}}],
+          "request": {"method": "GET", "url": "{{base_url}}/chats"}
+        },
+        {
+          "name": "GET /chats/{chat_id}",
+          "request": {"method": "GET", "url": "{{base_url}}/chats/{{chat_id}}"}
+        },
+        {
+          "name": "PATCH /chats/{chat_id}",
+          "request": {"method": "PATCH", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\"name\": \"Updated Chat Name\", \"description\": \"Updated description\"}"}, "url": "{{base_url}}/chats/{{chat_id}}"}
+        }
+      ]
+    },
+    {
+      "name": "Settings",
+      "item": [
+        {
+          "name": "GET /chats/{chat_id}/settings",
+          "request": {"method": "GET", "url": "{{base_url}}/chats/{{chat_id}}/settings"}
+        },
+        {
+          "name": "PATCH /chats/{chat_id}/settings",
+          "request": {"method": "PATCH", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\"bot\": {\"enabled\": true, \"language\": \"ru\"}, \"moderation\": {\"enabled\": true}}"}, "url": "{{base_url}}/chats/{{chat_id}}/settings"}
+        }
+      ]
+    }
+,
+    {
+      "name": "Members",
+      "item": [
+        {
+          "name": "GET /chats/{chat_id}/members",
+          "request": {"method": "GET", "url": {"raw": "{{base_url}}/chats/{{chat_id}}/members?page=1&limit=20", "host": ["{{base_url}}"], "path": ["chats", "{{chat_id}}", "members"], "query": [{"key": "page", "value": "1"}, {"key": "limit", "value": "20"}, {"key": "search", "value": "", "disabled": true}, {"key": "role", "value": "", "disabled": true}]}}
+        },
+        {
+          "name": "PATCH /chats/{chat_id}/members/{user_id}/role",
+          "request": {"method": "PATCH", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\"role\": \"moderator\"}"}, "url": "{{base_url}}/chats/{{chat_id}}/members/{{user_id}}/role"}
+        }
+      ]
+    },
+    {
+      "name": "Logs",
+      "item": [
+        {
+          "name": "GET /chats/{chat_id}/logs",
+          "request": {"method": "GET", "url": {"raw": "{{base_url}}/chats/{{chat_id}}/logs?page=1&limit=50", "host": ["{{base_url}}"], "path": ["chats", "{{chat_id}}", "logs"], "query": [{"key": "page", "value": "1"}, {"key": "limit", "value": "50"}, {"key": "type", "value": "", "disabled": true}, {"key": "from_date", "value": "", "disabled": true}, {"key": "to_date", "value": "", "disabled": true}]}}
+        },
+        {
+          "name": "GET /chats/{chat_id}/messages",
+          "request": {"method": "GET", "url": {"raw": "{{base_url}}/chats/{{chat_id}}/messages?page=1&limit=50", "host": ["{{base_url}}"], "path": ["chats", "{{chat_id}}", "messages"], "query": [{"key": "page", "value": "1"}, {"key": "limit", "value": "50"}, {"key": "deleted", "value": "", "disabled": true}, {"key": "user_id", "value": "", "disabled": true}]}}
+        }
+      ]
+    },
+    {
+      "name": "Brain",
+      "item": [
+        {
+          "name": "GET /chats/{chat_id}/brain",
+          "request": {"method": "GET", "url": "{{base_url}}/chats/{{chat_id}}/brain"}
+        },
+        {
+          "name": "PATCH /chats/{chat_id}/brain/instructions",
+          "request": {"method": "PATCH", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\"instructions\": \"Be helpful and friendly.\"}"}, "url": "{{base_url}}/chats/{{chat_id}}/brain/instructions"}
+        }
+      ]
+    }
+,
+    {
+      "name": "Notifications",
+      "item": [
+        {
+          "name": "GET /notifications",
+          "request": {"method": "GET", "url": {"raw": "{{base_url}}/notifications?page=1&limit=20", "host": ["{{base_url}}"], "path": ["notifications"], "query": [{"key": "page", "value": "1"}, {"key": "limit", "value": "20"}, {"key": "unread", "value": "true", "disabled": true}, {"key": "type", "value": "", "disabled": true}]}}
+        },
+        {
+          "name": "POST /notifications/{id}/read",
+          "request": {"method": "POST", "url": "{{base_url}}/notifications/{{notification_id}}/read"}
+        },
+        {
+          "name": "POST /notifications/read-all",
+          "request": {"method": "POST", "url": "{{base_url}}/notifications/read-all"}
+        }
+      ]
+    },
+    {
+      "name": "Plans",
+      "item": [
+        {
+          "name": "GET /plans",
+          "event": [{"listen": "test", "script": {"exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"]}}],
+          "request": {"method": "GET", "url": "{{base_url}}/plans", "auth": {"type": "noauth"}}
+        },
+        {
+          "name": "GET /chats/{chat_id}/plan",
+          "request": {"method": "GET", "url": "{{base_url}}/chats/{{chat_id}}/plan"}
+        }
+      ]
+    }
+  ]
+}
