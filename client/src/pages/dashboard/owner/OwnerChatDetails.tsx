@@ -186,12 +186,12 @@ export default function OwnerChatDetails() {
               isPrivateChat={isPrivateChat}
             />
           )}
-          {activeTab === "bot" && !isPrivateChat && <BotSettingsTab chatId={telegramChatId} />}
-          {activeTab === "moderation" && !isPrivateChat && <ModerationTab chatId={telegramChatId} />}
-          {activeTab === "filters" && !isPrivateChat && <FiltersTab chatId={telegramChatId} />}
-          {activeTab === "members" && !isPrivateChat && <MembersTab chatId={telegramChatId} />}
-          {activeTab === "logs" && <LogsTab chatId={telegramChatId} />}
-          {activeTab === "brain" && <BrainTab chatId={telegramChatId} />}
+          {activeTab === "bot" && !isPrivateChat && <BotSettingsTab chatId={chat.chat_uuid || telegramChatId} />}
+          {activeTab === "moderation" && !isPrivateChat && <ModerationTab chatId={chat.chat_uuid || telegramChatId} />}
+          {activeTab === "filters" && !isPrivateChat && <FiltersTab chatId={chat.chat_uuid || telegramChatId} />}
+          {activeTab === "members" && !isPrivateChat && <MembersTab chatId={chat.chat_uuid || telegramChatId} />}
+          {activeTab === "logs" && <LogsTab chatId={chat.chat_uuid || telegramChatId} />}
+          {activeTab === "brain" && <BrainTab chatId={chat.chat_uuid || telegramChatId} />}
           {activeTab === "plan" && !isPrivateChat && <PlanTab />}
         </div>
 

@@ -69,6 +69,7 @@ export interface GlobalBansResponse {
 export interface BotChat {
   id: number;
   telegram_chat_id: number;
+  chat_uuid?: string;  // UUID чата для API
   title: string;
   chat_type: 'private' | 'group' | 'supergroup' | 'channel';
   username?: string;
