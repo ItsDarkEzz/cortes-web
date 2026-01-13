@@ -1,5 +1,5 @@
 /**
- * Вкладка "Фильтры" - стоп-слова, медиа, face-control
+ * Вкладка "Фильтры" - стоп-слова, триггер-слова, медиа, face-control
  */
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { 
   Filter, Link2, Languages, Type, EyeOff, Image, Video, Mic, File, Music, 
   Sticker, BarChart2, Globe, UserCheck, Users, FileText, Plus, X, Edit2, 
-  Check, Loader2, Trash2, GripVertical, Eye 
+  Check, Loader2, Trash2, GripVertical, Eye, MessageSquare 
 } from "lucide-react";
 import { Section, SectionTitle, Toggle, SettingRow, CollapsibleSection, CommandCard } from "./components";
 import { useChatSettings, useUpdateChatSettings } from "@/hooks/use-chats";
@@ -35,6 +35,11 @@ export function FiltersTab({ chatId }: FiltersTabProps) {
   const [zalgoMessage, setZalgoMessage] = useState("");
   const [nsfwFilterEnabled, setNsfwFilterEnabled] = useState(false);
   const [nsfwMessage, setNsfwMessage] = useState("");
+  // Триггер-слова
+  const [triggerWordsEnabled, setTriggerWordsEnabled] = useState(false);
+  const [triggerWords, setTriggerWords] = useState<string[]>([]);
+  const [triggerWordsMessage, setTriggerWordsMessage] = useState("");
+  const [newTriggerWord, setNewTriggerWord] = useState("");
   // Медиа права
   const [canSendPhotos, setCanSendPhotos] = useState(true);
   const [canSendVideos, setCanSendVideos] = useState(true);
@@ -69,6 +74,9 @@ export function FiltersTab({ chatId }: FiltersTabProps) {
       setZalgoMessage(f.zalgo_message || "⚠️ {user}, zalgo-текст запрещён.");
       setNsfwFilterEnabled(f.nsfw_filter_enabled ?? false);
       setNsfwMessage(f.nsfw_message || "🔞 {user}, NSFW контент запрещён.");
+      setTriggerWordsEnabled(f.trigger_words_enabled ?? false);
+      setTriggerWords(f.trigger_words || []);
+      setTriggerWordsMessage(f.trigger_words_message || "");
     }
     if (settings?.media_permissions) {
       const m = settings.media_permissions;
@@ -105,6 +113,9 @@ export function FiltersTab({ chatId }: FiltersTabProps) {
           block_links: !canSendLinks,
           nsfw_filter_enabled: nsfwFilterEnabled,
           nsfw_message: nsfwMessage,
+          trigger_words_enabled: triggerWordsEnabled,
+          trigger_words: triggerWords,
+          trigger_words_message: triggerWordsMessage,
         },
         media_permissions: {
           can_send_photos: canSendPhotos,
@@ -142,6 +153,24 @@ export function FiltersTab({ chatId }: FiltersTabProps) {
 
   const removeStopWord = (idx: number) => {
     setStopWords(stopWords.filter((_, i) => i !== idx));
+    markChanged();
+  };
+
+  const addTriggerWords = () => {
+    if (!newTriggerWord.trim()) return;
+    const words = newTriggerWord
+      .split(',')
+      .map(w => w.trim().toLowerCase())
+      .filter(w => w && !triggerWords.includes(w));
+    if (words.length > 0) {
+      setTriggerWords([...triggerWords, ...words]);
+      setNewTriggerWord("");
+      markChanged();
+    }
+  };
+
+  const removeTriggerWord = (idx: number) => {
+    setTriggerWords(triggerWords.filter((_, i) => i !== idx));
     markChanged();
   };
 
@@ -184,6 +213,23 @@ export function FiltersTab({ chatId }: FiltersTabProps) {
             <Button size="sm" onClick={addStopWord}><Plus size={14} /></Button>
           </div>
           <input value={stopWordMessage} onChange={(e) => { setStopWordMessage(e.target.value); markChanged(); }} placeholder="Сообщение при удалении" className="w-full h-9 px-3 rounded-lg bg-white/5 border border-white/10 text-sm" />
+        </CollapsibleSection>
+
+        <CollapsibleSection icon={MessageSquare} title="Триггер-слова" color="text-purple-400" enabled={triggerWordsEnabled} onToggle={() => { setTriggerWordsEnabled(!triggerWordsEnabled); markChanged(); }}>
+          <p className="text-xs text-muted-foreground mb-2">Бот отправит сообщение при упоминании этих слов/фраз</p>
+          <div className="flex flex-wrap gap-2 mb-3">
+            {triggerWords.map((w, i) => (
+              <span key={i} className="px-2 py-1 rounded-lg bg-purple-400/10 text-purple-400 text-sm flex items-center gap-1.5">
+                {w}
+                <button onClick={() => removeTriggerWord(i)} className="hover:text-purple-300"><X size={12} /></button>
+              </span>
+            ))}
+          </div>
+          <div className="flex gap-2 mb-3">
+            <input value={newTriggerWord} onChange={(e) => setNewTriggerWord(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && addTriggerWords()} placeholder="Слова через запятую..." className="flex-1 h-9 px-3 rounded-lg bg-white/5 border border-white/10 text-sm" />
+            <Button size="sm" onClick={addTriggerWords}><Plus size={14} /></Button>
+          </div>
+          <textarea value={triggerWordsMessage} onChange={(e) => { setTriggerWordsMessage(e.target.value); markChanged(); }} placeholder="Сообщение. Переменные: {user}, {word}" className="w-full h-16 px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm resize-none" />
         </CollapsibleSection>
 
         <CollapsibleSection icon={Link2} title="Фильтр каналов" color="text-orange-400" enabled={blockChannelPosts} onToggle={() => { setBlockChannelPosts(!blockChannelPosts); markChanged(); }}>

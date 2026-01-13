@@ -85,10 +85,6 @@ export interface ChatSettings {
     inactivity_enabled: boolean;
     inactivity_hours: number;
     inactivity_messages: string[];
-    // Триггер-слова
-    trigger_words_enabled: boolean;
-    trigger_words: string[];
-    trigger_words_message: string;
   };
   moderation: {
     ban_enabled: boolean;
@@ -135,6 +131,10 @@ export interface ChatSettings {
     block_links: boolean;
     nsfw_filter_enabled: boolean;
     nsfw_message: string;
+    // Триггер-слова
+    trigger_words_enabled: boolean;
+    trigger_words: string[];
+    trigger_words_message: string;
   };
   media_permissions: {
     can_send_photos: boolean;
