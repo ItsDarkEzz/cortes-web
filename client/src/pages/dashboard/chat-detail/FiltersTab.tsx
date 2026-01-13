@@ -215,23 +215,6 @@ export function FiltersTab({ chatId }: FiltersTabProps) {
           <input value={stopWordMessage} onChange={(e) => { setStopWordMessage(e.target.value); markChanged(); }} placeholder="Сообщение при удалении" className="w-full h-9 px-3 rounded-lg bg-white/5 border border-white/10 text-sm" />
         </CollapsibleSection>
 
-        <CollapsibleSection icon={MessageSquare} title="Триггер-слова" color="text-purple-400" enabled={triggerWordsEnabled} onToggle={() => { setTriggerWordsEnabled(!triggerWordsEnabled); markChanged(); }}>
-          <p className="text-xs text-muted-foreground mb-2">Бот отправит сообщение при упоминании этих слов/фраз</p>
-          <div className="flex flex-wrap gap-2 mb-3">
-            {triggerWords.map((w, i) => (
-              <span key={i} className="px-2 py-1 rounded-lg bg-purple-400/10 text-purple-400 text-sm flex items-center gap-1.5">
-                {w}
-                <button onClick={() => removeTriggerWord(i)} className="hover:text-purple-300"><X size={12} /></button>
-              </span>
-            ))}
-          </div>
-          <div className="flex gap-2 mb-3">
-            <input value={newTriggerWord} onChange={(e) => setNewTriggerWord(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && addTriggerWords()} placeholder="Слова через запятую..." className="flex-1 h-9 px-3 rounded-lg bg-white/5 border border-white/10 text-sm" />
-            <Button size="sm" onClick={addTriggerWords}><Plus size={14} /></Button>
-          </div>
-          <textarea value={triggerWordsMessage} onChange={(e) => { setTriggerWordsMessage(e.target.value); markChanged(); }} placeholder="Сообщение. Переменные: {user}, {word}" className="w-full h-16 px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm resize-none" />
-        </CollapsibleSection>
-
         <CollapsibleSection icon={Link2} title="Фильтр каналов" color="text-orange-400" enabled={blockChannelPosts} onToggle={() => { setBlockChannelPosts(!blockChannelPosts); markChanged(); }}>
           <div className="flex flex-wrap gap-2 mb-3">
             {blockedChannels.map((c, i) => (
@@ -246,6 +229,25 @@ export function FiltersTab({ chatId }: FiltersTabProps) {
             <Button size="sm" onClick={addChannel}><Plus size={14} /></Button>
           </div>
           <input value={channelBlockMessage} onChange={(e) => { setChannelBlockMessage(e.target.value); markChanged(); }} placeholder="Сообщение при блокировке" className="w-full h-9 px-3 rounded-lg bg-white/5 border border-white/10 text-sm" />
+        </CollapsibleSection>
+
+        <CollapsibleSection icon={MessageSquare} title="Триггер-слова" color="text-purple-400" enabled={triggerWordsEnabled} onToggle={() => { setTriggerWordsEnabled(!triggerWordsEnabled); markChanged(); }} className="lg:col-span-2">
+          <p className="text-xs text-muted-foreground mb-2">Бот отправит сообщение при упоминании этих слов/фраз</p>
+          <div className="flex flex-wrap gap-2 mb-3">
+            {triggerWords.map((w, i) => (
+              <span key={i} className="px-2 py-1 rounded-lg bg-purple-400/10 text-purple-400 text-sm flex items-center gap-1.5">
+                {w}
+                <button onClick={() => removeTriggerWord(i)} className="hover:text-purple-300"><X size={12} /></button>
+              </span>
+            ))}
+          </div>
+          <div className="grid lg:grid-cols-2 gap-3">
+            <div className="flex gap-2">
+              <input value={newTriggerWord} onChange={(e) => setNewTriggerWord(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && addTriggerWords()} placeholder="Слова через запятую..." className="flex-1 h-9 px-3 rounded-lg bg-white/5 border border-white/10 text-sm" />
+              <Button size="sm" onClick={addTriggerWords}><Plus size={14} /></Button>
+            </div>
+            <textarea value={triggerWordsMessage} onChange={(e) => { setTriggerWordsMessage(e.target.value); markChanged(); }} placeholder="Сообщение. Переменные: {user}, {word}" className="w-full h-9 px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm resize-none" />
+          </div>
         </CollapsibleSection>
 
         <Section>
