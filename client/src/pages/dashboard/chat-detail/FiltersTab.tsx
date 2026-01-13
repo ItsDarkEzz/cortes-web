@@ -4,10 +4,10 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { 
-  Filter, Link2, Languages, Type, EyeOff, Image, Video, Mic, File, Music, 
-  Sticker, BarChart2, Globe, UserCheck, Users, FileText, Plus, X, Edit2, 
-  Check, Loader2, Trash2, GripVertical, Eye 
+import {
+  Filter, Link2, Languages, Type, EyeOff, Image, Video, Mic, File, Music,
+  Sticker, BarChart2, Globe, UserCheck, Users, FileText, Plus, X, Edit2,
+  Check, Loader2, Trash2, GripVertical, Eye
 } from "lucide-react";
 import { Section, SectionTitle, Toggle, SettingRow, CollapsibleSection, CommandCard } from "./components";
 import { useChatSettings, useUpdateChatSettings } from "@/hooks/use-chats";
@@ -234,9 +234,9 @@ export function FiltersTab({ chatId }: FiltersTabProps) {
 
       {/* Плавающая кнопка сохранения */}
       {hasChanges && (
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }} 
-          animate={{ opacity: 1, y: 0 }} 
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           className="fixed bottom-6 right-6 z-50"
         >
           <Button onClick={handleSave} disabled={isSaving} size="lg" className="bg-green-500 hover:bg-green-600 shadow-lg shadow-green-500/25">
@@ -262,8 +262,9 @@ function FaceControlSection({ chatId, onChangesMade }: { chatId: string; onChang
   const [questionnaireEnabled, setQuestionnaireEnabled] = useState(false);
   const [questionnaireIntro, setQuestionnaireIntro] = useState("");
   const [questionnaireSuccess, setQuestionnaireSuccess] = useState("");
-  const [questionnaireQuestions, setQuestionnaireQuestions] = useState<Array<{id: number; text: string; required: boolean; order: number}>>([]);
+  const [questionnaireQuestions, setQuestionnaireQuestions] = useState<Array<{ id: number; text: string; required: boolean; order: number }>>([]);
   const [notifyChatId, setNotifyChatId] = useState<string>("");
+  const [autoAcceptKnown, setAutoAcceptKnown] = useState(false);
   const [showQuestionnaireModal, setShowQuestionnaireModal] = useState(false);
   const [hasLocalChanges, setHasLocalChanges] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -282,6 +283,7 @@ function FaceControlSection({ chatId, onChangesMade }: { chatId: string; onChang
       setQuestionnaireSuccess(fc.questionnaire_success || "Добро пожаловать!");
       setQuestionnaireQuestions(fc.questionnaire_questions || []);
       setNotifyChatId(fc.notify_chat_id ? String(fc.notify_chat_id) : "");
+      setAutoAcceptKnown(fc.auto_accept_known ?? false);
       setHasLocalChanges(false);
     }
   }, [settings]);
@@ -306,6 +308,7 @@ function FaceControlSection({ chatId, onChangesMade }: { chatId: string; onChang
           questionnaire_success: questionnaireSuccess,
           questionnaire_questions: questionnaireQuestions,
           notify_chat_id: notifyChatId ? parseInt(notifyChatId) : null,
+          auto_accept_known: autoAcceptKnown,
         }
       });
       setHasLocalChanges(false);
@@ -324,12 +327,13 @@ function FaceControlSection({ chatId, onChangesMade }: { chatId: string; onChang
           </Button>
         </div>
       )}
-      
+
       <CollapsibleSection icon={UserCheck} title="Face-контроль" color="text-green-400" enabled={faceControlEnabled} onToggle={() => { setFaceControlEnabled(!faceControlEnabled); markChanged(); }} className="lg:col-span-2">
         <div className="grid lg:grid-cols-2 gap-2 mb-4">
           <SettingRow icon={Image} title="Требовать аватар" desc="Аватар обязателен" enabled={requireAvatar} onToggle={() => { setRequireAvatar(!requireAvatar); markChanged(); }} color="text-green-400" />
           <SettingRow icon={EyeOff} title="NSFW аватар" desc="Проверка аватара" enabled={nsfwAvatarCheck} onToggle={() => { setNsfwAvatarCheck(!nsfwAvatarCheck); markChanged(); }} color="text-pink-400" />
           <SettingRow icon={Users} title="Username" desc="@username обязателен" enabled={requireUsername} onToggle={() => { setRequireUsername(!requireUsername); markChanged(); }} color="text-green-400" />
+          <SettingRow icon={UserCheck} title="Автопринятие" desc="Принимать ранее одобренных" enabled={autoAcceptKnown} onToggle={() => { setAutoAcceptKnown(!autoAcceptKnown); markChanged(); }} color="text-blue-400" />
           <div className="flex items-center justify-between p-3 rounded-xl bg-white/5">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-green-400"><FileText size={14} /></div>
@@ -358,33 +362,33 @@ function FaceControlSection({ chatId, onChangesMade }: { chatId: string; onChang
               <Toggle enabled={questionnaireEnabled} onToggle={() => { setQuestionnaireEnabled(!questionnaireEnabled); markChanged(); }} />
             </div>
           </div>
-          
+
           {questionnaireEnabled && (
             <div className="space-y-3">
               <div>
                 <label className="text-xs text-muted-foreground mb-1 block">Вступительное сообщение</label>
-                <textarea 
-                  value={questionnaireIntro} 
-                  onChange={(e) => { setQuestionnaireIntro(e.target.value); markChanged(); }} 
-                  className="w-full min-h-[60px] px-3 py-2 rounded-lg bg-white/5 border border-white/10 resize-y text-sm" 
+                <textarea
+                  value={questionnaireIntro}
+                  onChange={(e) => { setQuestionnaireIntro(e.target.value); markChanged(); }}
+                  className="w-full min-h-[60px] px-3 py-2 rounded-lg bg-white/5 border border-white/10 resize-y text-sm"
                   placeholder="Ответьте на вопросы для вступления в чат"
                 />
               </div>
               <div>
                 <label className="text-xs text-muted-foreground mb-1 block">Сообщение при успешном прохождении</label>
-                <input 
-                  value={questionnaireSuccess} 
-                  onChange={(e) => { setQuestionnaireSuccess(e.target.value); markChanged(); }} 
-                  className="w-full h-9 px-3 rounded-lg bg-white/5 border border-white/10 text-sm" 
+                <input
+                  value={questionnaireSuccess}
+                  onChange={(e) => { setQuestionnaireSuccess(e.target.value); markChanged(); }}
+                  className="w-full h-9 px-3 rounded-lg bg-white/5 border border-white/10 text-sm"
                   placeholder="Добро пожаловать!"
                 />
               </div>
               <div>
                 <label className="text-xs text-muted-foreground mb-1 block">ID чата/пользователя для уведомлений о заявках</label>
-                <input 
-                  value={notifyChatId} 
-                  onChange={(e) => { setNotifyChatId(e.target.value); markChanged(); }} 
-                  className="w-full h-9 px-3 rounded-lg bg-white/5 border border-white/10 text-sm" 
+                <input
+                  value={notifyChatId}
+                  onChange={(e) => { setNotifyChatId(e.target.value); markChanged(); }}
+                  className="w-full h-9 px-3 rounded-lg bg-white/5 border border-white/10 text-sm"
                   placeholder="-1001234567890 или 123456789"
                 />
                 <p className="text-xs text-muted-foreground mt-1">Укажите ID чата или пользователя, куда будут приходить заявки на модерацию</p>
@@ -394,18 +398,18 @@ function FaceControlSection({ chatId, onChangesMade }: { chatId: string; onChang
         </div>
 
         {/* Модальное окно анкеты */}
-        <QuestionnaireModal 
-          isOpen={showQuestionnaireModal} 
-          onClose={() => setShowQuestionnaireModal(false)} 
+        <QuestionnaireModal
+          isOpen={showQuestionnaireModal}
+          onClose={() => setShowQuestionnaireModal(false)}
           questions={questionnaireQuestions}
           intro={questionnaireIntro}
           success={questionnaireSuccess}
-          onSave={(data) => { 
-            setQuestionnaireQuestions(data.questions.map((q, i) => ({ id: q.id, text: q.text, required: q.required, order: i }))); 
+          onSave={(data) => {
+            setQuestionnaireQuestions(data.questions.map((q, i) => ({ id: q.id, text: q.text, required: q.required, order: i })));
             setQuestionnaireIntro(data.intro);
             setQuestionnaireSuccess(data.success);
-            markChanged(); 
-          }} 
+            markChanged();
+          }}
         />
       </CollapsibleSection>
     </div>
@@ -416,10 +420,10 @@ function FaceControlSection({ chatId, onChangesMade }: { chatId: string; onChang
 interface QuestionnaireModalProps {
   isOpen: boolean;
   onClose: () => void;
-  questions: Array<{id: number; text: string; required: boolean}>;
+  questions: Array<{ id: number; text: string; required: boolean }>;
   intro: string;
   success: string;
-  onSave: (data: { questions: Array<{id: number; text: string; required: boolean}>; intro: string; success: string }) => void;
+  onSave: (data: { questions: Array<{ id: number; text: string; required: boolean }>; intro: string; success: string }) => void;
 }
 
 function QuestionnaireModal({ isOpen, onClose, questions, intro, success, onSave }: QuestionnaireModalProps) {
@@ -453,9 +457,9 @@ function QuestionnaireModal({ isOpen, onClose, questions, intro, success, onSave
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.95 }} 
-        animate={{ opacity: 1, scale: 1 }} 
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
         className="relative w-full max-w-4xl max-h-[90vh] bg-card border border-white/10 rounded-3xl shadow-2xl overflow-hidden flex flex-col"
       >
         {/* Header */}
@@ -477,32 +481,31 @@ function QuestionnaireModal({ isOpen, onClose, questions, intro, success, onSave
             <label className="text-base font-medium mb-3 block">Вопросы (перетащите для изменения порядка)</label>
             <div className="space-y-3">
               {localQuestions.map((q, i) => (
-                <div 
-                  key={q.id} 
+                <div
+                  key={q.id}
                   draggable
                   onDragStart={() => handleDragStart(i)}
                   onDragOver={(e) => handleDragOver(e, i)}
                   onDragEnd={handleDragEnd}
-                  className={`flex items-center gap-4 p-4 rounded-2xl border group transition-all cursor-move ${
-                    draggedIdx === i ? "opacity-50 bg-primary/10 border-primary/30" : 
-                    dragOverIdx === i ? "bg-primary/5 border-primary/20" : 
-                    "bg-white/5 border-white/10 hover:border-white/20"
-                  }`}
+                  className={`flex items-center gap-4 p-4 rounded-2xl border group transition-all cursor-move ${draggedIdx === i ? "opacity-50 bg-primary/10 border-primary/30" :
+                      dragOverIdx === i ? "bg-primary/5 border-primary/20" :
+                        "bg-white/5 border-white/10 hover:border-white/20"
+                    }`}
                 >
                   <GripVertical size={22} className="text-muted-foreground cursor-grab active:cursor-grabbing shrink-0" />
                   <span className="w-10 h-10 rounded-full bg-primary/20 text-primary text-base flex items-center justify-center font-bold shrink-0">{i + 1}</span>
-                  <input 
-                    value={q.text} 
+                  <input
+                    value={q.text}
                     onChange={(e) => {
                       const updated = [...localQuestions];
                       updated[i] = { ...updated[i], text: e.target.value };
                       setLocalQuestions(updated);
                     }}
                     onClick={(e) => e.stopPropagation()}
-                    className="flex-1 h-12 px-4 rounded-xl bg-white/5 border border-white/10 text-base focus:outline-none focus:ring-2 focus:ring-primary/50" 
+                    className="flex-1 h-12 px-4 rounded-xl bg-white/5 border border-white/10 text-base focus:outline-none focus:ring-2 focus:ring-primary/50"
                     placeholder="Текст вопроса..."
                   />
-                  <button 
+                  <button
                     onClick={(e) => {
                       e.stopPropagation();
                       const updated = [...localQuestions];
@@ -513,7 +516,7 @@ function QuestionnaireModal({ isOpen, onClose, questions, intro, success, onSave
                   >
                     {q.required ? "Обязательный" : "Опциональный"}
                   </button>
-                  <button 
+                  <button
                     onClick={(e) => { e.stopPropagation(); setLocalQuestions(localQuestions.filter((_, idx) => idx !== i)); }}
                     className="p-2.5 rounded-xl hover:bg-red-400/20 text-muted-foreground hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all shrink-0"
                   >
@@ -521,8 +524,8 @@ function QuestionnaireModal({ isOpen, onClose, questions, intro, success, onSave
                   </button>
                 </div>
               ))}
-              
-              <button 
+
+              <button
                 onClick={() => setLocalQuestions([...localQuestions, { id: Date.now(), text: "", required: false }])}
                 className="w-full p-4 rounded-2xl border-2 border-dashed border-white/20 text-muted-foreground hover:text-white hover:border-primary/50 hover:bg-primary/5 transition-all flex items-center justify-center gap-2 text-base"
               >

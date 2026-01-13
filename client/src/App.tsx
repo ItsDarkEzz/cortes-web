@@ -18,6 +18,8 @@ const About = lazy(() => import("@/pages/About"));
 const Documentation = lazy(() => import("@/pages/Documentation"));
 const Support = lazy(() => import("@/pages/Support"));
 const Token = lazy(() => import("@/pages/Token"));
+const Banners = lazy(() => import("@/pages/Banners"));
+const BannerExport = lazy(() => import("@/pages/Banners").then(m => ({ default: m.BannerExport })));
 const Login = lazy(() => import("@/pages/Login"));
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
 const DashboardChats = lazy(() => import("@/pages/dashboard/Chats"));
@@ -55,6 +57,8 @@ function Router() {
                     <Route path="/documentation" component={Documentation} />
                     <Route path="/support" component={Support} />
                     <Route path="/token" component={Token} />
+                    <Route path="/banners" component={Banners} />
+                    <Route path="/banner-export" component={BannerExport} />
                     <Route path="/login" component={Login} />
                     <Route path="/dashboard">
                         <ProtectedRoute><Dashboard /></ProtectedRoute>
