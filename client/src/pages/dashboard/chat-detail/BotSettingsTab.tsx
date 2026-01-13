@@ -4,7 +4,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Bot, Bell, Clock, Volume2, Plus, X, Check, Loader2 } from "lucide-react";
+import { Bot, Bell, Clock, Plus, X, Check, Loader2 } from "lucide-react";
 import { Section, SectionTitle, Toggle } from "./components";
 import { useChatSettings, useUpdateChatSettings } from "@/hooks/use-chats";
 
@@ -18,7 +18,7 @@ export function BotSettingsTab({ chatId }: BotSettingsTabProps) {
   
   const [botName, setBotName] = useState("");
   const [personality, setPersonality] = useState("friendly");
-  const [autoReplyEnabled, setAutoReplyEnabled] = useState(true);
+  const [botMode, setBotMode] = useState<'passive' | 'normal' | 'aggressive'>('normal');
   const [welcomeEnabled, setWelcomeEnabled] = useState(false);
   const [welcomeMessage, setWelcomeMessage] = useState("");
   const [inactivityEnabled, setInactivityEnabled] = useState(false);
@@ -31,7 +31,7 @@ export function BotSettingsTab({ chatId }: BotSettingsTabProps) {
     if (settings?.bot) {
       setBotName(settings.bot.name || "Cortes");
       setPersonality(settings.bot.personality || "friendly");
-      setAutoReplyEnabled(settings.bot.auto_reply_enabled ?? true);
+      setBotMode(settings.bot.mode || 'normal');
       setWelcomeEnabled(settings.bot.welcome_enabled ?? false);
       setWelcomeMessage(settings.bot.welcome_message || "Добро пожаловать в {chat_name}, {user}!");
       setInactivityEnabled(settings.bot.inactivity_enabled ?? false);
@@ -48,7 +48,7 @@ export function BotSettingsTab({ chatId }: BotSettingsTabProps) {
         bot: {
           name: botName,
           personality,
-          auto_reply_enabled: autoReplyEnabled,
+          mode: botMode,
           welcome_enabled: welcomeEnabled,
           welcome_message: welcomeMessage,
           inactivity_enabled: inactivityEnabled,
@@ -110,12 +110,27 @@ export function BotSettingsTab({ chatId }: BotSettingsTabProps) {
 
         <div className="space-y-5">
           <Section>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-blue-400/10 flex items-center justify-center text-blue-400"><Volume2 size={18} /></div>
-                <div><p className="font-medium">Авто-ответы</p><p className="text-sm text-muted-foreground">Бот самостоятельно включается в разговор</p></div>
-              </div>
-              <Toggle enabled={autoReplyEnabled} onToggle={() => { setAutoReplyEnabled(!autoReplyEnabled); markChanged(); }} />
+            <SectionTitle icon={Bot} title="Режим бота" color="text-blue-400" />
+            <p className="text-sm text-muted-foreground mb-3">Как активно бот будет участвовать в разговоре</p>
+            <div className="grid grid-cols-1 gap-2">
+              {[
+                { key: 'passive', label: '😴 Пассивный', desc: 'Отвечает только когда обращаются напрямую' },
+                { key: 'normal', label: '😊 Обычный', desc: 'Иногда включается в разговор самостоятельно' },
+                { key: 'aggressive', label: '🔥 Активный', desc: 'Часто участвует в обсуждениях' },
+              ].map((m) => (
+                <button
+                  key={m.key}
+                  className={`px-4 py-3 rounded-xl text-left transition-colors ${
+                    botMode === m.key
+                      ? 'bg-primary text-white'
+                      : 'bg-white/5 text-muted-foreground hover:text-white hover:bg-white/10'
+                  }`}
+                  onClick={() => { setBotMode(m.key as typeof botMode); markChanged(); }}
+                >
+                  <div className="font-medium">{m.label}</div>
+                  <div className={`text-xs mt-0.5 ${botMode === m.key ? 'text-white/70' : 'text-muted-foreground'}`}>{m.desc}</div>
+                </button>
+              ))}
             </div>
           </Section>
 

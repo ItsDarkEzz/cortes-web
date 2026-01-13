@@ -79,7 +79,7 @@ export interface ChatSettings {
   bot: {
     name: string;
     personality: string;
-    auto_reply_enabled: boolean;
+    mode: 'passive' | 'normal' | 'aggressive';
     welcome_enabled: boolean;
     welcome_message?: string;
     inactivity_enabled: boolean;
