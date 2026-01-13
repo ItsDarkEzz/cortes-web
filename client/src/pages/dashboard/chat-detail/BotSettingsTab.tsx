@@ -18,7 +18,7 @@ export function BotSettingsTab({ chatId }: BotSettingsTabProps) {
   
   const [botName, setBotName] = useState("");
   const [personality, setPersonality] = useState("friendly");
-  const [botMode, setBotMode] = useState<'passive' | 'normal' | 'aggressive'>('normal');
+  const [botMode, setBotMode] = useState<'normal' | 'passive' | 'muted' | 'admins'>('normal');
   const [welcomeEnabled, setWelcomeEnabled] = useState(false);
   const [welcomeMessage, setWelcomeMessage] = useState("");
   const [inactivityEnabled, setInactivityEnabled] = useState(false);
@@ -114,9 +114,10 @@ export function BotSettingsTab({ chatId }: BotSettingsTabProps) {
             <p className="text-sm text-muted-foreground mb-3">Как активно бот будет участвовать в разговоре</p>
             <div className="grid grid-cols-1 gap-2">
               {[
-                { key: 'passive', label: '😴 Пассивный', desc: 'Отвечает только когда обращаются напрямую' },
-                { key: 'normal', label: '😊 Обычный', desc: 'Иногда включается в разговор самостоятельно' },
-                { key: 'aggressive', label: '🔥 Активный', desc: 'Часто участвует в обсуждениях' },
+                { key: 'normal', label: '🟢 Обычный', desc: 'Cortes сам вступает в разговор' },
+                { key: 'passive', label: '🟡 Пассивный', desc: 'Только на упоминания (режим обучения)' },
+                { key: 'muted', label: '🔴 Отключён', desc: 'Полностью отключён в этом чате' },
+                { key: 'admins', label: '🛡 Только админы', desc: 'Отвечает только администраторам' },
               ].map((m) => (
                 <button
                   key={m.key}
