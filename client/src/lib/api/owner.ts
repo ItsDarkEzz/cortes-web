@@ -112,7 +112,7 @@ export interface ChatDetailedStats {
 
 export interface ChatSettings {
   is_enabled: boolean;
-  bot_mode: 'passive' | 'normal' | 'aggressive';
+  bot_mode: 'normal' | 'passive' | 'muted' | 'admins';
   language: string;
   nsfw_filter: boolean;
   auto_moderation: boolean;

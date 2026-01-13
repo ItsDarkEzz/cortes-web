@@ -127,8 +127,14 @@ export function FiltersTab({ chatId }: FiltersTabProps) {
   const markChanged = () => setHasChanges(true);
 
   const addStopWord = () => {
-    if (newWord && !stopWords.includes(newWord.toLowerCase())) {
-      setStopWords([...stopWords, newWord.toLowerCase()]);
+    if (!newWord.trim()) return;
+    // Разбиваем по запятой и добавляем все слова
+    const words = newWord
+      .split(',')
+      .map(w => w.trim().toLowerCase())
+      .filter(w => w && !stopWords.includes(w));
+    if (words.length > 0) {
+      setStopWords([...stopWords, ...words]);
       setNewWord("");
       markChanged();
     }
@@ -174,7 +180,7 @@ export function FiltersTab({ chatId }: FiltersTabProps) {
             ))}
           </div>
           <div className="flex gap-2 mb-3">
-            <input value={newWord} onChange={(e) => setNewWord(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && addStopWord()} placeholder="Добавить слово..." className="flex-1 h-9 px-3 rounded-lg bg-white/5 border border-white/10 text-sm" />
+            <input value={newWord} onChange={(e) => setNewWord(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && addStopWord()} placeholder="Слова через запятую..." className="flex-1 h-9 px-3 rounded-lg bg-white/5 border border-white/10 text-sm" />
             <Button size="sm" onClick={addStopWord}><Plus size={14} /></Button>
           </div>
           <input value={stopWordMessage} onChange={(e) => { setStopWordMessage(e.target.value); markChanged(); }} placeholder="Сообщение при удалении" className="w-full h-9 px-3 rounded-lg bg-white/5 border border-white/10 text-sm" />

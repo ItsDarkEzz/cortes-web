@@ -79,12 +79,16 @@ export interface ChatSettings {
   bot: {
     name: string;
     personality: string;
-    mode: 'passive' | 'normal' | 'aggressive';
+    mode: 'normal' | 'passive' | 'muted' | 'admins';
     welcome_enabled: boolean;
     welcome_message?: string;
     inactivity_enabled: boolean;
     inactivity_hours: number;
     inactivity_messages: string[];
+    // Триггер-слова
+    trigger_words_enabled: boolean;
+    trigger_words: string[];
+    trigger_words_message: string;
   };
   moderation: {
     ban_enabled: boolean;

@@ -4,7 +4,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Bot, Bell, Clock, Plus, X, Check, Loader2 } from "lucide-react";
+import { Bot, Bell, Clock, Plus, X, Check, Loader2, MessageSquare } from "lucide-react";
 import { Section, SectionTitle, Toggle } from "./components";
 import { useChatSettings, useUpdateChatSettings } from "@/hooks/use-chats";
 
@@ -24,6 +24,12 @@ export function BotSettingsTab({ chatId }: BotSettingsTabProps) {
   const [inactivityEnabled, setInactivityEnabled] = useState(false);
   const [inactivityHours, setInactivityHours] = useState(24);
   const [inactivityMessages, setInactivityMessages] = useState<string[]>([]);
+  // Триггер-слова
+  const [triggerWordsEnabled, setTriggerWordsEnabled] = useState(false);
+  const [triggerWords, setTriggerWords] = useState<string[]>([]);
+  const [triggerWordsMessage, setTriggerWordsMessage] = useState("");
+  const [newTriggerWord, setNewTriggerWord] = useState("");
+  
   const [hasChanges, setHasChanges] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -37,6 +43,9 @@ export function BotSettingsTab({ chatId }: BotSettingsTabProps) {
       setInactivityEnabled(settings.bot.inactivity_enabled ?? false);
       setInactivityHours(settings.bot.inactivity_hours || 24);
       setInactivityMessages(settings.bot.inactivity_messages || []);
+      setTriggerWordsEnabled(settings.bot.trigger_words_enabled ?? false);
+      setTriggerWords(settings.bot.trigger_words || []);
+      setTriggerWordsMessage(settings.bot.trigger_words_message || "");
       setHasChanges(false);
     }
   }, [settings]);
@@ -54,6 +63,9 @@ export function BotSettingsTab({ chatId }: BotSettingsTabProps) {
           inactivity_enabled: inactivityEnabled,
           inactivity_hours: inactivityHours,
           inactivity_messages: inactivityMessages,
+          trigger_words_enabled: triggerWordsEnabled,
+          trigger_words: triggerWords,
+          trigger_words_message: triggerWordsMessage,
         }
       });
       setHasChanges(false);
@@ -63,6 +75,25 @@ export function BotSettingsTab({ chatId }: BotSettingsTabProps) {
   };
 
   const markChanged = () => setHasChanges(true);
+
+  const addTriggerWords = () => {
+    if (!newTriggerWord.trim()) return;
+    // Разбиваем по запятой и добавляем все слова
+    const words = newTriggerWord
+      .split(',')
+      .map(w => w.trim().toLowerCase())
+      .filter(w => w && !triggerWords.includes(w));
+    if (words.length > 0) {
+      setTriggerWords([...triggerWords, ...words]);
+      setNewTriggerWord("");
+      markChanged();
+    }
+  };
+
+  const removeTriggerWord = (idx: number) => {
+    setTriggerWords(triggerWords.filter((_, i) => i !== idx));
+    markChanged();
+  };
 
   if (isLoading) {
     return (
@@ -148,6 +179,45 @@ export function BotSettingsTab({ chatId }: BotSettingsTabProps) {
                 className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 resize-none" 
                 placeholder="Добро пожаловать в {chat_name}, {user}!"
               />
+            )}
+          </Section>
+
+          <Section>
+            <div className="flex items-center justify-between mb-4">
+              <SectionTitle icon={MessageSquare} title="Триггер-слова" color="text-purple-400" />
+              <Toggle enabled={triggerWordsEnabled} onToggle={() => { setTriggerWordsEnabled(!triggerWordsEnabled); markChanged(); }} />
+            </div>
+            {triggerWordsEnabled && (
+              <div className="space-y-3">
+                <p className="text-sm text-muted-foreground">Бот отправит сообщение, когда пользователь напишет одно из этих слов целиком</p>
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {triggerWords.map((w, i) => (
+                    <span key={i} className="px-2 py-1 rounded-lg bg-purple-400/10 text-purple-400 text-sm flex items-center gap-1.5">
+                      {w}
+                      <button onClick={() => removeTriggerWord(i)} className="hover:text-purple-300"><X size={12} /></button>
+                    </span>
+                  ))}
+                </div>
+                <div className="flex gap-2">
+                  <input 
+                    value={newTriggerWord} 
+                    onChange={(e) => setNewTriggerWord(e.target.value)} 
+                    onKeyDown={(e) => e.key === 'Enter' && addTriggerWords()} 
+                    placeholder="Слова через запятую..." 
+                    className="flex-1 h-10 px-4 rounded-xl bg-white/5 border border-white/10" 
+                  />
+                  <Button onClick={addTriggerWords} size="icon" className="h-10 w-10">
+                    <Plus size={18} />
+                  </Button>
+                </div>
+                <textarea 
+                  value={triggerWordsMessage} 
+                  onChange={(e) => { setTriggerWordsMessage(e.target.value); markChanged(); }} 
+                  rows={2} 
+                  className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 resize-none" 
+                  placeholder="Сообщение при триггер-слове. Переменные: {user}, {word}"
+                />
+              </div>
             )}
           </Section>
         </div>
