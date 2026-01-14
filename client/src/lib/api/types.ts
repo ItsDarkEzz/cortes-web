@@ -85,6 +85,7 @@ export interface ChatSettings {
     inactivity_enabled: boolean;
     inactivity_hours: number;
     inactivity_messages: string[];
+    mode: string;
   };
   moderation: {
     ban_enabled: boolean;
@@ -163,6 +164,7 @@ export interface ChatSettings {
       required: boolean;
       order: number;
     }>;
+    auto_accept_known: boolean;
   };
 }
 

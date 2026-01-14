@@ -3,9 +3,10 @@
  */
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { 
-  Ban, VolumeX, AlertCircle, UserMinus, Trash2, Crown, Filter, 
-  Settings, ChevronLeft, ChevronRight, Loader2, ExternalLink, Reply 
+import {
+  Ban, VolumeX, UserMinus, AlertCircle, Flag, Lock,
+  AlertTriangle, MessageSquare, Check, Loader2, Trash2,
+  Crown, Filter, ExternalLink, Reply, UserCheck, FileText, Settings, ChevronLeft, ChevronRight
 } from "lucide-react";
 import { useChatLogs, useChatMessages, useChatSettingsLogs } from "@/hooks/use-chats";
 
@@ -13,21 +14,27 @@ interface LogsTabProps {
   chatId: string;
 }
 
-const logColors: Record<string, string> = { 
-  ban: "text-red-400 bg-red-400/10", 
-  mute: "text-orange-400 bg-orange-400/10", 
-  warn: "text-yellow-400 bg-yellow-400/10", 
-  kick: "text-purple-400 bg-purple-400/10", 
-  delete: "text-blue-400 bg-blue-400/10", 
-  role: "text-green-400 bg-green-400/10", 
-  filter: "text-pink-400 bg-pink-400/10" 
+const logColors: Record<string, string> = {
+  ban: "text-red-400 bg-red-400/10",
+  mute: "text-orange-400 bg-orange-400/10",
+  warn: "text-yellow-400 bg-yellow-400/10",
+  kick: "text-purple-400 bg-purple-400/10",
+  delete: "text-blue-400 bg-blue-400/10",
+  role: "text-green-400 bg-green-400/10",
+  filter: "text-pink-400 bg-pink-400/10",
+  face_control_pass: "text-green-400 bg-green-400/10",
+  face_control_decline: "text-red-400 bg-red-400/10",
+  face_control_info: "text-blue-400 bg-blue-400/10"
 };
 
 const actionLabels: Record<string, string> = {
   ban: "Бан", unban: "Разбан", mute: "Мут", unmute: "Размут",
   warn: "Предупреждение", unwarn: "Снятие предупреждения", kick: "Кик",
   delete: "Удаление", read_only_on: "Тихий режим вкл", read_only_off: "Тихий режим выкл",
-  filter_trigger: "Сработал фильтр", role_change: "Смена роли"
+  filter_trigger: "Сработал фильтр", role_change: "Смена роли",
+  face_control_pass: "Face Control: принят",
+  face_control_decline: "Face Control: отклонён",
+  face_control_questionnaire_start: "Face Control: анкета"
 };
 
 const filterLabels: Record<string, string> = {
@@ -66,7 +73,7 @@ export function LogsTab({ chatId }: LogsTabProps) {
   const [logsPage, setLogsPage] = useState(1);
   const [messagesPage, setMessagesPage] = useState(1);
   const [settingsPage, setSettingsPage] = useState(1);
-  
+
   const { data: logsData, isLoading: logsLoading } = useChatLogs(chatId, { limit: 20, page: logsPage });
   const { data: messagesData, isLoading: messagesLoading } = useChatMessages(chatId, { limit: 20, page: messagesPage });
   const { data: settingsLogsData, isLoading: settingsLogsLoading } = useChatSettingsLogs(chatId, { limit: 20, page: settingsPage });
@@ -124,6 +131,9 @@ export function LogsTab({ chatId }: LogsTabProps) {
                       {log.type === "delete" && <Trash2 size={18} />}
                       {log.type === "role" && <Crown size={18} />}
                       {log.type === "filter" && <Filter size={18} />}
+                      {log.type === "face_control_pass" && <UserCheck size={18} />}
+                      {log.type === "face_control_decline" && <UserMinus size={18} />}
+                      {log.type === "face_control_info" && <FileText size={18} />}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-medium">
