@@ -17,9 +17,8 @@ export function BotSettingsTab({ chatId }: BotSettingsTabProps) {
   const updateSettings = useUpdateChatSettings(chatId);
 
   const [botName, setBotName] = useState("");
-  const [botMode, setBotMode] = useState("normal");
-  const [personality, setPersonality] = useState("friendly");
   const [botMode, setBotMode] = useState<'normal' | 'passive' | 'muted' | 'admins'>('normal');
+  const [personality, setPersonality] = useState("friendly");
   const [welcomeEnabled, setWelcomeEnabled] = useState(false);
   const [welcomeMessage, setWelcomeMessage] = useState("");
   const [inactivityEnabled, setInactivityEnabled] = useState(false);
@@ -32,9 +31,8 @@ export function BotSettingsTab({ chatId }: BotSettingsTabProps) {
   useEffect(() => {
     if (settings?.bot) {
       setBotName(settings.bot.name || "Cortes");
-      setBotMode(settings.bot.mode || "normal");
-      setPersonality(settings.bot.personality || "friendly");
       setBotMode(settings.bot.mode || 'normal');
+      setPersonality(settings.bot.personality || "friendly");
       setWelcomeEnabled(settings.bot.welcome_enabled ?? false);
       setWelcomeMessage(settings.bot.welcome_message || "Добро пожаловать в {chat_name}, {user}!");
       setInactivityEnabled(settings.bot.inactivity_enabled ?? false);
@@ -52,7 +50,6 @@ export function BotSettingsTab({ chatId }: BotSettingsTabProps) {
           name: botName,
           mode: botMode,
           personality,
-          mode: botMode,
           welcome_enabled: welcomeEnabled,
           welcome_message: welcomeMessage,
           inactivity_enabled: inactivityEnabled,
@@ -94,12 +91,12 @@ export function BotSettingsTab({ chatId }: BotSettingsTabProps) {
             <div>
               <label className="text-sm text-muted-foreground mb-3 block">Режим работы</label>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
-                {[
+                {([
                   { key: "normal", label: "🟢 Обычный" },
                   { key: "passive", label: "🟡 Обучение" },
                   { key: "muted", label: "🔴 Отключен" },
                   { key: "admins", label: "🛡 Админы" }
-                ].map((m) => (
+                ] as const).map((m) => (
                   <button
                     key={m.key}
                     className={`px-2 py-2.5 rounded-xl font-medium text-xs sm:text-sm transition-colors ${botMode === m.key ? "bg-primary text-white" : "bg-white/5 text-muted-foreground hover:text-white hover:bg-white/10"}`}

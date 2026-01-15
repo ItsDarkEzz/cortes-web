@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { Footer } from "@/components/cortes/Footer";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Shield, VolumeX, Ban, Brain, Zap } from "lucide-react";
 import { useSEO } from "@/hooks/use-seo";
 import { useState, useEffect } from "react";
 import cortesLogo from "@assets/generated_images/cortes_ai_avatar.png";
@@ -9,6 +9,18 @@ import cortesLogo from "@assets/generated_images/cortes_ai_avatar.png";
 const TwitchIcon = ({ size = 20 }: { size?: number }) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
         <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z" />
+    </svg>
+);
+
+const TelegramIcon = ({ size = 20 }: { size?: number }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+        <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
+    </svg>
+);
+
+const InstagramIcon = ({ size = 20 }: { size?: number }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.757-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z" />
     </svg>
 );
 
@@ -126,6 +138,285 @@ function LogoRevealLoop({ children, currentSlideIndex, totalSlides }: { children
     );
 }
 
+
+// Stories баннер — Концепт "Глитч-волна"
+// Глобальный триггер для запуска анимации
+let storiesPlayTrigger: (() => void) | null = null;
+
+function StoriesPlayButton() {
+    return (
+        <motion.button
+            onClick={() => storiesPlayTrigger?.()}
+            className="group flex items-center gap-3 px-6 py-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors cursor-pointer"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+        >
+            <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="text-primary ml-0.5">
+                    <path d="M8 5v14l11-7z" />
+                </svg>
+            </div>
+            <span className="text-white font-medium">Запустить анимацию</span>
+        </motion.button>
+    );
+}
+
+function StoriesGlitchBanner({ autoPlay = true }: { autoPlay?: boolean }) {
+    const [phase, setPhase] = useState(-1);
+    const [isPlaying, setIsPlaying] = useState(autoPlay);
+
+    // Регистрируем триггер для внешней кнопки
+    useEffect(() => {
+        storiesPlayTrigger = () => {
+            setPhase(0);
+            setIsPlaying(true);
+        };
+        return () => { storiesPlayTrigger = null; };
+    }, []);
+
+    useEffect(() => {
+        if (!isPlaying) return;
+        if (phase === -1) {
+            setPhase(0);
+            return;
+        }
+
+        const durations = [2500, 2500, 2500, 2500, 2500, 2500, 3000];
+        
+        const timer = setTimeout(() => {
+            const nextPhase = (phase + 1) % 7;
+            if (nextPhase === 0 && !autoPlay) {
+                setIsPlaying(false);
+                setPhase(-1);
+            } else {
+                setPhase(nextPhase);
+            }
+        }, durations[phase]);
+
+        return () => clearTimeout(timer);
+    }, [phase, isPlaying, autoPlay]);
+
+    return (
+        <div className="relative w-full aspect-[9/16] overflow-hidden rounded-3xl bg-background">
+            {/* Фон как на лендинге */}
+            <div className="absolute inset-0" style={{
+                backgroundImage: `
+                    radial-gradient(circle at 50% 30%, rgba(120, 119, 198, 0.15), transparent 50%),
+                    linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px),
+                    linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px)
+                `,
+                backgroundSize: '100% 100%, 40px 40px, 40px 40px'
+            }} />
+
+            {/* Фаза 0: Логотип + тизер */}
+            {phase === 0 && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center px-8">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                        className="relative"
+                    >
+                        <div className="absolute -inset-6 bg-primary/20 rounded-full blur-3xl" />
+                        <img src={cortesLogo} alt="Cortes" className="relative w-32 h-32 rounded-2xl border border-white/10" />
+                    </motion.div>
+                    <motion.p
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.4, duration: 0.5 }}
+                        className="mt-8 text-2xl text-muted-foreground text-center"
+                    >
+                        Твой чат скучный?
+                    </motion.p>
+                </div>
+            )}
+
+            {/* Фаза 1: Проблема → Решение */}
+            {phase === 1 && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center px-8">
+                    <motion.h1
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.6 }}
+                        className="text-6xl font-bold tracking-tighter text-gradient text-center"
+                    >
+                        CORTES
+                    </motion.h1>
+                    <motion.p
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3, duration: 0.5 }}
+                        className="text-xl font-medium mt-4 bg-gradient-to-r from-primary via-purple-400 to-secondary bg-clip-text text-transparent text-center"
+                    >
+                        AI который оживит общение
+                    </motion.p>
+                </div>
+            )}
+
+            {/* Фаза 2: Ключевая фича */}
+            {phase === 2 && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center px-8">
+                    <motion.h2
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="text-4xl font-bold text-white text-center leading-tight"
+                    >
+                        Не бот.
+                        <br />
+                        <span className="bg-gradient-to-r from-primary via-purple-400 to-secondary bg-clip-text text-transparent">
+                            Личность.
+                        </span>
+                    </motion.h2>
+                    <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.4 }}
+                        className="text-muted-foreground text-center text-lg mt-6"
+                    >
+                        Шутит, спорит, троллит, помогает
+                    </motion.p>
+                </div>
+            )}
+
+            {/* Фаза 3: Модерация */}
+            {phase === 3 && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center px-8">
+                    <motion.h2
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="text-4xl font-bold text-white text-center leading-tight"
+                    >
+                        Полная модерация
+                    </motion.h2>
+                    <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.3 }}
+                        className="text-muted-foreground text-center text-lg mt-4"
+                    >
+                        Бан, мут, фильтры
+                    </motion.p>
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.5, duration: 0.4 }}
+                        className="flex gap-4 mt-8"
+                    >
+                        <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-red-400">
+                            <Shield size={24} />
+                        </div>
+                        <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-orange-400">
+                            <VolumeX size={24} />
+                        </div>
+                        <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-red-400">
+                            <Ban size={24} />
+                        </div>
+                    </motion.div>
+                </div>
+            )}
+
+            {/* Фаза 4: Память и контекст */}
+            {phase === 4 && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center px-8">
+                    <motion.h2
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="text-4xl font-bold text-white text-center leading-tight"
+                    >
+                        Помнит
+                        <br />
+                        <span className="bg-gradient-to-r from-primary via-purple-400 to-secondary bg-clip-text text-transparent">
+                            всё
+                        </span>
+                    </motion.h2>
+                    <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.3 }}
+                        className="text-muted-foreground text-center text-lg mt-4"
+                    >
+                        Контекст, мемы, историю чата
+                    </motion.p>
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.5, duration: 0.4 }}
+                        className="mt-8"
+                    >
+                        <div className="w-14 h-14 rounded-xl bg-white/5 flex items-center justify-center text-purple-400">
+                            <Brain size={28} />
+                        </div>
+                    </motion.div>
+                </div>
+            )}
+
+            {/* Фаза 5: Скорость */}
+            {phase === 5 && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center px-8">
+                    <motion.h2
+                        initial={{ opacity: 0, scale: 1.2 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.5 }}
+                        className="text-5xl font-bold text-white text-center"
+                    >
+                        &lt;200ms
+                    </motion.h2>
+                    <motion.p
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3, duration: 0.5 }}
+                        className="text-2xl font-bold mt-2 bg-gradient-to-r from-primary via-purple-400 to-secondary bg-clip-text text-transparent"
+                    >
+                        Мгновенные ответы
+                    </motion.p>
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.5 }}
+                        className="mt-6"
+                    >
+                        <div className="w-14 h-14 rounded-xl bg-white/5 flex items-center justify-center text-yellow-400">
+                            <Zap size={28} />
+                        </div>
+                    </motion.div>
+                </div>
+            )}
+
+            {/* Фаза 6: CTA */}
+            {phase === 6 && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center px-8">
+                    <motion.img
+                        src={cortesLogo}
+                        alt="Cortes"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.5 }}
+                        className="w-24 h-24 rounded-xl border border-white/10 mb-6"
+                    />
+                    <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.2 }}
+                        className="text-muted-foreground text-lg mb-6"
+                    >
+                        Бесплатно в Telegram
+                    </motion.p>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.4 }}
+                        className="px-8 py-4 bg-white text-black rounded-full font-semibold text-lg shadow-[0_0_30px_rgba(255,255,255,0.25)]"
+                    >
+                        @TheCortesBot
+                    </motion.div>
+                </div>
+            )}
+        </div>
+    );
+}
 
 // Анимированный баннер для GIF
 function TwitchBannerAnimated() {
@@ -320,6 +611,15 @@ export default function Banners() {
                             <TwitchBannerAnimated />
                         </div>
                     </BannerSection>
+
+                    <BannerSection title="Telegram / Instagram Stories" platform="1080×1920 (9:16)" icon={<TelegramIcon size={24} />} iconBg="bg-gradient-to-br from-[#0088cc] to-[#833AB4]">
+                        <div className="flex flex-col items-center gap-6">
+                            <div className="w-[320px]">
+                                <StoriesGlitchBanner autoPlay={false} />
+                            </div>
+                            <StoriesPlayButton />
+                        </div>
+                    </BannerSection>
                 </div>
             </section>
 
@@ -333,6 +633,15 @@ export function BannerExport() {
     return (
         <div className="bg-background" style={{ width: '1920px', height: '384px' }}>
             <TwitchBannerAnimated />
+        </div>
+    );
+}
+
+// Экспорт Stories баннера для записи (1080x1920)
+export function StoriesBannerExport() {
+    return (
+        <div style={{ width: '1080px', height: '1920px' }}>
+            <StoriesGlitchBanner />
         </div>
     );
 }

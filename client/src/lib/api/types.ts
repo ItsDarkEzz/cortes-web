@@ -85,7 +85,6 @@ export interface ChatSettings {
     inactivity_enabled: boolean;
     inactivity_hours: number;
     inactivity_messages: string[];
-    mode: string;
   };
   moderation: {
     ban_enabled: boolean;
@@ -230,6 +229,7 @@ export interface Message {
   telegram_message_id?: number;
   reply_to_user_id?: number;
   reply_to_user_name?: string;
+  is_bot?: boolean;
 }
 
 // Brain

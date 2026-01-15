@@ -12,6 +12,7 @@ import { useChatLogs, useChatMessages, useChatSettingsLogs } from "@/hooks/use-c
 
 interface LogsTabProps {
   chatId: string;
+  messagesOnly?: boolean;
 }
 
 const logColors: Record<string, string> = {
@@ -68,8 +69,8 @@ function Pagination({ pagination, page, setPage }: { pagination: any; page: numb
   );
 }
 
-export function LogsTab({ chatId }: LogsTabProps) {
-  const [tab, setTab] = useState<"actions" | "messages" | "settings">("actions");
+export function LogsTab({ chatId, messagesOnly = false }: LogsTabProps) {
+  const [tab, setTab] = useState<"actions" | "messages" | "settings">(messagesOnly ? "messages" : "actions");
   const [logsPage, setLogsPage] = useState(1);
   const [messagesPage, setMessagesPage] = useState(1);
   const [settingsPage, setSettingsPage] = useState(1);
@@ -106,11 +107,13 @@ export function LogsTab({ chatId }: LogsTabProps) {
 
   return (
     <div className="space-y-4">
-      <div className="flex gap-2 p-1 rounded-xl bg-white/5">
-        <button onClick={() => setTab("actions")} className={`flex-1 py-2.5 rounded-lg font-medium transition-colors text-sm ${tab === "actions" ? "bg-primary text-white" : "text-muted-foreground hover:text-white"}`}>Модерация</button>
-        <button onClick={() => setTab("messages")} className={`flex-1 py-2.5 rounded-lg font-medium transition-colors text-sm ${tab === "messages" ? "bg-primary text-white" : "text-muted-foreground hover:text-white"}`}>Сообщения</button>
-        <button onClick={() => setTab("settings")} className={`flex-1 py-2.5 rounded-lg font-medium transition-colors text-sm ${tab === "settings" ? "bg-primary text-white" : "text-muted-foreground hover:text-white"}`}>Настройки</button>
-      </div>
+      {!messagesOnly && (
+        <div className="flex gap-2 p-1 rounded-xl bg-white/5">
+          <button onClick={() => setTab("actions")} className={`flex-1 py-2.5 rounded-lg font-medium transition-colors text-sm ${tab === "actions" ? "bg-primary text-white" : "text-muted-foreground hover:text-white"}`}>Модерация</button>
+          <button onClick={() => setTab("messages")} className={`flex-1 py-2.5 rounded-lg font-medium transition-colors text-sm ${tab === "messages" ? "bg-primary text-white" : "text-muted-foreground hover:text-white"}`}>Сообщения</button>
+          <button onClick={() => setTab("settings")} className={`flex-1 py-2.5 rounded-lg font-medium transition-colors text-sm ${tab === "settings" ? "bg-primary text-white" : "text-muted-foreground hover:text-white"}`}>Настройки</button>
+        </div>
+      )}
 
       {tab === "actions" ? (
         logsLoading ? (
@@ -160,10 +163,15 @@ export function LogsTab({ chatId }: LogsTabProps) {
           <>
             <div className="space-y-2">
               {messages.map((msg) => (
-                <div key={msg.id} className={`p-4 rounded-xl ${msg.deleted ? "bg-red-500/5 border border-red-500/20" : "bg-white/5 border border-white/10"}`}>
+                <div key={msg.id} className={`p-4 rounded-xl ${msg.deleted ? "bg-red-500/5 border border-red-500/20" : msg.is_bot ? "bg-primary/5 border border-primary/20" : "bg-white/5 border border-white/10"}`}>
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
-                      <span className="font-medium text-primary">{msg.user_name}</span>
+                      <span className={`font-medium ${msg.is_bot ? "text-primary" : "text-primary"}`}>
+                        {msg.is_bot && "🤖 "}{msg.user_name}
+                      </span>
+                      {msg.is_bot && (
+                        <span className="text-xs px-2 py-0.5 rounded bg-primary/20 text-primary">Бот</span>
+                      )}
                       {msg.message_type && msg.message_type !== "text" && (
                         <span className="text-xs px-2 py-0.5 rounded bg-white/10 text-muted-foreground">{messageTypeLabels[msg.message_type] || msg.message_type}</span>
                       )}

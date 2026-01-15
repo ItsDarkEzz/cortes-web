@@ -98,10 +98,11 @@ export default function OwnerChatDetails() {
 
   const isPrivateChat = chat.chat_type === 'private';
 
-  // Для личных чатов показываем только Обзор
+  // Для личных чатов показываем Обзор и Журнал (сообщения)
   const tabs: { key: TabType; label: string; icon: React.ElementType }[] = isPrivateChat
     ? [
         { key: "overview", label: "Обзор", icon: BarChart3 },
+        { key: "logs", label: "Сообщения", icon: History },
       ]
     : [
         { key: "overview", label: "Обзор", icon: BarChart3 },
@@ -186,12 +187,12 @@ export default function OwnerChatDetails() {
               isPrivateChat={isPrivateChat}
             />
           )}
-          {activeTab === "bot" && !isPrivateChat && <BotSettingsTab chatId={chat.chat_uuid || telegramChatId} />}
-          {activeTab === "moderation" && !isPrivateChat && <ModerationTab chatId={chat.chat_uuid || telegramChatId} />}
-          {activeTab === "filters" && !isPrivateChat && <FiltersTab chatId={chat.chat_uuid || telegramChatId} />}
-          {activeTab === "members" && !isPrivateChat && <MembersTab chatId={chat.chat_uuid || telegramChatId} />}
-          {activeTab === "logs" && <LogsTab chatId={chat.chat_uuid || telegramChatId} />}
-          {activeTab === "brain" && <BrainTab chatId={chat.chat_uuid || telegramChatId} />}
+          {activeTab === "bot" && !isPrivateChat && <BotSettingsTab chatId={String(chat.telegram_chat_id)} />}
+          {activeTab === "moderation" && !isPrivateChat && <ModerationTab chatId={String(chat.telegram_chat_id)} />}
+          {activeTab === "filters" && !isPrivateChat && <FiltersTab chatId={String(chat.telegram_chat_id)} />}
+          {activeTab === "members" && !isPrivateChat && <MembersTab chatId={String(chat.telegram_chat_id)} />}
+          {activeTab === "logs" && <LogsTab chatId={String(chat.telegram_chat_id)} messagesOnly={isPrivateChat} />}
+          {activeTab === "brain" && <BrainTab chatId={String(chat.telegram_chat_id)} />}
           {activeTab === "plan" && !isPrivateChat && <PlanTab />}
         </div>
 
