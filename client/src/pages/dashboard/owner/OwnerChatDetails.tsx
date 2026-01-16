@@ -8,7 +8,7 @@ import { useRoute, useLocation } from "wouter";
 import { 
   ArrowLeft, Settings, Users, Bot, Shield, BarChart3, 
   Filter, History, Brain, CreditCard, Loader2, PowerOff, User, UsersRound,
-  Activity, Calendar, Crown, MessageCircle, Cpu, DollarSign, Eye
+  Activity, Calendar, Crown, MessageCircle, Cpu, DollarSign, Eye, Layers
 } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Button } from "@/components/ui/button";
@@ -28,8 +28,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useChatDetails, useLeaveChat } from "@/hooks/use-owner";
-import { ownerApi } from "@/lib/api";
+import { useChatDetails, useLeaveChat, useChatContextDebug } from "@/hooks/use-owner";
+import { ownerApi, type ContextDebugResponse, type ContextClusterInfo } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import { 
   TabBtn, scrollStyles,
@@ -37,7 +37,7 @@ import {
   MembersTab, LogsTab, BrainTab, PlanTab 
 } from "../chat-detail";
 
-type TabType = "overview" | "bot" | "moderation" | "filters" | "members" | "logs" | "brain" | "plan";
+type TabType = "overview" | "context" | "bot" | "moderation" | "filters" | "members" | "logs" | "brain" | "plan";
 
 export default function OwnerChatDetails() {
   const [, params] = useRoute("/dashboard/owner/chats/:chatId");
@@ -102,10 +102,12 @@ export default function OwnerChatDetails() {
   const tabs: { key: TabType; label: string; icon: React.ElementType }[] = isPrivateChat
     ? [
         { key: "overview", label: "Обзор", icon: BarChart3 },
+        { key: "context", label: "Контекст", icon: Layers },
         { key: "logs", label: "Сообщения", icon: History },
       ]
     : [
         { key: "overview", label: "Обзор", icon: BarChart3 },
+        { key: "context", label: "Контекст", icon: Layers },
         { key: "bot", label: "Бот", icon: Bot },
         { key: "moderation", label: "Модерация", icon: Shield },
         { key: "filters", label: "Фильтры", icon: Filter },
@@ -187,6 +189,7 @@ export default function OwnerChatDetails() {
               isPrivateChat={isPrivateChat}
             />
           )}
+          {activeTab === "context" && <ContextDebugTab chatId={Number(telegramChatId)} />}
           {activeTab === "bot" && !isPrivateChat && <BotSettingsTab chatId={String(chat.telegram_chat_id)} />}
           {activeTab === "moderation" && !isPrivateChat && <ModerationTab chatId={String(chat.telegram_chat_id)} />}
           {activeTab === "filters" && !isPrivateChat && <FiltersTab chatId={String(chat.telegram_chat_id)} />}
@@ -480,6 +483,194 @@ function OwnerOverviewTab({ chat, stats, settings, subscription, formatDate, for
             </div>
           </CardContent>
         </Card>
+      )}
+    </div>
+  );
+}
+
+// ============== Context Debug Tab ==============
+
+interface ContextDebugTabProps {
+  chatId: number;
+}
+
+function ContextDebugTab({ chatId }: ContextDebugTabProps) {
+  const { data: contextData, isLoading, error } = useChatContextDebug(chatId);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (error || !contextData) {
+    return (
+      <Card className="bg-red-500/10 border-red-500/20">
+        <CardContent className="py-6">
+          <p className="text-red-400">Ошибка загрузки контекста</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const qualityColor = {
+    full: 'text-green-400',
+    partial: 'text-yellow-400',
+    minimal: 'text-red-400',
+  }[contextData.dynamic_context_quality || 'minimal'] || 'text-gray-400';
+
+  return (
+    <div className="space-y-4">
+      {/* Общая информация */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <Card className="bg-white/5 border-white/10">
+          <CardHeader className="pb-2">
+            <CardDescription>Всего сообщений</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{contextData.total_messages}</div>
+          </CardContent>
+        </Card>
+        
+        <Card className="bg-white/5 border-white/10">
+          <CardHeader className="pb-2">
+            <CardDescription>Кластеризация</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className={`text-lg font-bold ${contextData.clustering_applied ? 'text-green-400' : 'text-gray-400'}`}>
+              {contextData.clustering_applied ? 'Активна' : 'Отключена'}
+            </div>
+            <p className="text-xs text-muted-foreground truncate">{contextData.clustering_reason}</p>
+          </CardContent>
+        </Card>
+        
+        <Card className="bg-white/5 border-white/10">
+          <CardHeader className="pb-2">
+            <CardDescription>Кластеров</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{contextData.all_clusters.length}</div>
+            <p className="text-xs text-muted-foreground">+{contextData.unclustered_count} без кластера</p>
+          </CardContent>
+        </Card>
+        
+        <Card className="bg-white/5 border-white/10">
+          <CardHeader className="pb-2">
+            <CardDescription>Качество контекста</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className={`text-lg font-bold ${qualityColor}`}>
+              {contextData.dynamic_context_quality === 'full' ? '🟢 Полный' :
+               contextData.dynamic_context_quality === 'partial' ? '🟡 Частичный' : '🔴 Минимальный'}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Rolling Summary */}
+      {contextData.rolling_summary && (
+        <Card className="bg-white/5 border-white/10">
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Brain className="w-4 h-4" />
+              Rolling Summary (активная нить разговора)
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+              {contextData.rolling_summary}
+            </p>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Кластеры */}
+      {contextData.all_clusters.length > 0 && (
+        <Card className="bg-white/5 border-white/10">
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Layers className="w-4 h-4" />
+              Кластеры тем ({contextData.all_clusters.length})
+            </CardTitle>
+            <CardDescription>
+              Сообщения группируются по темам. Активный кластер используется для контекста.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {contextData.all_clusters.map((cluster) => (
+              <ClusterCard key={cluster.cluster_id} cluster={cluster} />
+            ))}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Текущий контекст */}
+      <Card className="bg-white/5 border-white/10">
+        <CardHeader>
+          <CardTitle className="text-base flex items-center gap-2">
+            <MessageCircle className="w-4 h-4" />
+            Текущий контекст (последние сообщения)
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <pre className="text-xs text-muted-foreground whitespace-pre-wrap bg-black/20 p-3 rounded-lg max-h-96 overflow-y-auto">
+            {contextData.recent_context || '[Нет контекста]'}
+          </pre>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+// Компонент для отображения кластера
+function ClusterCard({ cluster }: { cluster: ContextClusterInfo }) {
+  const [expanded, setExpanded] = useState(false);
+  
+  return (
+    <div 
+      className={`border rounded-lg p-3 ${
+        cluster.is_active 
+          ? 'border-green-500/50 bg-green-500/10' 
+          : 'border-white/10 bg-white/5'
+      }`}
+    >
+      <div 
+        className="flex items-center justify-between cursor-pointer"
+        onClick={() => setExpanded(!expanded)}
+      >
+        <div className="flex items-center gap-3">
+          <div className={`w-3 h-3 rounded-full ${cluster.is_active ? 'bg-green-500' : 'bg-gray-500'}`} />
+          <div>
+            <span className="font-medium">
+              Кластер #{cluster.cluster_id}
+              {cluster.is_dominant && <span className="ml-2 text-xs text-yellow-400">👑 Доминирующий</span>}
+              {cluster.is_active && <span className="ml-2 text-xs text-green-400">✓ Активный</span>}
+            </span>
+            <p className="text-xs text-muted-foreground">
+              {cluster.size} сообщений • Уверенность: {(cluster.confidence * 100).toFixed(0)}%
+            </p>
+          </div>
+        </div>
+        <Button variant="ghost" size="sm">
+          {expanded ? '▲' : '▼'}
+        </Button>
+      </div>
+      
+      {expanded && (
+        <div className="mt-3 space-y-2 pl-6">
+          {cluster.messages.map((msg, idx: number) => (
+            <div key={idx} className="text-xs border-l-2 border-white/20 pl-2">
+              <span className={msg.role === 'assistant' ? 'text-blue-400' : 'text-gray-400'}>
+                {msg.user}:
+              </span>
+              <span className="text-muted-foreground ml-1">
+                {msg.content.length > 100 ? msg.content.slice(0, 100) + '...' : msg.content}
+              </span>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );

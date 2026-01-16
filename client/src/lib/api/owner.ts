@@ -188,6 +188,37 @@ export interface BroadcastResponse {
   status: string;
 }
 
+// Context Debug Types
+export interface ContextClusterMessage {
+  id: string;
+  content: string;
+  role: string;
+  user: string;
+  created_at?: string;
+}
+
+export interface ContextClusterInfo {
+  cluster_id: number;
+  size: number;
+  confidence: number;
+  is_dominant: boolean;
+  is_active: boolean;
+  messages: ContextClusterMessage[];
+}
+
+export interface ContextDebugResponse {
+  chat_id: number;
+  total_messages: number;
+  clustering_applied: boolean;
+  clustering_reason: string;
+  active_cluster?: ContextClusterInfo;
+  all_clusters: ContextClusterInfo[];
+  unclustered_count: number;
+  rolling_summary?: string;
+  recent_context: string;
+  dynamic_context_quality?: string;
+}
+
 // ============ API Functions ============
 
 export const ownerApi = {
@@ -247,6 +278,10 @@ export const ownerApi = {
   // Детальная информация о чате
   getChatDetails: (telegram_chat_id: number) =>
     apiClient.get<ChatDetailedResponse>(`/owner/chats/${telegram_chat_id}`),
+  
+  // Отладка контекста чата
+  getChatContextDebug: (telegram_chat_id: number) =>
+    apiClient.get<ContextDebugResponse>(`/owner/chats/${telegram_chat_id}/context`),
   
   updateChatSettings: (telegram_chat_id: number, settings: Partial<ChatSettings>) =>
     apiClient.patch<{ success: boolean }>(`/owner/chats/${telegram_chat_id}/settings`, settings),

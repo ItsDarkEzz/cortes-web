@@ -89,31 +89,6 @@ export function BotSettingsTab({ chatId }: BotSettingsTabProps) {
             </div>
 
             <div>
-              <label className="text-sm text-muted-foreground mb-3 block">Режим работы</label>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
-                {([
-                  { key: "normal", label: "🟢 Обычный" },
-                  { key: "passive", label: "🟡 Обучение" },
-                  { key: "muted", label: "🔴 Отключен" },
-                  { key: "admins", label: "🛡 Админы" }
-                ] as const).map((m) => (
-                  <button
-                    key={m.key}
-                    className={`px-2 py-2.5 rounded-xl font-medium text-xs sm:text-sm transition-colors ${botMode === m.key ? "bg-primary text-white" : "bg-white/5 text-muted-foreground hover:text-white hover:bg-white/10"}`}
-                    onClick={() => { setBotMode(m.key); markChanged(); }}
-                  >
-                    {m.label}
-                  </button>
-                ))}
-              </div>
-              <p className="text-xs text-muted-foreground mt-2 px-1">
-                {botMode === "normal" && "Cortes активно участвует в диалоге"}
-                {botMode === "passive" && "Cortes отвечает только на упоминания (режим обучения)"}
-                {botMode === "muted" && "Cortes полностью отключён (игнорирует все сообщения)"}
-                {botMode === "admins" && "Cortes отвечает только администраторам чата"}
-              </p>
-            </div>
-            <div>
               <label className="text-sm text-muted-foreground mb-3 block">Характер бота</label>
               <div className="grid grid-cols-2 gap-2">
                 {[

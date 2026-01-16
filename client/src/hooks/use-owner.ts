@@ -60,6 +60,16 @@ export function useChatDetails(telegram_chat_id: number) {
   });
 }
 
+// Отладка контекста чата
+export function useChatContextDebug(telegram_chat_id: number, enabled = true) {
+  return useQuery({
+    queryKey: ['owner', 'chat-context', telegram_chat_id],
+    queryFn: () => ownerApi.getChatContextDebug(telegram_chat_id),
+    enabled: !!telegram_chat_id && enabled,
+    refetchInterval: 10000, // Обновлять каждые 10 секунд
+  });
+}
+
 // Обновление настроек чата
 export function useUpdateChatSettings() {
   const queryClient = useQueryClient();
