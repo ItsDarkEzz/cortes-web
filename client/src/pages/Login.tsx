@@ -93,8 +93,21 @@ export default function Login() {
       setStep("waiting");
       
       // Open Telegram bot with auth token
+      // Используем _self для Safari iOS, который блокирует _blank
       const botUrl = `https://t.me/TheCortesBot?start=auth_${result.auth_token}`;
-      window.open(botUrl, "_blank");
+      const newWindow = window.open(botUrl, "_blank", "noopener,noreferrer");
+      
+      // Fallback для Safari iOS — если window.open не сработал
+      if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+        // Создаём временную ссылку и кликаем по ней
+        const link = document.createElement('a');
+        link.href = botUrl;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
     } catch (err) {
       setError("Не удалось начать авторизацию. Попробуйте позже.");
       setStep("error");
@@ -143,11 +156,13 @@ export default function Login() {
             <div className="flex justify-center gap-3">
               <Button
                 variant="outline"
-                onClick={() => window.open(`https://t.me/CortesAiBot?start=auth_${authToken}`, "_blank")}
+                asChild
                 className="border-white/10"
               >
-                <TelegramIcon className="w-4 h-4 mr-2" />
-                Открыть бота
+                <a href={`https://t.me/TheCortesBot?start=auth_${authToken}`}>
+                  <TelegramIcon className="w-4 h-4 mr-2" />
+                  Открыть бота
+                </a>
               </Button>
               <Button variant="ghost" onClick={resetAuth} className="text-muted-foreground">
                 <XCircle className="w-4 h-4 mr-2" />

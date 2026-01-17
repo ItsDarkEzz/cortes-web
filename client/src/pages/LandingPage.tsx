@@ -4,6 +4,7 @@ import { Architecture } from "@/components/cortes/Architecture";
 import { ChatDemo } from "@/components/cortes/ChatDemo";
 import { UseCases } from "@/components/cortes/UseCases";
 import { Features } from "@/components/cortes/Features";
+import { DashboardCTA } from "@/components/cortes/DashboardCTA";
 import { FAQ } from "@/components/cortes/FAQ";
 import { Footer } from "@/components/cortes/Footer";
 import { useSEO } from "@/hooks/use-seo";
@@ -11,8 +12,8 @@ import { LandingPageSchemas } from "@/components/SEOSchema";
 
 export default function LandingPage() {
   useSEO({
-    title: "Умный AI-бот для Telegram | Бесплатно",
-    description: "Cortes — интеллектуальный Telegram-бот с AI. Понимает контекст, не спамит, имеет характер и собственное мнение. Добавьте бесплатно за 30 секунд.",
+    title: "Cortes AI — Умный бот для Telegram на GPT-5.2 | Модерация через команды",
+    description: "Cortes — интеллектуальный Telegram-бот на GPT-5.2. Команды модерации (ban, mute, kick, warn) и автоматические фильтры контента. Блокировка стоп-слов, репостов, нежелательных символов и медиа. Добавьте бесплатно за 30 секунд.",
     canonical: "/",
   });
 
@@ -25,6 +26,7 @@ export default function LandingPage() {
       <ChatDemo />
       <UseCases />
       <Features />
+      <DashboardCTA />
       <FAQ />
       <Footer />
     </div>

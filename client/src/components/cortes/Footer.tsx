@@ -19,6 +19,9 @@ export function Footer() {
             <Link href="/documentation">
               <a className="text-muted-foreground hover:text-white transition-colors">Документация</a>
             </Link>
+            <Link href="/dashboard">
+              <a className="text-muted-foreground hover:text-primary transition-colors font-medium">Dashboard</a>
+            </Link>
             <Link href="/token">
               <a className="text-muted-foreground hover:text-primary transition-colors font-medium">$CORTES</a>
             </Link>

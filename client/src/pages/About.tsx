@@ -1,13 +1,13 @@
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { Footer } from "@/components/cortes/Footer";
-import { ArrowLeft, Zap, Shield, Brain, Zap as ZapIcon, MessageSquare, Image, Volume2 } from "lucide-react";
+import { ArrowLeft, Zap, Shield, Brain, Filter, Sparkles, Image, Volume2 } from "lucide-react";
 import { useSEO } from "@/hooks/use-seo";
 
 export default function About() {
     useSEO({
-        title: "О проекте — История создания умного AI-бота",
-        description: "Узнайте историю создания Cortes — AI-бота для Telegram. Принципы работы, миссия проекта и планы развития от разработчика Шахриёра.",
+        title: "О проекте — История создания умного AI-бота на GPT-5.2",
+        description: "Узнайте историю создания Cortes — AI-бота для Telegram на GPT-5.2. Принципы работы, система модерации, миссия проекта и планы развития от разработчика Шахриёра.",
         canonical: "/about",
     });
 
@@ -40,7 +40,7 @@ export default function About() {
                             Кто такой <span className="text-gradient-primary">Cortes?</span>
                         </h1>
                         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                            Умный Telegram-бот, который вмешивается только когда это нужно. Он не спамит, не раздражает, а просто делает ваш чат лучше.
+                            Умный Telegram-бот на GPT-5.2, который понимает контекст и помогает с модерацией. Он не спамит, не раздражает, а просто делает ваш чат лучше.
                         </p>
                     </motion.div>
                 </div>
@@ -60,10 +60,10 @@ export default function About() {
                         >
                             <h2 className="text-3xl font-bold text-white mb-4">История Cortes</h2>
                             <p className="text-muted-foreground text-lg leading-relaxed mb-4">
-                                Всё началось в 2020 году, когда я, Шахриёр, впервые задумался о том, каким должен быть идеальный Telegram-бот. Идея была простой: создать ИИ, который не просто отвечает на команды, а реально понимает контекст и становится частью сообщества.
+                                Всё началось в 2024 году, когда я, Шахриёр, впервые задумался о том, каким должен быть идеальный Telegram-бот. Идея была простой: создать ИИ на базе GPT-5.2, который не просто отвечает на команды, а реально понимает контекст и становится частью сообщества.
                             </p>
                             <p className="text-muted-foreground text-lg leading-relaxed mb-4">
-                                Годы разработки, экспериментов и итераций привели к тому, что вы видите сейчас. Cortes — это не просто бот. Это помощник, который учится у вашего чата, адаптируется к его культуре и добавляет ценность каждый день.
+                                Месяцы разработки, экспериментов и итераций привели к тому, что вы видите сейчас. Cortes — это не просто бот. Это помощник с памятью, который учится у вашего чата, адаптируется к его культуре и предоставляет инструменты модерации для администраторов.
                             </p>
                         </motion.div>
 
@@ -109,7 +109,7 @@ export default function About() {
                         >
                             <h2 className="text-3xl font-bold text-white mb-4">Моя миссия</h2>
                             <p className="text-muted-foreground text-lg leading-relaxed">
-                                Сделать каждый Telegram-чат более живым, интересным и привлекательным. Не заменить людей — дополнить их. Cortes — это помощник, который знает, когда говорить, а когда молчать.
+                                Сделать каждый Telegram-чат более живым, интересным и безопасным. Не заменить людей — дополнить их. Cortes — это помощник, который знает, когда говорить, а когда молчать, и предоставляет инструменты для поддержания порядка в чате.
                             </p>
                         </motion.div>
 
@@ -140,21 +140,21 @@ export default function About() {
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="flex gap-4">
                                     <div className="w-10 h-10 rounded-lg bg-primary/30 flex items-center justify-center text-primary flex-shrink-0">
-                                        <MessageSquare size={20} />
+                                        <Filter size={20} />
                                     </div>
                                     <div>
-                                        <h3 className="text-white font-semibold mb-1">Система модераций</h3>
-                                        <p className="text-muted-foreground text-sm">Инструменты для администраторов с AI-помощью</p>
+                                        <h3 className="text-white font-semibold mb-1">Расширенные фильтры</h3>
+                                        <p className="text-muted-foreground text-sm">Больше опций для контроля контента</p>
                                     </div>
                                 </div>
 
                                 <div className="flex gap-4">
                                     <div className="w-10 h-10 rounded-lg bg-primary/30 flex items-center justify-center text-primary flex-shrink-0">
-                                        <ZapIcon size={20} />
+                                        <Sparkles size={20} />
                                     </div>
                                     <div>
-                                        <h3 className="text-white font-semibold mb-1">Система фильтраций</h3>
-                                        <p className="text-muted-foreground text-sm">Умные фильтры для контроля контента</p>
+                                        <h3 className="text-white font-semibold mb-1">Улучшенная память</h3>
+                                        <p className="text-muted-foreground text-sm">Более глубокое понимание контекста</p>
                                     </div>
                                 </div>
 
@@ -173,7 +173,7 @@ export default function About() {
                                         <Volume2 size={20} />
                                     </div>
                                     <div>
-                                        <h3 className="text-white font-semibold mb-1">Ответы с голосом</h3>
+                                        <h3 className="text-white font-semibold mb-1">Голосовые ответы</h3>
                                         <p className="text-muted-foreground text-sm">Cortes сможет говорить в голосовых чатах</p>
                                     </div>
                                 </div>

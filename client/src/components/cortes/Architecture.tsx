@@ -1,5 +1,6 @@
 import { motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
+import { Zap, Sparkles, Shield, Clock, CheckCircle, Brain, TrendingUp } from "lucide-react";
 
 export function Architecture() {
   const [activeLayer, setActiveLayer] = useState(1);
@@ -15,27 +16,27 @@ export function Architecture() {
       name: "Фильтр",
       title: "Анализ потока",
       description: "Легкие нейросети сканируют каждое сообщение в реальном времени. Определяют триггеры, контекст и релевантность без задержек.",
-      details: ["Скорость: <300ms на сообщение", "Точность: 95.2%", "Модель: MiniLM + Fast Tokenizer"],
-      icon: "⚡",
-      color: "from-blue-500 to-cyan-500"
+      details: ["Скорость: <300ms на сообщение", "Точность: 95.2%", "Модель: GPT-5.2 + Fast Tokenizer"],
+      IconComponent: Zap,
+      color: "from-cyan-500 to-blue-500"
     },
     {
       id: 2,
       name: "Персона",
       title: "Генерация ответа",
       description: "Основная LLM формирует ответ, сохраняя характер, юмор и контекст. Помнит историю чата и адаптируется к культуре группы.",
-      details: ["Модель: Gemini 3 Pro/Gemini 2.5 Pro с адаптацией", "Контекст: 20000+ токенов", "Качество: 95.7% релевантности"],
-      icon: "🧠",
-      color: "from-primary to-purple-500"
+      details: ["Модель: GPT-5.2 с адаптацией", "Контекст: 20000+ токенов", "Качество: 95.7% релевантности"],
+      IconComponent: Sparkles,
+      color: "from-violet-500 to-purple-500"
     },
     {
       id: 3,
-      name: "Креатив",
-      title: "Творчество",
-      description: "Мощная генеративная модель для создания квестов, дуэлей и сценарных мини-игр. Создает уникальный контент на лету.",
-      details: ["Модель: Gemini 3 Pro для генерации", "Сценарии: RPG, Дуэли, Квесты", "Креативность: Unlimited"],
-      icon: "✨",
-      color: "from-purple-500 to-pink-500"
+      name: "Модерация",
+      title: "Контроль чата",
+      description: "Команды модерации и автоматические фильтры. Баны, муты, предупреждения через команды. Фильтры стоп-слов и нежелательного контента.",
+      details: ["Команды: ban, mute, kick, warn", "Фильтры: стоп-слова, каналы, медиа", "Блокировка: символы, ссылки, NSFW"],
+      IconComponent: Shield,
+      color: "from-rose-500 to-pink-500"
     }
   ];
 
@@ -72,7 +73,9 @@ export function Architecture() {
               <div className={`absolute inset-0 bg-gradient-to-br ${layer.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
               <div className="relative z-10 h-full p-6 flex flex-col justify-between">
                 <div className="flex items-start justify-between">
-                  <div className="text-4xl">{layer.icon}</div>
+                  <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
+                    <layer.IconComponent className="w-6 h-6 text-white" />
+                  </div>
                   <span className={`text-xs font-mono font-bold px-2 py-1 rounded-full ${
                     activeLayer === layer.id 
                       ? `bg-gradient-to-r ${layer.color} text-white` 
@@ -136,10 +139,10 @@ export function Architecture() {
 
         <div ref={metricsRef} className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { label: "Задержка", value: "<300ms", icon: "⚡" },
-            { label: "Точность", value: "95.2%", icon: "🎯" },
-            { label: "Контекст", value: "2000+", icon: "🧠" },
-            { label: "Uptime", value: "99.99%", icon: "🛡️" }
+            { label: "Задержка", value: "<300ms", IconComponent: Clock },
+            { label: "Точность", value: "95.2%", IconComponent: CheckCircle },
+            { label: "Контекст", value: "2000+", IconComponent: Brain },
+            { label: "Uptime", value: "99.99%", IconComponent: TrendingUp }
           ].map((metric, i) => (
             <motion.div
               key={i}
@@ -148,7 +151,9 @@ export function Architecture() {
               transition={{ duration: 0.4, delay: i * 0.1 }}
               className="p-4 rounded-xl bg-white/[0.03] border border-white/10 text-center hover:bg-white/[0.05] transition-colors"
             >
-              <div className="text-2xl mb-2">{metric.icon}</div>
+              <div className="flex justify-center mb-2">
+                <metric.IconComponent className="w-6 h-6 text-primary" />
+              </div>
               <div className="text-xs uppercase tracking-widest text-muted-foreground mb-1">{metric.label}</div>
               <div className="text-lg font-bold text-white">{metric.value}</div>
             </motion.div>
