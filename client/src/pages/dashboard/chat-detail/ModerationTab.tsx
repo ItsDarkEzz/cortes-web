@@ -21,12 +21,15 @@ export function ModerationTab({ chatId }: ModerationTabProps) {
 
   const [banEnabled, setBanEnabled] = useState(true);
   const [banMessage, setBanMessage] = useState("");
+  const [unbanMessage, setUnbanMessage] = useState("");
   const [muteEnabled, setMuteEnabled] = useState(true);
   const [muteMessage, setMuteMessage] = useState("");
+  const [unmuteMessage, setUnmuteMessage] = useState("");
   const [kickEnabled, setKickEnabled] = useState(true);
   const [kickMessage, setKickMessage] = useState("");
   const [warnEnabled, setWarnEnabled] = useState(true);
   const [warnMessage, setWarnMessage] = useState("");
+  const [unwarnMessage, setUnwarnMessage] = useState("");
   const [warningsForBan, setWarningsForBan] = useState(3);
   const [banDurationDays, setBanDurationDays] = useState(30);
   const [warningExpireDays, setWarningExpireDays] = useState(14);
@@ -52,12 +55,15 @@ export function ModerationTab({ chatId }: ModerationTabProps) {
       const m = settings.moderation;
       setBanEnabled(m.ban_enabled ?? true);
       setBanMessage(m.ban_message || "🚫 Пользователь {user} заблокирован на {duration}.\nПричина: {reason}");
+      setUnbanMessage(m.unban_message || "✅ {user} разбанен.");
       setMuteEnabled(m.mute_enabled ?? true);
       setMuteMessage(m.mute_message || "🔇 Пользователь {user} заглушен на {duration}.\nПричина: {reason}");
+      setUnmuteMessage(m.unmute_message || "✅ {user} размучен.");
       setKickEnabled(m.kick_enabled ?? true);
       setKickMessage(m.kick_message || "👢 Пользователь {user} удалён из чата.\nПричина: {reason}");
       setWarnEnabled(m.warn_enabled ?? true);
       setWarnMessage(m.warn_message || "⚠️ Пользователь {user} получил предупреждение ({warnings}/{max}).\nПричина: {reason}");
+      setUnwarnMessage(m.unwarn_message || "✅ Предупреждение снято с {user}. Осталось: {warnings}/{max}");
       setWarningsForBan(m.warnings_for_ban || 3);
       setBanDurationDays(m.ban_duration_days || 30);
       setWarningExpireDays(m.warning_expire_days || 14);
@@ -86,12 +92,15 @@ export function ModerationTab({ chatId }: ModerationTabProps) {
         moderation: {
           ban_enabled: banEnabled,
           ban_message: banMessage,
+          unban_message: unbanMessage,
           mute_enabled: muteEnabled,
           mute_message: muteMessage,
+          unmute_message: unmuteMessage,
           kick_enabled: kickEnabled,
           kick_message: kickMessage,
           warn_enabled: warnEnabled,
           warn_message: warnMessage,
+          unwarn_message: unwarnMessage,
           warnings_for_ban: warningsForBan,
           ban_duration_days: banDurationDays,
           warning_expire_days: warningExpireDays,
@@ -133,10 +142,13 @@ export function ModerationTab({ chatId }: ModerationTabProps) {
         <Section>
           <SectionTitle icon={Ban} title="Команды модерации" color="text-red-400" />
           <div className="space-y-2">
-            <CommandCard icon={Ban} title="/ban, /unban" desc="Блокировка пользователей" enabled={banEnabled} onToggle={() => { setBanEnabled(!banEnabled); markChanged(); }} color="text-red-400" message={banMessage} onMessageChange={(v) => { setBanMessage(v); markChanged(); }} vars="{user}, {duration}, {reason}" />
-            <CommandCard icon={VolumeX} title="/mute, /unmute" desc="Заглушение пользователей" enabled={muteEnabled} onToggle={() => { setMuteEnabled(!muteEnabled); markChanged(); }} color="text-orange-400" message={muteMessage} onMessageChange={(v) => { setMuteMessage(v); markChanged(); }} vars="{user}, {duration}, {reason}" />
+            <CommandCard icon={Ban} title="/ban" desc="Блокировка пользователей" enabled={banEnabled} onToggle={() => { setBanEnabled(!banEnabled); markChanged(); }} color="text-red-400" message={banMessage} onMessageChange={(v) => { setBanMessage(v); markChanged(); }} vars="{user}, {duration}, {reason}" />
+            <CommandCard icon={Ban} title="/unban" desc="Разблокировка пользователей" enabled={banEnabled} onToggle={() => { setBanEnabled(!banEnabled); markChanged(); }} color="text-green-400" message={unbanMessage} onMessageChange={(v) => { setUnbanMessage(v); markChanged(); }} vars="{user}" />
+            <CommandCard icon={VolumeX} title="/mute" desc="Заглушение пользователей" enabled={muteEnabled} onToggle={() => { setMuteEnabled(!muteEnabled); markChanged(); }} color="text-orange-400" message={muteMessage} onMessageChange={(v) => { setMuteMessage(v); markChanged(); }} vars="{user}, {duration}, {reason}" />
+            <CommandCard icon={VolumeX} title="/unmute" desc="Снятие заглушения" enabled={muteEnabled} onToggle={() => { setMuteEnabled(!muteEnabled); markChanged(); }} color="text-green-400" message={unmuteMessage} onMessageChange={(v) => { setUnmuteMessage(v); markChanged(); }} vars="{user}" />
             <CommandCard icon={UserMinus} title="/kick" desc="Удаление из чата" enabled={kickEnabled} onToggle={() => { setKickEnabled(!kickEnabled); markChanged(); }} color="text-purple-400" message={kickMessage} onMessageChange={(v) => { setKickMessage(v); markChanged(); }} vars="{user}, {reason}" />
-            <CommandCard icon={AlertCircle} title="/warn, /unwarn" desc="Система предупреждений" enabled={warnEnabled} onToggle={() => { setWarnEnabled(!warnEnabled); markChanged(); }} color="text-yellow-400" message={warnMessage} onMessageChange={(v) => { setWarnMessage(v); markChanged(); }} vars="{user}, {warnings}, {max}, {reason}" />
+            <CommandCard icon={AlertCircle} title="/warn" desc="Выдача предупреждения" enabled={warnEnabled} onToggle={() => { setWarnEnabled(!warnEnabled); markChanged(); }} color="text-yellow-400" message={warnMessage} onMessageChange={(v) => { setWarnMessage(v); markChanged(); }} vars="{user}, {warnings}, {max}, {reason}" />
+            <CommandCard icon={AlertCircle} title="/unwarn" desc="Снятие предупреждения" enabled={warnEnabled} onToggle={() => { setWarnEnabled(!warnEnabled); markChanged(); }} color="text-green-400" message={unwarnMessage} onMessageChange={(v) => { setUnwarnMessage(v); markChanged(); }} vars="{user}, {warnings}, {max}" />
             <CommandCard icon={Flag} title="/report" desc="Жалобы на пользователей" enabled={reportEnabled} onToggle={() => { setReportEnabled(!reportEnabled); markChanged(); }} color="text-blue-400" message={reportMessage} onMessageChange={(v) => { setReportMessage(v); markChanged(); }} vars="{user}, {target}, {message}" />
           </div>
           

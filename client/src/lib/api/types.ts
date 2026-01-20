@@ -89,12 +89,15 @@ export interface ChatSettings {
   moderation: {
     ban_enabled: boolean;
     ban_message: string;
+    unban_message: string;
     mute_enabled: boolean;
     mute_message: string;
+    unmute_message: string;
     kick_enabled: boolean;
     kick_message: string;
     warn_enabled: boolean;
     warn_message: string;
+    unwarn_message: string;
     warnings_for_ban: number;
     ban_duration_days: number;
     warning_expire_days: number;

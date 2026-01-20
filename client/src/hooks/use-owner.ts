@@ -213,3 +213,21 @@ export function useBroadcast() {
     }) => ownerApi.sendBroadcast(data),
   });
 }
+
+export function useLLMPriority() {
+  return useQuery({
+    queryKey: ['owner', 'llm-priority'],
+    queryFn: () => ownerApi.getLLMPriority(),
+  });
+}
+
+export function useUpdateLLMPriority() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: Partial<import('@/lib/api/owner').LLMChainsResponse>) =>
+      ownerApi.updateLLMPriority(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['owner', 'llm-priority'] });
+    },
+  });
+}

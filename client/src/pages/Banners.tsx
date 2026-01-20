@@ -418,6 +418,106 @@ function StoriesGlitchBanner({ autoPlay = true }: { autoPlay?: boolean }) {
     );
 }
 
+// Статический баннер для Twitch - вариант 1
+function TwitchBannerStatic() {
+    return (
+        <div className="relative w-full aspect-[5/1] overflow-hidden rounded-3xl bg-background border border-white/10">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/20 rounded-full blur-[120px] opacity-60" />
+
+            <div className="absolute inset-0 opacity-10" style={{
+                backgroundImage: 'linear-gradient(to bottom, rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(to right, rgba(255,255,255,0.5) 1px, transparent 1px)',
+                backgroundSize: '40px 40px'
+            }} />
+
+            <div className="absolute inset-0 flex items-center px-8 md:px-16 lg:px-20">
+                <div className="relative flex-shrink-0">
+                    <div className="absolute -inset-3 bg-primary/30 rounded-3xl blur-2xl" />
+                    <img src={cortesLogo} alt="Cortes" className="relative w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 rounded-2xl object-cover border border-white/10" />
+                </div>
+
+                <div className="ml-6 md:ml-10 lg:ml-14 flex-1">
+                    <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter leading-[0.9] text-transparent bg-clip-text bg-gradient-to-b from-white to-white/30">
+                        CORTES
+                    </h1>
+                    <div className="text-xl md:text-3xl lg:text-4xl mt-3 font-bold">
+                        <p className="leading-tight text-transparent bg-clip-text bg-gradient-to-b from-primary to-purple-400">
+                            Искусственный интеллект
+                        </p>
+                        <p className="leading-tight text-transparent bg-clip-text bg-gradient-to-b from-primary to-purple-400">
+                            для твоего чата
+                        </p>
+                    </div>
+                </div>
+
+                <div className="hidden lg:block relative z-10">
+                    <span className="text-2xl font-bold text-white/50 block text-right">
+                        @TheCortesBot
+                    </span>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+// Статический баннер для Twitch - вариант 2 (с фичами)
+function TwitchBannerStaticFeatures() {
+    return (
+        <div className="relative w-full aspect-[5/1] overflow-hidden rounded-3xl bg-background border border-white/10">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/20 rounded-full blur-[120px] opacity-60" />
+
+            <div className="absolute inset-0 opacity-10" style={{
+                backgroundImage: 'linear-gradient(to bottom, rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(to right, rgba(255,255,255,0.5) 1px, transparent 1px)',
+                backgroundSize: '40px 40px'
+            }} />
+
+            <div className="absolute inset-0 flex items-center justify-between px-8 md:px-16 lg:px-20">
+                <div className="flex items-center gap-6 md:gap-10">
+                    <div className="relative flex-shrink-0">
+                        <div className="absolute -inset-3 bg-primary/30 rounded-3xl blur-2xl" />
+                        <img src={cortesLogo} alt="Cortes" className="relative w-20 h-20 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-2xl object-cover border border-white/10" />
+                    </div>
+
+                    <div>
+                        <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-[0.9] text-transparent bg-clip-text bg-gradient-to-b from-white to-white/30 mb-2">
+                            CORTES
+                        </h1>
+                        <p className="text-xl md:text-xl lg:text-2xl leading-tight text-transparent bg-clip-text bg-gradient-to-b from-primary to-purple-400 font-medium">
+                            Искусственный интеллект для твоего чата
+                        </p>
+                    </div>
+                </div>
+
+                <div className="hidden lg:flex items-center gap-8">
+                    <div className="flex flex-col items-center gap-2">
+                        <div className="w-14 h-14 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+                            <Brain className="text-purple-400" size={28} />
+                        </div>
+                        <span className="text-sm font-semibold text-white/70">Память</span>
+                    </div>
+                    
+                    <div className="flex flex-col items-center gap-2">
+                        <div className="w-14 h-14 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+                            <Shield className="text-blue-400" size={28} />
+                        </div>
+                        <span className="text-sm font-semibold text-white/70">Модерация</span>
+                    </div>
+                    
+                    <div className="flex flex-col items-center gap-2">
+                        <div className="w-14 h-14 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+                            <Zap className="text-yellow-400" size={28} />
+                        </div>
+                        <span className="text-sm font-semibold text-white/70">&lt;200ms</span>
+                    </div>
+
+                    <div className="ml-4 px-6 py-3 bg-gradient-to-r from-primary to-purple-500 rounded-full">
+                        <span className="text-lg font-bold text-white">@TheCortesBot</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 // Анимированный баннер для GIF
 function TwitchBannerAnimated() {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -607,8 +707,19 @@ export default function Banners() {
             <section className="py-8 pb-24">
                 <div className="max-w-7xl mx-auto px-4">
                     <BannerSection title="Twitch" platform="1920×384" icon={<TwitchIcon size={24} />} iconBg="bg-[#9146FF]">
-                        <div>
-                            <TwitchBannerAnimated />
+                        <div className="space-y-6">
+                            <div>
+                                <h3 className="text-lg font-semibold text-white mb-3">Статический баннер — вариант 1</h3>
+                                <TwitchBannerStatic />
+                            </div>
+                            <div>
+                                <h3 className="text-lg font-semibold text-white mb-3">Статический баннер — вариант 2</h3>
+                                <TwitchBannerStaticFeatures />
+                            </div>
+                            <div>
+                                <h3 className="text-lg font-semibold text-white mb-3">Анимированный баннер</h3>
+                                <TwitchBannerAnimated />
+                            </div>
                         </div>
                     </BannerSection>
 
@@ -633,6 +744,24 @@ export function BannerExport() {
     return (
         <div className="bg-background" style={{ width: '1920px', height: '384px' }}>
             <TwitchBannerAnimated />
+        </div>
+    );
+}
+
+// Экспорт статического баннера
+export function StaticBannerExport() {
+    return (
+        <div className="bg-background" style={{ width: '1920px', height: '384px' }}>
+            <TwitchBannerStatic />
+        </div>
+    );
+}
+
+// Экспорт статического баннера с фичами
+export function StaticBannerFeaturesExport() {
+    return (
+        <div className="bg-background" style={{ width: '1920px', height: '384px' }}>
+            <TwitchBannerStaticFeatures />
         </div>
     );
 }

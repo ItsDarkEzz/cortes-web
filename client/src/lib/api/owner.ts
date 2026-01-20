@@ -158,6 +158,18 @@ export interface LLMUsageResponse {
   total_tokens: number;
 }
 
+export interface LLMModelEntry {
+  provider: string;
+  model: string;
+  enabled: boolean;
+}
+
+export interface LLMChainsResponse {
+  response: LLMModelEntry[];
+  observer: LLMModelEntry[];
+  background: LLMModelEntry[];
+}
+
 export interface UserSubscription {
   id: number;
   telegram_user_id: number;
@@ -360,6 +372,12 @@ export const ownerApi = {
     user_ids?: number[];
     parse_mode?: string;
   }) => apiClient.post<BroadcastResponse>('/owner/broadcast', data),
+
+  getLLMPriority: () => apiClient.get<LLMChainsResponse>('/owner/llm-priority'),
+  updateLLMPriority: (data: Partial<LLMChainsResponse>) =>
+    apiClient.patch<{ success: boolean }>('/owner/llm-priority', data),
+  llmTest: (data: { provider: string; model: string; with_tools?: boolean }) =>
+    apiClient.post<{ success: boolean; latency_ms?: number; error?: string }>('/owner/llm-test', data),
 };
 
 // ============ WebSocket для логов ============

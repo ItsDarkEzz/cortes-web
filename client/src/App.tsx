@@ -34,6 +34,7 @@ const OwnerChats = lazy(() => import("@/pages/dashboard/owner/OwnerChats"));
 const OwnerChatDetails = lazy(() => import("@/pages/dashboard/owner/OwnerChatDetails"));
 const OwnerSubscriptions = lazy(() => import("@/pages/dashboard/owner/OwnerSubscriptions"));
 const OwnerBroadcast = lazy(() => import("@/pages/dashboard/owner/OwnerBroadcast"));
+const OwnerLLMSettings = lazy(() => import("@/pages/dashboard/owner/OwnerLLMSettings"));
 // const DashboardNotifications = lazy(() => import("@/pages/dashboard/Notifications")); // временно отключено
 const NotFound = lazy(() => import("@/pages/not-found"));
 
@@ -96,6 +97,9 @@ function Router() {
                     </Route>
                     <Route path="/dashboard/owner/broadcast">
                         <ProtectedRoute><OwnerBroadcast /></ProtectedRoute>
+                    </Route>
+                    <Route path="/dashboard/owner/llm">
+                        <ProtectedRoute><OwnerLLMSettings /></ProtectedRoute>
                     </Route>
                     {/* Notifications - временно отключено
                     <Route path="/dashboard/notifications">
