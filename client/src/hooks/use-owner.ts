@@ -15,10 +15,18 @@ export function useBotStats() {
 }
 
 // Использование LLM
-export function useLLMUsage(period: '24h' | '7d' | '30d' = '24h') {
+export function useLLMUsage(period: '24h' | '7d' | '30d' | 'all' = '24h') {
   return useQuery({
     queryKey: ['owner', 'llm-usage', period],
     queryFn: () => ownerApi.getLLMUsage(period),
+  });
+}
+
+// Топ чатов по использованию LLM
+export function useTopLLMChats(limit: number = 5, period: '24h' | '7d' | '30d' | 'all' = '7d') {
+  return useQuery({
+    queryKey: ['owner', 'top-llm-chats', limit, period],
+    queryFn: () => ownerApi.getTopLLMChats(limit, period),
   });
 }
 

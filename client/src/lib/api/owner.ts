@@ -231,14 +231,32 @@ export interface ContextDebugResponse {
   dynamic_context_quality?: string;
 }
 
+export interface TopChatLLMStats {
+  chat_id: number;
+  title?: string;
+  username?: string;
+  first_name?: string;
+  calls_count: number;
+  tokens_total: number;
+  cost_total: number;
+}
+
+export interface TopChatsLLMResponse {
+  period: string;
+  chats: TopChatLLMStats[];
+}
+
 // ============ API Functions ============
 
 export const ownerApi = {
   // Статистика
   getStats: () => apiClient.get<BotStats>('/owner/stats'),
   
-  getLLMUsage: (period: '24h' | '7d' | '30d' = '24h') => 
+  getLLMUsage: (period: '24h' | '7d' | '30d' | 'all' = '24h') => 
     apiClient.get<LLMUsageResponse>(`/owner/llm-usage?period=${period}`),
+    
+  getTopLLMChats: (limit: number = 5, period: '24h' | '7d' | '30d' | 'all' = '7d') =>
+    apiClient.get<TopChatsLLMResponse>(`/owner/stats/top-llm-chats?limit=${limit}&period=${period}`),
   
   // Логи
   getLogs: (params: {
