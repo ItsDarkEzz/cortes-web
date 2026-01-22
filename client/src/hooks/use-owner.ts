@@ -87,7 +87,7 @@ export function useUpdateChatSettings() {
       chatId: number; 
       settings: Partial<{
         is_enabled: boolean;
-        bot_mode: 'passive' | 'normal' | 'aggressive';
+        bot_mode: 'normal' | 'passive' | 'muted' | 'admins';
         language: string;
         nsfw_filter: boolean;
         auto_moderation: boolean;
@@ -236,6 +236,46 @@ export function useUpdateLLMPriority() {
       ownerApi.updateLLMPriority(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['owner', 'llm-priority'] });
+    },
+  });
+}
+
+// Custom Providers
+export function useCustomProviders() {
+  return useQuery({
+    queryKey: ['owner', 'custom-providers'],
+    queryFn: () => ownerApi.getCustomProviders(),
+  });
+}
+
+export function useCreateCustomProvider() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: import('@/lib/api/owner').CustomLLMProviderCreate) =>
+      ownerApi.createCustomProvider(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['owner', 'custom-providers'] });
+    },
+  });
+}
+
+export function useUpdateCustomProvider() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, data }: { id: number; data: import('@/lib/api/owner').CustomLLMProviderUpdate }) =>
+      ownerApi.updateCustomProvider(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['owner', 'custom-providers'] });
+    },
+  });
+}
+
+export function useDeleteCustomProvider() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => ownerApi.deleteCustomProvider(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['owner', 'custom-providers'] });
     },
   });
 }

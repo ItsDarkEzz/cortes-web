@@ -1,1 +1,0 @@
-import{t as n,v as a,w as i,x as t}from"./index-aSmLva6P.js";function o(){return n({queryKey:["user","stats"],queryFn:()=>t.stats(),staleTime:60*1e3})}function y(){const u=a();return i({mutationFn:s=>t.updateName(s),onSuccess:(s,r)=>{u.setQueryData(["user","me"],e=>e&&{...e,name:r})}})}export{y as a,o as u};

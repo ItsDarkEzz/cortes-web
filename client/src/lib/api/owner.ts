@@ -246,6 +246,29 @@ export interface TopChatsLLMResponse {
   chats: TopChatLLMStats[];
 }
 
+export interface CustomLLMProvider {
+  id: number;
+  name: string;
+  base_url: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CustomLLMProviderCreate {
+  name: string;
+  base_url: string;
+  api_key: string;
+  is_active?: boolean;
+}
+
+export interface CustomLLMProviderUpdate {
+  name?: string;
+  base_url?: string;
+  api_key?: string;
+  is_active?: boolean;
+}
+
 // ============ API Functions ============
 
 export const ownerApi = {
@@ -396,6 +419,18 @@ export const ownerApi = {
     apiClient.patch<{ success: boolean }>('/owner/llm-priority', data),
   llmTest: (data: { provider: string; model: string; with_tools?: boolean }) =>
     apiClient.post<{ success: boolean; latency_ms?: number; error?: string }>('/owner/llm-test', data),
+
+  // Custom Providers
+  getCustomProviders: () => apiClient.get<CustomLLMProvider[]>('/owner/llm/providers'),
+
+  createCustomProvider: (data: CustomLLMProviderCreate) => 
+    apiClient.post<CustomLLMProvider>('/owner/llm/providers', data),
+
+  updateCustomProvider: (id: number, data: CustomLLMProviderUpdate) =>
+    apiClient.patch<boolean>(`/owner/llm/providers/${id}`, data),
+
+  deleteCustomProvider: (id: number) =>
+    apiClient.delete<boolean>(`/owner/llm/providers/${id}`),
 };
 
 // ============ WebSocket для логов ============

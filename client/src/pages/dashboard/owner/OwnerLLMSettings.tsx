@@ -13,13 +13,29 @@ import { Badge } from "@/components/ui/badge";
 import { 
   Loader2, ArrowLeft, Bot, GripVertical, 
   Play, Trash2, Plus, Save, RotateCcw,
-  Zap, Eye, CheckCircle, AlertCircle
+  Zap, Eye, CheckCircle, AlertCircle, Edit, Globe
 } from "lucide-react";
-import { useLLMPriority, useUpdateLLMPriority } from "@/hooks/use-owner";
-import { ownerApi, type LLMModelEntry } from "@/lib/api/owner";
+import { 
+  useLLMPriority, 
+  useUpdateLLMPriority,
+  useCustomProviders, 
+  useCreateCustomProvider, 
+  useUpdateCustomProvider, 
+  useDeleteCustomProvider 
+} from "@/hooks/use-owner";
+import { ownerApi, type LLMModelEntry, type CustomLLMProvider } from "@/lib/api/owner";
 import { useToast } from "@/hooks/use-toast";
 import { Reorder, useDragControls } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogTrigger,
+  DialogFooter
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 
 type ChainKey = "response" | "observer" | "background";
 
@@ -207,6 +223,228 @@ function ChainList({
   );
 }
 
+function CustomProvidersTab() {
+  const { data: providers, isLoading } = useCustomProviders();
+  const createMutation = useCreateCustomProvider();
+  const updateMutation = useUpdateCustomProvider();
+  const deleteMutation = useDeleteCustomProvider();
+  const { toast } = useToast();
+  
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [editingProvider, setEditingProvider] = useState<CustomLLMProvider | null>(null);
+  
+  const [formData, setFormData] = useState({
+    name: "",
+    base_url: "",
+    api_key: "",
+    is_active: true
+  });
+
+  const handleCreate = async () => {
+    try {
+      await createMutation.mutateAsync(formData);
+      toast({ title: "Успешно", description: "Провайдер добавлен" });
+      setIsCreateOpen(false);
+      setFormData({ name: "", base_url: "", api_key: "", is_active: true });
+    } catch {
+      toast({ title: "Ошибка", description: "Не удалось добавить провайдера", variant: "destructive" });
+    }
+  };
+
+  const handleUpdate = async () => {
+    if (!editingProvider) return;
+    try {
+      await updateMutation.mutateAsync({
+        id: editingProvider.id,
+        data: {
+          name: formData.name,
+          base_url: formData.base_url,
+          api_key: formData.api_key || undefined,
+          is_active: formData.is_active
+        }
+      });
+      toast({ title: "Успешно", description: "Провайдер обновлен" });
+      setEditingProvider(null);
+      setFormData({ name: "", base_url: "", api_key: "", is_active: true });
+    } catch {
+      toast({ title: "Ошибка", description: "Не удалось обновить провайдера", variant: "destructive" });
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    if (!confirm("Вы уверены?")) return;
+    try {
+      await deleteMutation.mutateAsync(id);
+      toast({ title: "Успешно", description: "Провайдер удален" });
+    } catch {
+      toast({ title: "Ошибка", description: "Не удалось удалить провайдера", variant: "destructive" });
+    }
+  };
+
+  const openEdit = (provider: CustomLLMProvider) => {
+    setEditingProvider(provider);
+    setFormData({
+      name: provider.name,
+      base_url: provider.base_url,
+      api_key: "",
+      is_active: provider.is_active
+    });
+  };
+
+  if (isLoading) {
+    return <div className="flex justify-center p-8"><Loader2 className="animate-spin" /></div>;
+  }
+
+  return (
+    <ScrollArea className="h-full">
+      <div className="p-6 max-w-4xl mx-auto space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-semibold">Кастомные провайдеры</h2>
+            <p className="text-sm text-muted-foreground">Подключение сторонних API, совместимых с OpenAI</p>
+          </div>
+          <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+            <DialogTrigger asChild>
+              <Button size="sm">
+                <Plus className="w-4 h-4 mr-2" />
+                Добавить
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Добавить провайдера</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div className="space-y-2">
+                  <Label>Название</Label>
+                  <Input 
+                    placeholder="My Local LLM" 
+                    value={formData.name}
+                    onChange={e => setFormData({...formData, name: e.target.value})}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Base URL</Label>
+                  <Input 
+                    placeholder="http://localhost:11434/v1" 
+                    value={formData.base_url}
+                    onChange={e => setFormData({...formData, base_url: e.target.value})}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>API Key</Label>
+                  <Input 
+                    type="password"
+                    placeholder="sk-..." 
+                    value={formData.api_key}
+                    onChange={e => setFormData({...formData, api_key: e.target.value})}
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <Switch 
+                    checked={formData.is_active}
+                    onCheckedChange={c => setFormData({...formData, is_active: c})}
+                  />
+                  <Label>Активен</Label>
+                </div>
+              </div>
+              <DialogFooter>
+                <Button onClick={handleCreate} disabled={createMutation.isPending}>
+                  {createMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                  Создать
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
+
+        <div className="grid gap-4">
+          {providers?.map(provider => (
+            <div key={provider.id} className="bg-card border border-border/50 rounded-lg p-4 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="p-2 bg-primary/10 rounded-lg">
+                  <Globe className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-medium">{provider.name}</h3>
+                    {provider.is_active ? (
+                      <Badge variant="secondary" className="bg-green-500/10 text-green-500 hover:bg-green-500/20">Active</Badge>
+                    ) : (
+                      <Badge variant="outline" className="text-muted-foreground">Inactive</Badge>
+                    )}
+                  </div>
+                  <p className="text-sm text-muted-foreground font-mono mt-1">{provider.base_url}</p>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <Button variant="ghost" size="icon" onClick={() => openEdit(provider)}>
+                  <Edit className="w-4 h-4" />
+                </Button>
+                <Button variant="ghost" size="icon" className="text-red-400 hover:text-red-300" onClick={() => handleDelete(provider.id)}>
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          ))}
+          
+          {providers?.length === 0 && (
+            <div className="text-center py-12 text-muted-foreground border border-dashed border-white/10 rounded-lg">
+              Нет кастомных провайдеров
+            </div>
+          )}
+        </div>
+
+        <Dialog open={!!editingProvider} onOpenChange={o => !o && setEditingProvider(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Редактировать провайдера</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label>Название</Label>
+                <Input 
+                  value={formData.name}
+                  onChange={e => setFormData({...formData, name: e.target.value})}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Base URL</Label>
+                <Input 
+                  value={formData.base_url}
+                  onChange={e => setFormData({...formData, base_url: e.target.value})}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>API Key (оставьте пустым, чтобы не менять)</Label>
+                <Input 
+                  type="password"
+                  value={formData.api_key}
+                  onChange={e => setFormData({...formData, api_key: e.target.value})}
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <Switch 
+                  checked={formData.is_active}
+                  onCheckedChange={c => setFormData({...formData, is_active: c})}
+                />
+                <Label>Активен</Label>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button onClick={handleUpdate} disabled={updateMutation.isPending}>
+                {updateMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                Сохранить
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
+    </ScrollArea>
+  );
+}
+
 export default function OwnerLLMSettings() {
   const [, setLocation] = useLocation();
   const { data, isLoading } = useLLMPriority();
@@ -329,6 +567,12 @@ export default function OwnerLLMSettings() {
                     Фоновые задачи
                     <Badge variant="secondary" className="ml-2">{chains.background.length}</Badge>
                   </TabsTrigger>
+                  <TabsTrigger 
+                    value="custom" 
+                    className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none h-full px-0"
+                  >
+                    Кастомные провайдеры
+                  </TabsTrigger>
                 </TabsList>
               </div>
 
@@ -384,6 +628,10 @@ export default function OwnerLLMSettings() {
                     <ChainList items={chains.background} onChange={(items) => setChains(c => ({ ...c, background: items }))} />
                   </div>
                 </ScrollArea>
+              </TabsContent>
+
+              <TabsContent value="custom" className="flex-1 min-h-0 mt-0">
+                <CustomProvidersTab />
               </TabsContent>
             </Tabs>
           </div>

@@ -238,6 +238,7 @@ export default function OwnerPanel() {
     { icon: CreditCard, label: "Подписки", href: "/dashboard/owner/subscriptions", color: "text-purple-400" },
     { icon: Send, label: "Рассылка", href: "/dashboard/owner/broadcast", color: "text-orange-400" },
     { icon: Zap, label: "LLM настройки", href: "/dashboard/owner/llm", color: "text-yellow-400" },
+    { icon: Calendar, label: "Память", href: "/dashboard/owner/memory", color: "text-cyan-400" },
   ];
 
   return (
