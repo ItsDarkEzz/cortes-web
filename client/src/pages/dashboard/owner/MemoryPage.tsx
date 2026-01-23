@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import ForceGraph3D from 'react-force-graph-3d';
-import { useChats } from '@/hooks/use-chats';
+import { useBotChats } from '@/hooks/use-owner';
 import {
   memoryApi,
   EpochSummaryItem,
@@ -22,7 +22,7 @@ import { Separator } from '@/components/ui/separator';
 import { Loader2, Network, Search, Pencil, History, MessageSquarePlus, RotateCcw } from 'lucide-react';
 
 export default function MemoryPage() {
-  const { data: chatsData, isLoading: isLoadingChats } = useChats();
+  const { data: chatsData, isLoading: isLoadingChats } = useBotChats({ limit: 100 });
   const chats = chatsData?.chats;
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
 
@@ -45,8 +45,8 @@ export default function MemoryPage() {
               <div className="p-2 flex justify-center"><Loader2 className="h-4 w-4 animate-spin" /></div>
             ) : (
               chats?.map(chat => (
-                <SelectItem key={chat.id} value={String(chat.id)}>
-                  {chat.name || `Chat ${chat.id}`}
+                <SelectItem key={chat.telegram_chat_id} value={String(chat.telegram_chat_id)}>
+                  {chat.title || `Chat ${chat.telegram_chat_id}`}
                 </SelectItem>
               ))
             )}

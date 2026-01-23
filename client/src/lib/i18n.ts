@@ -51,7 +51,7 @@ const ru = {
   "common.id": "ID",
 } as const;
 
-const en: typeof ru = {
+const en: Record<keyof typeof ru, string> = {
   // Navigation
   "nav.overview": "Overview",
   "nav.chats": "Chats",

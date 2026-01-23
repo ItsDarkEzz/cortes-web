@@ -318,6 +318,7 @@ function FaceControlSection({ chatId, onChangesMade }: { chatId: string; onChang
   const [questionnaireSuccess, setQuestionnaireSuccess] = useState("");
   const [questionnaireQuestions, setQuestionnaireQuestions] = useState<Array<{id: number; text: string; required: boolean; order: number}>>([]);
   const [notifyChatId, setNotifyChatId] = useState<string>("");
+  const [autoAcceptKnown, setAutoAcceptKnown] = useState(false);
   const [showQuestionnaireModal, setShowQuestionnaireModal] = useState(false);
   const [hasLocalChanges, setHasLocalChanges] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -336,6 +337,7 @@ function FaceControlSection({ chatId, onChangesMade }: { chatId: string; onChang
       setQuestionnaireSuccess(fc.questionnaire_success || "Добро пожаловать!");
       setQuestionnaireQuestions(fc.questionnaire_questions || []);
       setNotifyChatId(fc.notify_chat_id ? String(fc.notify_chat_id) : "");
+      setAutoAcceptKnown(fc.auto_accept_known ?? false);
       setHasLocalChanges(false);
     }
   }, [settings]);
@@ -360,6 +362,7 @@ function FaceControlSection({ chatId, onChangesMade }: { chatId: string; onChang
           questionnaire_success: questionnaireSuccess,
           questionnaire_questions: questionnaireQuestions,
           notify_chat_id: notifyChatId ? parseInt(notifyChatId) : null,
+          auto_accept_known: autoAcceptKnown,
         }
       });
       setHasLocalChanges(false);
