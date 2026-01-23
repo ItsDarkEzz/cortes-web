@@ -23,7 +23,7 @@ import { Loader2, Network, Search, Pencil, History, MessageSquarePlus, RotateCcw
 
 export default function MemoryPage() {
   const { data: chatsData, isLoading: isLoadingChats } = useBotChats({ limit: 100 });
-  const chats = chatsData?.chats;
+  const chats = chatsData?.chats?.filter((chat) => chat.chat_type === 'group' || chat.chat_type === 'supergroup');
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
 
   return (
