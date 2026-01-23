@@ -27,6 +27,34 @@ export interface GraphResponse {
   edges: GraphEdge[];
 }
 
+export interface EmbeddingPoint {
+  id: string;
+  source_type: string;
+  source_id: string;
+  text_content: string;
+  metadata?: Record<string, any>;
+  x: number;
+  y: number;
+  z: number;
+}
+
+export interface Embeddings3DResponse {
+  items: EmbeddingPoint[];
+}
+
+export interface EmbeddingSearchItem {
+  embedding_id: string;
+  source_type: string;
+  source_id: string;
+  similarity: number;
+  text_content: string;
+  metadata?: Record<string, any>;
+}
+
+export interface EmbeddingSearchResponse {
+  results: EmbeddingSearchItem[];
+}
+
 export interface EntityCreateRequest {
   name: string;
   type: string;
@@ -92,6 +120,23 @@ export interface ChangeLogResponse {
 export const memoryApi = {
   getGraph: (chatId: string) => {
     return apiClient.get<GraphResponse>(`/memory/graph/${chatId}`);
+  },
+
+  getEmbeddings3D: (chatId: string, params?: { source_type?: string; limit?: number }) => {
+    const qs = new URLSearchParams();
+    if (params?.source_type) qs.set('source_type', params.source_type);
+    if (params?.limit !== undefined) qs.set('limit', String(params.limit));
+    const q = qs.toString();
+    return apiClient.get<Embeddings3DResponse>(`/memory/embeddings/${chatId}${q ? `?${q}` : ''}`);
+  },
+
+  searchEmbeddings: (chatId: string, params: { q: string; source_type?: string; limit?: number; threshold?: number }) => {
+    const qs = new URLSearchParams();
+    qs.set('q', params.q);
+    if (params.source_type) qs.set('source_type', params.source_type);
+    if (params.limit !== undefined) qs.set('limit', String(params.limit));
+    if (params.threshold !== undefined) qs.set('threshold', String(params.threshold));
+    return apiClient.get<EmbeddingSearchResponse>(`/memory/embeddings/search/${chatId}?${qs.toString()}`);
   },
 
   createEntity: (chatId: string, data: EntityCreateRequest) => {

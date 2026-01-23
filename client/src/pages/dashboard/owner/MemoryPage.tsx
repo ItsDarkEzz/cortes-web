@@ -6,6 +6,8 @@ import {
   memoryApi,
   EpochSummaryItem,
   MemorySearchItem,
+  EmbeddingPoint,
+  EmbeddingSearchItem,
 } from '@/lib/api/memory';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -62,6 +64,7 @@ export default function MemoryPage() {
             <TabsTrigger value="timeline">Эпохи</TabsTrigger>
             <TabsTrigger value="rag">Поиск (RAG)</TabsTrigger>
             <TabsTrigger value="graph">3D Граф</TabsTrigger>
+            <TabsTrigger value="vectors">Вектора</TabsTrigger>
           </TabsList>
 
           <TabsContent value="timeline">
@@ -72,6 +75,9 @@ export default function MemoryPage() {
           </TabsContent>
           <TabsContent value="graph">
             <GraphTab chatId={selectedChatId} />
+          </TabsContent>
+          <TabsContent value="vectors">
+            <VectorsTab chatId={selectedChatId} />
           </TabsContent>
         </Tabs>
       )}
@@ -640,6 +646,231 @@ function GraphTab({ chatId }: { chatId: string }) {
               linkDirectionalParticleSpeed={(d: any) => Math.max(0.002, (d.weight || 1) * 0.002)}
               enableNodeDrag={false}
             />
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function VectorsTab({ chatId }: { chatId: string }) {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const graphRef = useRef<any>(null);
+  const [size, setSize] = useState({ width: 0, height: 0 });
+  const [sourceFilter, setSourceFilter] = useState<string>('all');
+  const [limit, setLimit] = useState<number>(1200);
+  const [scale, setScale] = useState<number>(900);
+  const [jitter, setJitter] = useState<number>(16);
+  const [q, setQ] = useState('');
+  const [submitted, setSubmitted] = useState('');
+
+  useEffect(() => {
+    const measure = () => {
+      const el = containerRef.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const next = { width: Math.max(0, Math.floor(rect.width)), height: Math.max(0, Math.floor(rect.height)) };
+      setSize((prev) => (prev.width === next.width && prev.height === next.height ? prev : next));
+    };
+
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, [chatId]);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => el.removeEventListener('wheel', onWheel as any);
+  }, []);
+
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ['memory-embeddings-3d', chatId, sourceFilter, limit],
+    queryFn: () => memoryApi.getEmbeddings3D(chatId, { source_type: sourceFilter === 'all' ? '' : sourceFilter, limit }),
+    enabled: !!chatId,
+  });
+
+  const items = data?.items || [];
+  const effectiveSourceType = sourceFilter === 'all' ? '' : sourceFilter;
+
+  const searchQuery = useQuery({
+    queryKey: ['memory-embeddings-search', chatId, submitted, effectiveSourceType],
+    queryFn: () => memoryApi.searchEmbeddings(chatId, { q: submitted, source_type: effectiveSourceType, limit: 50, threshold: 0.35 }),
+    enabled: submitted.trim().length >= 2,
+  });
+
+  const searchResults: EmbeddingSearchItem[] = (searchQuery.data?.results || []) as any;
+  const sourceTypes = useMemo(() => {
+    const s = new Set<string>();
+    items.forEach(p => s.add(p.source_type));
+    return Array.from(s).sort();
+  }, [items]);
+
+  const hash01 = (input: string) => {
+    let h = 2166136261;
+    for (let i = 0; i < input.length; i += 1) {
+      h ^= input.charCodeAt(i);
+      h = Math.imul(h, 16777619);
+    }
+    return ((h >>> 0) % 10000) / 10000;
+  };
+
+  const colorFor = (key: string) => {
+    const hue = Math.floor(hash01(key) * 360);
+    return `hsl(${hue}, 70%, 60%)`;
+  };
+
+  const graphData = useMemo(() => {
+    const nodes = items.map((p: EmbeddingPoint) => ({
+      id: p.id,
+      source_type: p.source_type,
+      source_id: p.source_id,
+      text: p.text_content,
+      x: p.x * scale + (hash01(`${p.id}:x`) - 0.5) * jitter,
+      y: p.y * scale + (hash01(`${p.id}:y`) - 0.5) * jitter,
+      z: p.z * scale + (hash01(`${p.id}:z`) - 0.5) * jitter,
+    }));
+    return { nodes, links: [] as any[] };
+  }, [items, scale, jitter]);
+
+  const nodeById = useMemo(() => {
+    const m = new Map<string, any>();
+    graphData.nodes.forEach((n: any) => m.set(String(n.id), n));
+    return m;
+  }, [graphData]);
+
+  const highlightIds = useMemo(() => {
+    if (submitted.trim().length < 2) return new Set<string>();
+    const ids = new Set<string>();
+    searchResults.forEach(r => ids.add(String(r.embedding_id)));
+    return ids;
+  }, [submitted, searchResults]);
+  return (
+    <Card className="h-[720px] overflow-hidden">
+      <CardHeader className="flex flex-row items-center justify-between">
+        <CardTitle className="flex items-center gap-2">
+          <Network className="h-5 w-5" />
+          Вектора (3D)
+        </CardTitle>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={() => graphRef.current?.zoomToFit?.(400, 20)} disabled={isLoading}>
+            <RotateCcw className="h-4 w-4 mr-2" />
+            Сброс
+          </Button>
+          <Select value={sourceFilter} onValueChange={setSourceFilter}>
+            <SelectTrigger className="w-[200px] h-8">
+              <SelectValue placeholder="Тип" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Все типы</SelectItem>
+              {sourceTypes.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+            </SelectContent>
+          </Select>
+          <Input
+            className="w-[220px] h-8"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Семантический поиск по векторам"
+          />
+          <Button size="sm" onClick={() => setSubmitted(q.trim())} disabled={q.trim().length < 2}>
+            <Search className="h-4 w-4 mr-2" />
+            Найти
+          </Button>
+          <Input
+            className="w-[120px] h-8"
+            value={String(limit)}
+            onChange={(e) => setLimit(Math.max(50, Math.min(500000, Number(e.target.value || 0))))}
+            placeholder="limit"
+          />
+          <Badge variant="outline">{graphData.nodes.length} точек</Badge>
+          <Input
+            className="w-[110px] h-8"
+            value={String(scale)}
+            onChange={(e) => setScale(Math.max(1, Math.min(2000, Number(e.target.value || 0))))}
+            placeholder="scale"
+          />
+          <Input
+            className="w-[110px] h-8"
+            value={String(jitter)}
+            onChange={(e) => setJitter(Math.max(0, Math.min(2000, Number(e.target.value || 0))))}
+            placeholder="jitter"
+          />
+        </div>
+      </CardHeader>
+      <CardContent className="p-0 h-[640px]">
+        <div ref={containerRef} className="h-full w-full touch-none relative">
+          {isLoading && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            </div>
+          )}
+          {!isLoading && isError && (
+            <div className="absolute inset-0 flex items-center justify-center text-muted-foreground border-t">
+              Ошибка загрузки векторов: {String((error as any)?.message || error || 'unknown')}
+            </div>
+          )}
+          {!isLoading && !isError && graphData.nodes.length === 0 && (
+            <div className="absolute inset-0 flex items-center justify-center text-muted-foreground border-t">
+              Нет векторов для отображения
+            </div>
+          )}
+          {!isLoading && !isError && graphData.nodes.length > 0 && size.width > 0 && size.height > 0 && (
+            <ForceGraph3D
+              ref={graphRef}
+              width={size.width}
+              height={size.height}
+              graphData={graphData as any}
+              backgroundColor="rgba(0,0,0,0)"
+              nodeLabel={(n: any) => `${n.source_type}\n${String(n.text || '').slice(0, 160)}`}
+              nodeColor={(n: any) => {
+                const id = String(n.id);
+                if (highlightIds.size > 0 && !highlightIds.has(id)) return 'rgba(150,150,150,0.10)';
+                return colorFor(String(n.source_type));
+              }}
+              nodeRelSize={2.6}
+              enableNodeDrag={false}
+              warmupTicks={0}
+              cooldownTicks={0}
+            />
+          )}
+          {submitted.trim().length >= 2 && (
+            <div className="absolute bottom-0 left-0 right-0 border-t bg-background/90 backdrop-blur p-3 max-h-[220px] overflow-auto">
+              <div className="text-xs text-muted-foreground mb-2">
+                Найдено: {searchQuery.isLoading ? '...' : searchResults.length}
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {(searchResults || []).slice(0, 8).map(r => (
+                  <Button
+                    key={r.embedding_id}
+                    variant="outline"
+                    className="h-auto justify-start whitespace-normal text-left"
+                    onClick={() => {
+                      const n = nodeById.get(String(r.embedding_id));
+                      if (!n) return;
+                      graphRef.current?.cameraPosition?.(
+                        { x: n.x, y: n.y, z: n.z + 260 },
+                        { x: n.x, y: n.y, z: n.z },
+                        650
+                      );
+                    }}
+                  >
+                    <div className="space-y-1">
+                      <div className="text-xs text-muted-foreground">
+                        {r.source_type} • sim {r.similarity.toFixed(2)}
+                      </div>
+                      <div className="text-sm">
+                        {String(r.text_content || '').slice(0, 140)}
+                      </div>
+                    </div>
+                  </Button>
+                ))}
+              </div>
+            </div>
           )}
         </div>
       </CardContent>
