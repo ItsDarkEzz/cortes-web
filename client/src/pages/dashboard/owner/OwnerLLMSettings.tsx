@@ -37,7 +37,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 
-type ChainKey = "response" | "response_fast" | "observer" | "background";
+type ChainKey = "response" | "response_fast" | "vision_response" | "observer" | "background";
 
 // Локальный тип с ID для drag-n-drop
 interface ChainItem extends LLMModelEntry {
@@ -454,6 +454,7 @@ export default function OwnerLLMSettings() {
   const [chains, setChains] = useState<Record<ChainKey, ChainItem[]>>({
     response: [],
     response_fast: [],
+    vision_response: [],
     observer: [],
     background: [],
   });
@@ -464,6 +465,7 @@ export default function OwnerLLMSettings() {
       setChains({
         response: data.response.map(x => ({ ...x, id: generateId() })),
         response_fast: (data.response_fast ?? []).map(x => ({ ...x, id: generateId() })),
+        vision_response: (data.vision_response ?? []).map(x => ({ ...x, id: generateId() })),
         observer: data.observer.map(x => ({ ...x, id: generateId() })),
         background: data.background.map(x => ({ ...x, id: generateId() })),
       });
@@ -476,6 +478,7 @@ export default function OwnerLLMSettings() {
       const cleanChains = {
         response: chains.response.map(({ id, ...rest }) => rest),
         response_fast: chains.response_fast.map(({ id, ...rest }) => rest),
+        vision_response: chains.vision_response.map(({ id, ...rest }) => rest),
         observer: chains.observer.map(({ id, ...rest }) => rest),
         background: chains.background.map(({ id, ...rest }) => rest),
       };
@@ -492,6 +495,7 @@ export default function OwnerLLMSettings() {
       setChains({
         response: data.response.map(x => ({ ...x, id: generateId() })),
         response_fast: (data.response_fast ?? []).map(x => ({ ...x, id: generateId() })),
+        vision_response: (data.vision_response ?? []).map(x => ({ ...x, id: generateId() })),
         observer: data.observer.map(x => ({ ...x, id: generateId() })),
         background: data.background.map(x => ({ ...x, id: generateId() })),
       });
@@ -565,6 +569,13 @@ export default function OwnerLLMSettings() {
                     <Badge variant="secondary" className="ml-2">{chains.response_fast.length}</Badge>
                   </TabsTrigger>
                   <TabsTrigger 
+                    value="vision_response" 
+                    className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none h-full px-0"
+                  >
+                    Vision
+                    <Badge variant="secondary" className="ml-2">{chains.vision_response.length}</Badge>
+                  </TabsTrigger>
+                  <TabsTrigger 
                     value="observer" 
                     className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none h-full px-0"
                   >
@@ -623,6 +634,29 @@ export default function OwnerLLMSettings() {
                     <ChainList
                       items={chains.response_fast}
                       onChange={(items) => setChains(c => ({ ...c, response_fast: items }))}
+                    />
+                  </div>
+                </ScrollArea>
+              </TabsContent>
+
+              <TabsContent value="vision_response" className="flex-1 min-h-0 mt-0">
+                <ScrollArea className="h-full">
+                  <div className="p-6 max-w-4xl mx-auto">
+                    <div className="flex items-center justify-between mb-4">
+                      <div>
+                        <h2 className="text-lg font-semibold">Vision ответы</h2>
+                        <p className="text-sm text-muted-foreground">
+                          Цепочка для мультимодальных ответов по изображениям и другим visual-вложениям. Здесь можно задавать свои provider + model, как и для быстрых ответов.
+                        </p>
+                      </div>
+                      <Button size="sm" onClick={() => addItem('vision_response')}>
+                        <Plus className="w-4 h-4 mr-2" />
+                        Добавить
+                      </Button>
+                    </div>
+                    <ChainList
+                      items={chains.vision_response}
+                      onChange={(items) => setChains(c => ({ ...c, vision_response: items }))}
                     />
                   </div>
                 </ScrollArea>

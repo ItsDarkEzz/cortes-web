@@ -167,6 +167,7 @@ export interface LLMModelEntry {
 export interface LLMChainsResponse {
   response: LLMModelEntry[];
   response_fast: LLMModelEntry[];
+  vision_response: LLMModelEntry[];
   observer: LLMModelEntry[];
   background: LLMModelEntry[];
 }
