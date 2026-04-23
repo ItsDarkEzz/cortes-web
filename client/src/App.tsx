@@ -16,7 +16,10 @@ import LandingPage from "@/pages/LandingPage";
 // Lazy load other pages
 const About = lazy(() => import("@/pages/About"));
 const Documentation = lazy(() => import("@/pages/Documentation"));
+const Commands = lazy(() => import("@/pages/Commands"));
+const RPGuide = lazy(() => import("@/pages/RPGuide"));
 const Support = lazy(() => import("@/pages/Support"));
+const RecapSharePage = lazy(() => import("@/pages/RecapSharePage"));
 const Token = lazy(() => import("@/pages/Token"));
 const Banners = lazy(() => import("@/pages/Banners"));
 const BannerExport = lazy(() => import("@/pages/Banners").then(m => ({ default: m.BannerExport })));
@@ -57,7 +60,10 @@ function Router() {
                     <Route path="/" component={LandingPage} />
                     <Route path="/about" component={About} />
                     <Route path="/documentation" component={Documentation} />
+                    <Route path="/commands" component={Commands} />
+                    <Route path="/rp" component={RPGuide} />
                     <Route path="/support" component={Support} />
+                    <Route path="/recap/:shareCode" component={RecapSharePage} />
                     <Route path="/token" component={Token} />
                     <Route path="/banners" component={Banners} />
                     <Route path="/banner-export" component={BannerExport} />

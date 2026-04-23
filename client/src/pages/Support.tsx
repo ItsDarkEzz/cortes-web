@@ -1,177 +1,181 @@
-import { motion } from "framer-motion";
-import { Link } from "wouter";
 import { Footer } from "@/components/cortes/Footer";
-import { ArrowLeft, MessageCircle, Mail, Zap, ExternalLink } from "lucide-react";
+import { ArrowUpRight, Mail, MessageCircle, Zap } from "lucide-react";
+import {
+  Reveal,
+  SectionKicker,
+  SiteFrame,
+  SiteHeader,
+  supportEmail,
+  telegramAddUrl,
+  telegramChannelUrl,
+  telegramSupportUrl,
+} from "@/components/cortes/SiteChrome";
 import { useSEO } from "@/hooks/use-seo";
 
+const channels = [
+  {
+    icon: MessageCircle,
+    label: "Telegram support",
+    value: "@ItsDarkEz",
+    description: "Самый быстрый путь, если нужно решить проблему по реальной настройке или поведению бота.",
+    href: telegramSupportUrl,
+    color: "text-[#3B82F6]",
+    bg: "bg-[#3B82F6]/10",
+    border: "border-[#3B82F6]/20",
+  },
+  {
+    icon: Mail,
+    label: "Email",
+    value: supportEmail,
+    description: "Подходит для длинных вопросов, баг-репортов и всего, что удобнее описывать письмом.",
+    href: `mailto:${supportEmail}`,
+    color: "text-[#8B5CF6]",
+    bg: "bg-[#8B5CF6]/10",
+    border: "border-[#8B5CF6]/20",
+  },
+  {
+    icon: Zap,
+    label: "Channel",
+    value: "@TheCortes",
+    description: "Новости продукта, обновления и новые сценарии использования без лишнего шума.",
+    href: telegramChannelUrl,
+    color: "text-white",
+    bg: "bg-white/10",
+    border: "border-white/20",
+  },
+];
+
+const faq = [
+  {
+    question: "Как добавить Cortes в мой чат?",
+    answer:
+      "Откройте установочную ссылку, выберите группу и выдайте боту нужные права. Дальше уже стоит зайти в дашборд и сразу зафиксировать режим поведения.",
+  },
+  {
+    question: "Почему Cortes иногда молчит?",
+    answer:
+      "Потому что это часть дизайна продукта. Если вопрос не требует памяти, аналитики или участия бота, промолчать часто полезнее ещё одной автоматической реплики.",
+  },
+  {
+    question: "Безопасны ли мои данные?",
+    answer:
+      "Cortes хранит часть истории и извлечённых фактов, чтобы держать контекст разговора. Вы в любой момент можете удалить бота, и логика перестанет собирать контекст.",
+  },
+  {
+    question: "Где следить за обновлениями?",
+    answer:
+      "Быстрее всего — в Telegram-канале проекта. Там появляются продуктовые апдейты, сценарии использования и заметки по развитию.",
+  },
+];
+
 export default function Support() {
-    useSEO({
-        title: "Поддержка — Помощь с AI-ботом для Telegram",
-        description: "Нужна помощь с Cortes? Telegram-поддержка с ответом в течение часа, email, FAQ. Присоединяйтесь к сообществу пользователей.",
-        canonical: "/support",
-    });
+  useSEO({
+    title: "Поддержка — Помощь с AI-ботом для Telegram",
+    description:
+      "Нужна помощь с Cortes? Telegram-поддержка с ответом в течение часа, email, FAQ. Присоединяйтесь к сообществу пользователей.",
+    canonical: "/support",
+  });
 
-    return (
-        <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
+  return (
+    <SiteFrame>
+      <SiteHeader />
 
-            {/* Header */}
-            <div className="border-b border-white/10 py-6 sticky top-0 z-50 bg-black/50 backdrop-blur-md">
-                <div className="max-w-6xl mx-auto px-4">
-                    <Link href="/">
-                        <a className="flex items-center gap-2 text-muted-foreground hover:text-white transition-colors w-fit">
-                            <ArrowLeft size={20} />
-                            <span>Назад на главную</span>
-                        </a>
-                    </Link>
-                </div>
-            </div>
+      <main>
+        {/* HERO SECTION */}
+        <section className="relative pt-40 pb-20 cortes-shell overflow-hidden">
+          {/* Violet orbital glow */}
+          <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-[#8B5CF6]/10 rounded-full blur-[120px] pointer-events-none -translate-y-1/2 -translate-x-1/3" />
+          
+          <Reveal>
+            <SectionKicker>Поддержка</SectionKicker>
+            <h1 className="mt-8 max-w-5xl font-cortes-display text-[clamp(3.5rem,7vw,6.5rem)] leading-[0.85] tracking-[-0.06em] text-white">
+              Прямые каналы. <br />
+              <span className="text-white/40">Без тикетов.</span>
+            </h1>
+            <p className="mt-10 max-w-2xl text-xl leading-relaxed text-white/50">
+              Поддержка устроена так же, как и сам продукт: без лишнего шума. Если вопрос надо решить быстро — пишите в Telegram. Нужно больше контекста — пишите на email.
+            </p>
+          </Reveal>
+        </section>
 
-            {/* Hero Section */}
-            <section className="py-20 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-transparent to-transparent pointer-events-none" />
+        {/* CHANNELS GRID */}
+        <section className="cortes-shell py-20 mt-10">
+          <div className="grid md:grid-cols-3 gap-6">
+            {channels.map((channel, index) => (
+              <Reveal
+                key={channel.label}
+                delay={index * 0.1}
+                className="group relative"
+              >
+                <a
+                  href={channel.href}
+                  target={channel.href.startsWith("mailto:") ? undefined : "_blank"}
+                  rel={channel.href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
+                  className="block h-full rounded-3xl border border-white/5 bg-white/[0.02] p-8 transition-colors hover:bg-white/[0.04] overflow-hidden"
+                >
+                  <div className={`inline-flex h-12 w-12 items-center justify-center rounded-2xl ${channel.bg} border ${channel.border} mb-8`}>
+                    <channel.icon className={`h-5 w-5 ${channel.color}`} />
+                  </div>
+                  
+                  <div className="font-cortes-mono text-[10px] uppercase tracking-[0.2em] text-[#8B5CF6] mb-4">
+                    {channel.label}
+                  </div>
+                  <h3 className="text-2xl font-cortes-display text-white mb-4">
+                    {channel.value}
+                  </h3>
+                  <p className="text-sm leading-relaxed text-white/50 mb-8">
+                    {channel.description}
+                  </p>
 
-                <div className="max-w-6xl mx-auto px-4 relative z-10 text-center">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
-                    >
-                        <h1 className="text-6xl md:text-7xl font-bold mb-6">
-                            Нужна <span className="text-gradient-primary">помощь?</span>
-                        </h1>
-                        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                            Мы здесь, чтобы помочь. Выберите удобный способ связи.
-                        </p>
-                    </motion.div>
-                </div>
-            </section>
+                  <div className="mt-auto inline-flex items-center gap-2 font-cortes-mono text-[10px] uppercase tracking-[0.2em] text-white/40 group-hover:text-white transition-colors">
+                    Открыть
+                    <ArrowUpRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </div>
+                </a>
+              </Reveal>
+            ))}
+          </div>
+        </section>
 
-            {/* Support Channels */}
-            <section className="py-20 relative">
-                <div className="max-w-6xl mx-auto px-4">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* FAQ SECTION */}
+        <section className="cortes-shell py-20 mt-20 mb-40">
+          <div className="grid lg:grid-cols-[1fr_1.5fr] gap-12 items-start">
+             <Reveal className="lg:sticky lg:top-40">
+               <SectionKicker>Частые Вопросы</SectionKicker>
+               <h2 className="mt-6 font-cortes-display text-[clamp(2.5rem,4vw,3.5rem)] leading-[0.9] tracking-[-0.04em] text-white">
+                 База знаний.
+               </h2>
+               <p className="mt-6 text-lg leading-relaxed text-white/40">
+                 Ниже только самые частые ситуации. Всё, что связано с конкретным чатом, режимом или памятью, лучше сразу обсуждать напрямую.
+               </p>
+               
+               <a
+                 href={telegramSupportUrl}
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 className="mt-10 inline-flex h-14 items-center justify-center rounded-full bg-white px-8 font-cortes-mono text-[12px] uppercase tracking-[0.2em] text-black transition-transform hover:scale-105"
+               >
+                 Написать в Telegram
+               </a>
+             </Reveal>
 
-                        {/* Telegram */}
-                        <motion.a
-                            href="https://t.me/ItsDarkEz"
-                            target={"_blank"}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.1 }}
-                            className="p-8 rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 border border-blue-500/30 hover:border-blue-500/50 transition-all group hover:scale-105"
-                        >
-                            <div className="w-14 h-14 rounded-xl bg-blue-500/20 flex items-center justify-center text-blue-400 mb-6 group-hover:scale-110 transition-transform">
-                                <MessageCircle size={32} />
-                            </div>
-                            <h3 className="text-2xl font-bold text-white mb-3">Telegram</h3>
-                            <p className="text-muted-foreground mb-6">
-                                Пишите нам в чат поддержки. Ответ в течение часа.
-                            </p>
-                            <div className="flex items-center gap-2 text-blue-400 font-semibold group-hover:gap-3 transition-all">
-                                <span>Написать</span>
-                                <ExternalLink size={18} />
-                            </div>
-                        </motion.a>
+             <div className="grid gap-4">
+               {faq.map((item, index) => (
+                 <Reveal
+                   key={item.question}
+                   delay={index * 0.1}
+                   className="rounded-3xl border border-white/5 bg-gradient-to-b from-[#15110d] to-[#09090b] p-8 md:p-10"
+                 >
+                   <h3 className="font-cortes-display text-2xl text-white mb-4">{item.question}</h3>
+                   <p className="text-base leading-relaxed text-white/50">{item.answer}</p>
+                 </Reveal>
+               ))}
+             </div>
+           </div>
+        </section>
+      </main>
 
-                        {/* Email */}
-                        <motion.a
-                            href="mailto:support@thecortes.ru"
-                            target={"_blank"}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.2 }}
-                            className="p-8 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 hover:border-purple-500/50 transition-all group hover:scale-105"
-                        >
-                            <div className="w-14 h-14 rounded-xl bg-purple-500/20 flex items-center justify-center text-purple-400 mb-6 group-hover:scale-110 transition-transform">
-                                <Mail size={32} />
-                            </div>
-                            <h3 className="text-2xl font-bold text-white mb-3">Email</h3>
-                            <p className="text-muted-foreground mb-6">
-                                Отправьте нам письмо на поддержку. Ответим в течение 24 часов.
-                            </p>
-                            <div className="flex items-center gap-2 text-purple-400 font-semibold group-hover:gap-3 transition-all">
-                                <span>support@thecortes.ru</span>
-                                <ExternalLink size={18} />
-                            </div>
-                        </motion.a>
-
-                        {/* Community */}
-                        <motion.a
-                            href="https://t.me/TheCortesChat"
-                            target={"_blank"}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.3 }}
-                            className="p-8 rounded-2xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 border border-green-500/30 hover:border-green-500/50 transition-all group hover:scale-105"
-                        >
-                            <div className="w-14 h-14 rounded-xl bg-green-500/20 flex items-center justify-center text-green-400 mb-6 group-hover:scale-110 transition-transform">
-                                <Zap size={32} />
-                            </div>
-                            <h3 className="text-2xl font-bold text-white mb-3">Community</h3>
-                            <p className="text-muted-foreground mb-6">
-                                Присоединитесь к сообществу пользователей Cortes.
-                            </p>
-                            <div className="flex items-center gap-2 text-green-400 font-semibold group-hover:gap-3 transition-all">
-                                <span>Перейти</span>
-                                <ExternalLink size={18} />
-                            </div>
-                        </motion.a>
-
-                    </div>
-                </div>
-            </section>
-
-            {/* FAQ Quick Links */}
-            <section className="py-20 relative">
-                <div className="max-w-4xl mx-auto px-4">
-                    <h2 className="text-4xl font-bold text-center mb-12">
-                        Популярные вопросы
-                    </h2>
-
-                    <div className="space-y-4">
-                        {[
-                            { q: "Как добавить Cortes в мой чат?", a: "Нажмите кнопку внизу на главной странице, выберите группу и дайте боту необходимые права." },
-                            { q: "Cortes не отвечает на мои сообщения", a: "Это нормально! Cortes отвечает только когда это нужно. Попробуйте обратиться к нему по имени @Cortes." },
-                            { q: "Безопасны ли мои данные?", a: "Да, полностью. Все сообщения шифруются, и мы не храним историю ваших чатов." },
-                            { q: "Когда выйдет режим модератора?", a: "Находится в разработке. Следите за обновлениями в нашем сообществе." }
-                        ].map((item, idx) => (
-                            <motion.div
-                                key={idx}
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: 0.4 + idx * 0.05 }}
-                                className="p-6 rounded-xl bg-white/[0.03] border border-white/10 hover:border-primary/20 transition-all"
-                            >
-                                <h3 className="text-white font-semibold mb-2">{item.q}</h3>
-                                <p className="text-muted-foreground text-sm">{item.a}</p>
-                            </motion.div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* Status */}
-            <section className="py-20 relative">
-                <div className="max-w-4xl mx-auto px-4 text-center">
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.8 }}
-                        className="p-8 rounded-2xl bg-green-500/10 border border-green-500/30"
-                    >
-                        <div className="flex items-center justify-center gap-2 mb-4">
-                            <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
-                            <span className="font-mono text-green-400">SYSTEM STATUS: ONLINE</span>
-                        </div>
-                        <p className="text-muted-foreground">
-                            Все системы работают нормально. Время ответа: <span className="text-white font-semibold">&lt;50ms</span>
-                        </p>
-                    </motion.div>
-                </div>
-            </section>
-
-            <Footer />
-        </div>
-
-    );
+      <Footer />
+    </SiteFrame>
+  );
 }

@@ -5,6 +5,7 @@ import {
 import { useAuth } from "@/hooks/use-auth";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { TranslationKey } from "@/lib/i18n";
+import { SiteFrame } from "@/components/cortes/SiteChrome";
 
 const API_BASE = import.meta.env.VITE_API_URL || '';
 
@@ -29,57 +30,63 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const isOwner = OWNER_ID && user?.id === OWNER_ID;
 
   return (
-    <div className="h-screen bg-background text-foreground flex flex-col overflow-hidden">
+    <SiteFrame className="flex flex-col">
       {/* Header */}
-      <header className="shrink-0 border-b border-white/10 bg-background/80 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <Link href="/" className="font-display font-bold text-lg tracking-tight text-gradient">
-              CORTES
+      <header className="sticky top-0 z-40 shrink-0 border-b border-white/5 bg-[#09090b]/80 backdrop-blur-[32px]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 min-h-16 flex items-center justify-between gap-3">
+          
+          <div className="flex items-center gap-6 min-w-0">
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-2 group cursor-pointer no-underline">
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-black font-cortes-display text-[14px] leading-none transition-transform group-hover:rotate-12 hover:scale-105">
+                C
+              </span>
+              <span className="hidden sm:block font-cortes-display text-[1rem] leading-none tracking-[-0.04em] text-white">
+                Cortes
+              </span>
             </Link>
-            <nav className="hidden md:flex items-center gap-1">
-              {navItems.map((item) => (
-                <Link key={item.labelKey} href={item.href}>
-                  <button className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                    location === item.href
-                      ? "bg-primary text-white" 
-                      : "text-muted-foreground hover:text-foreground hover:bg-white/5"
-                  }`}>
-                    <item.icon size={16} />
-                    {t(item.labelKey)}
-                  </button>
-                </Link>
-              ))}
+
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center gap-2 min-w-0 font-cortes-mono text-[10px] uppercase tracking-[0.2em]">
+              {navItems.map((item) => {
+                const isActive = location === item.href;
+                return (
+                  <Link key={item.labelKey} href={item.href}>
+                    <button className={`flex items-center gap-2 px-4 py-2 rounded-full transition-colors ${
+                      isActive
+                        ? "bg-white/10 text-white border border-white/10" 
+                        : "text-white/40 hover:text-white hover:bg-white/5 border border-transparent"
+                    }`}>
+                      <item.icon size={12} className={isActive ? "text-[#3B82F6]" : ""} />
+                      {t(item.labelKey)}
+                    </button>
+                  </Link>
+                );
+              })}
+              
               {/* Owner Panel - только для владельца */}
               {isOwner && (
                 <Link href="/dashboard/owner">
-                  <button className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                  <button className={`flex items-center gap-2 px-4 py-2 rounded-full transition-colors ${
                     location.startsWith("/dashboard/owner")
-                      ? "bg-red-500 text-white" 
-                      : "text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                      ? "bg-red-500/20 text-red-500 border border-red-500/30" 
+                      : "text-red-500/60 hover:text-red-400 hover:bg-red-500/10 border border-transparent"
                   }`}>
-                    <Shield size={16} />
+                    <Shield size={12} />
                     Owner
                   </button>
                 </Link>
               )}
             </nav>
           </div>
-          <div className="flex items-center gap-3">
-            {/* Notifications - временно отключено
-            <Link href="/dashboard/notifications">
-              <Button variant="ghost" size="icon" className="relative h-8 w-8">
-                <Bell size={18} />
-                <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-primary rounded-full text-[9px] flex items-center justify-center">3</span>
-              </Button>
-            </Link>
-            */}
+
+          <div className="flex items-center gap-4 shrink-0">
             <Link href="/dashboard/profile">
-              <div className="flex items-center gap-2 pl-3 border-l border-white/10 cursor-pointer hover:opacity-80 transition-opacity">
+              <div className="flex items-center gap-3 pl-4 border-l border-white/10 cursor-pointer group transition-opacity">
                 <div className="text-right hidden sm:block">
-                  <p className="text-sm font-medium leading-none">{displayName}</p>
+                  <p className="font-cortes-mono text-[10px] uppercase tracking-[0.2em] text-white/50 group-hover:text-white transition-colors">{displayName}</p>
                 </div>
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-sm overflow-hidden">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#3B82F6] to-[#8B5CF6] flex items-center justify-center text-sm overflow-hidden ring-2 ring-white/10 group-hover:ring-white/30 transition-all">
                   {avatarUrl ? (
                     <img 
                       src={avatarUrl} 
@@ -90,7 +97,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                       }}
                     />
                   ) : (
-                    <span>👤</span>
+                    <span>C</span>
                   )}
                 </div>
               </div>
@@ -99,39 +106,40 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
         </div>
       </header>
 
-      {/* Main */}
-      <main className="flex-1 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 py-4 h-full flex flex-col">
+      {/* Main Content Area */}
+      <main className="flex-1 relative z-10 cortes-shell">
+        <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 pt-8 pb-32 md:pb-12 h-full min-h-0 flex flex-col relative">
           {children}
         </div>
       </main>
 
-      {/* Mobile nav */}
-      <nav className="md:hidden shrink-0 bg-background/90 backdrop-blur-xl border-t border-white/10 px-2 py-1">
-        <div className="flex justify-around">
-          {navItems.map((item) => (
-            <Link key={item.labelKey} href={item.href}>
-              <button className={`flex flex-col items-center gap-0.5 p-2 ${
-                location === item.href ? "text-primary" : "text-muted-foreground"
-              }`}>
-                <item.icon size={18} />
-                <span className="text-[10px]">{t(item.labelKey)}</span>
-              </button>
-            </Link>
-          ))}
+      {/* Mobile nav (Floating Dock Style) */}
+      <nav className="md:hidden fixed bottom-6 inset-x-4 z-50 flex justify-center pointer-events-none">
+        <div className="pointer-events-auto flex items-center justify-around gap-2 w-full max-w-sm rounded-full border border-white/10 bg-[#09090b]/80 px-2 py-2 backdrop-blur-[32px] shadow-[0_20px_40px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.1)]">
+          {navItems.map((item) => {
+            const isActive = location === item.href;
+            return (
+              <Link key={item.labelKey} href={item.href}>
+                <button className={`flex flex-col items-center justify-center w-14 h-12 rounded-2xl transition-all ${
+                  isActive ? "bg-white/10 text-white shadow-inner" : "text-white/40 hover:text-white"
+                }`}>
+                  <item.icon size={16} className={isActive ? "text-[#3B82F6]" : ""} />
+                </button>
+              </Link>
+            );
+          })}
           {/* Owner Panel - мобильная версия */}
           {isOwner && (
             <Link href="/dashboard/owner">
-              <button className={`flex flex-col items-center gap-0.5 p-2 ${
-                location.startsWith("/dashboard/owner") ? "text-red-400" : "text-red-400/60"
+              <button className={`flex flex-col items-center justify-center w-14 h-12 rounded-2xl transition-all ${
+                location.startsWith("/dashboard/owner") ? "bg-red-500/20 text-red-500 shadow-inner border border-red-500/20" : "text-red-500/50 hover:text-red-400"
               }`}>
-                <Shield size={18} />
-                <span className="text-[10px]">Owner</span>
+                <Shield size={16} />
               </button>
             </Link>
           )}
         </div>
       </nav>
-    </div>
+    </SiteFrame>
   );
 }

@@ -89,8 +89,8 @@ export function BotSettingsTab({ chatId }: BotSettingsTabProps) {
             </div>
 
             <div>
-              <label className="text-sm text-muted-foreground mb-3 block">Характер бота</label>
-              <div className="grid grid-cols-2 gap-2">
+              <label className="font-cortes-mono text-[10px] uppercase tracking-[0.2em] text-white/40 mb-3 block">Характер бота</label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {[
                   { key: "friendly", label: "😊 Дружелюбный" },
                   { key: "business", label: "💼 Деловой" },
@@ -99,10 +99,10 @@ export function BotSettingsTab({ chatId }: BotSettingsTabProps) {
                 ].map((p) => (
                   <button
                     key={p.key}
-                    className={`px-4 py-3 rounded-xl font-medium transition-colors ${personality === p.key ? "bg-primary text-white" : "bg-white/5 text-muted-foreground hover:text-white hover:bg-white/10"}`}
+                    className={`px-4 py-3 rounded-2xl font-cortes-mono text-[10px] uppercase tracking-[0.1em] transition-all min-w-0 flex items-center justify-center border ${personality === p.key ? "bg-white text-black border-transparent shadow-[0_0_15px_rgba(255,255,255,0.2)]" : "bg-white/[0.02] text-white border-white/5 hover:border-white/10 hover:bg-white/[0.04]"}`}
                     onClick={() => { setPersonality(p.key); markChanged(); }}
                   >
-                    {p.label}
+                    <span className="truncate">{p.label}</span>
                   </button>
                 ))}
               </div>
@@ -215,10 +215,10 @@ export function BotSettingsTab({ chatId }: BotSettingsTabProps) {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="fixed bottom-6 right-6 z-50"
+          className="fixed bottom-28 md:bottom-6 right-4 md:right-6 z-50"
         >
-          <Button onClick={handleSave} disabled={isSaving} size="lg" className="bg-green-500 hover:bg-green-600 shadow-lg shadow-green-500/25">
-            {isSaving ? <Loader2 size={18} className="mr-2 animate-spin" /> : <Check size={18} className="mr-2" />}
+          <Button onClick={handleSave} disabled={isSaving} size="lg" className="bg-[#3B82F6] hover:bg-[#2563EB] shadow-[0_0_20px_rgba(59,130,246,0.4)] text-white font-cortes-mono text-[10px] uppercase tracking-[0.1em] rounded-2xl h-12 px-6">
+            {isSaving ? <Loader2 size={16} className="mr-2 animate-spin" /> : <Check size={16} className="mr-2" />}
             Сохранить изменения
           </Button>
         </motion.div>

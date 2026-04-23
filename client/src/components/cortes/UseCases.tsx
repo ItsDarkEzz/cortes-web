@@ -1,6 +1,6 @@
 import { motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
-import { BarChart3, TrendingUp, Users } from "lucide-react";
+import { Brain, Shield, Users } from "lucide-react";
 
 export function UseCases() {
   const [activeTab, setActiveTab] = useState("impact");
@@ -9,53 +9,53 @@ export function UseCases() {
 
   const impactStats = [
     {
-      metric: "Активность",
-      value: "+320%",
-      description: "Среднее увеличение сообщений в чате",
-      icon: TrendingUp
+      metric: "Для живых чатов",
+      value: "Память",
+      description: "Локальные мемы, договорённости и прошлые темы не теряются через полчаса.",
+      icon: Brain
     },
     {
-      metric: "Удержание",
-      value: "4.5x",
-      description: "Участники остаются в чате дольше",
+      metric: "Для команд",
+      value: "Summary",
+      description: "Удобно быстро вернуться в контекст после пропущенного обсуждения.",
       icon: Users
     },
     {
-      metric: "Модерация",
-      value: "-85%",
-      description: "Вручную модерируемого контента",
-      icon: BarChart3
+      metric: "Для админов",
+      value: "Control",
+      description: "Режимы, фильтры, moderation и Dashboard помогают держать чат под контролем.",
+      icon: Shield
     }
   ];
 
   const cases = [
     {
-      name: "DevCommunity",
-      size: "12K участников",
-      problem: "Спам и токсичность в общем чате",
-      solution: "Фильтры стоп-слов и команды модерации для быстрой реакции",
-      result: "85% меньше модерации вручную, чистый чат"
+      name: "Дружеские чаты",
+      size: "20-80 участников",
+      problem: "Хочется живого бота с характером, но без ощущения, что он влезает в каждую шутку.",
+      solution: "Observer-поведение + память о людях и локальных мемах.",
+      result: "Бот становится частью атмосферы, а не ещё одним источником шума."
     },
     {
-      name: "ArtCollective",
-      size: "3.8K участников",
-      problem: "Репосты из каналов засоряют чат",
-      solution: "Автоматическая блокировка репостов из нежелательных каналов",
-      result: "Чистый контент, +45% активности участников"
+      name: "Dev / AI комьюнити",
+      size: "50-300 участников",
+      problem: "Идеи, ссылки и решения быстро тонут в потоке обсуждений.",
+      solution: "Summary, recall и память о прошлых ветках разговора.",
+      result: "Проще вернуться в спор или быстро вспомнить, кто что предлагал."
     },
     {
-      name: "GamingGuild",
-      size: "8.2K участников",
-      problem: "Нужен умный помощник для организации",
-      solution: "Cortes отвечает на вопросы и помогает с координацией",
-      result: "Быстрые ответы 24/7, +180% вовлеченность"
+      name: "Учебные группы",
+      size: "30-200 участников",
+      problem: "Одни и те же вопросы по материалам повторяются снова и снова.",
+      solution: "Бот помнит контекст, документы и может подхватить повторяющийся вопрос.",
+      result: "Меньше повторов и проще держать общий контекст без ручных пересказов."
     },
     {
-      name: "TechStartup",
-      size: "2.1K участников",
-      problem: "Арабский спам и нежелательный контент",
-      solution: "Фильтры символов, ссылок и NSFW контента",
-      result: "Полностью чистый чат, 0 спама"
+      name: "Команды и стартапы",
+      size: "10-100 участников",
+      problem: "Решения и обещания теряются, если кто-то не успел читать чат весь день.",
+      solution: "Память о договорённостях, recap и админский контроль через Dashboard.",
+      result: "Меньше потерь контекста и меньше ручной рутины у владельца чата."
     }
   ];
 
@@ -64,12 +64,12 @@ export function UseCases() {
       <div className="max-w-6xl mx-auto px-4">
         
         <div className="text-center mb-20">
-          <span className="text-primary text-sm font-mono uppercase tracking-widest">Результаты</span>
+          <span className="text-primary text-sm font-mono uppercase tracking-widest">Сценарии</span>
           <h2 className="text-5xl md:text-6xl font-bold mt-4">
-            Результаты использования <span className="text-gradient-primary">Cortes</span>
+            Где особенно хорошо заходит <span className="text-gradient-primary">Cortes</span>
           </h2>
           <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">
-            Реальные метрики и кейсы Telegram-чатов с AI-ботом Cortes
+            Не для всех подряд, а для тех чатов, где важны контекст, память и аккуратное поведение бота
           </p>
         </div>
 
@@ -84,7 +84,7 @@ export function UseCases() {
                   : "bg-transparent text-muted-foreground border-white/10 hover:border-white/20"
               }`}
             >
-              {tab === "impact" ? "Метрики" : "Кейсы"}
+              {tab === "impact" ? "Кому подходит" : "Примеры"}
             </button>
           ))}
         </div>
@@ -154,7 +154,7 @@ export function UseCases() {
 
         <div className="mt-16 p-8 rounded-2xl bg-gradient-to-r from-primary/20 to-purple-500/20 border border-primary/30 text-center">
           <p className="text-lg text-muted-foreground">
-            Ваш чат может получить такие же результаты. <span className="text-white font-semibold">Начните бесплатно сегодня.</span>
+            Если у тебя активная группа и обычные боты уже раздражают, <span className="text-white font-semibold">Cortes стоит попробовать первым.</span>
           </p>
         </div>
       </div>

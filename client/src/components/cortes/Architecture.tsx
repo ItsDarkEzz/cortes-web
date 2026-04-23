@@ -1,6 +1,6 @@
 import { motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
-import { Zap, Sparkles, Shield, Clock, CheckCircle, Brain, TrendingUp } from "lucide-react";
+import { Zap, Sparkles, Shield, Brain, MessageCircleMore, Mic, LayoutDashboard } from "lucide-react";
 
 export function Architecture() {
   const [activeLayer, setActiveLayer] = useState(1);
@@ -13,28 +13,28 @@ export function Architecture() {
   const layers = [
     {
       id: 1,
-      name: "Фильтр",
-      title: "Анализ потока",
-      description: "Легкие нейросети сканируют каждое сообщение в реальном времени. Определяют триггеры, контекст и релевантность без задержек.",
-      details: ["Скорость: <300ms на сообщение", "Точность: 95.2%", "Модель: GPT-5.2 + Fast Tokenizer"],
+      name: "Observer",
+      title: "Решение: отвечать или молчать",
+      description: "Cortes сначала наблюдает за потоком сообщений, проверяет контекст, режим чата и полезность своего ответа. Поэтому он не лезет в каждую реплику.",
+      details: ["Смотрит на упоминания, reply и тон диалога", "Уважает режимы normal / passive / muted / admins", "Не плодит шум ради самого ответа"],
       IconComponent: Zap,
       color: "from-cyan-500 to-blue-500"
     },
     {
       id: 2,
-      name: "Персона",
-      title: "Генерация ответа",
-      description: "Основная LLM формирует ответ, сохраняя характер, юмор и контекст. Помнит историю чата и адаптируется к культуре группы.",
-      details: ["Модель: GPT-5.2 с адаптацией", "Контекст: 20000+ токенов", "Качество: 95.7% релевантности"],
+      name: "Memory",
+      title: "Память о чате и людях",
+      description: "Бот держит в памяти не только последние реплики, но и устойчивые факты, summary, связи между участниками и темы, которые всплывали раньше.",
+      details: ["Помнит факты, preferences и прошлые обсуждения", "Вытаскивает recall не только из ближайшего окна сообщений", "Помогает быстро вернуться в контекст спора или решения"],
       IconComponent: Sparkles,
       color: "from-violet-500 to-purple-500"
     },
     {
       id: 3,
-      name: "Модерация",
-      title: "Контроль чата",
-      description: "Команды модерации и автоматические фильтры. Баны, муты, предупреждения через команды. Фильтры стоп-слов и нежелательного контента.",
-      details: ["Команды: ban, mute, kick, warn", "Фильтры: стоп-слова, каналы, медиа", "Блокировка: символы, ссылки, NSFW"],
+      name: "Actions",
+      title: "Ответы, медиа и контроль",
+      description: "Когда Cortes решает вмешаться, он умеет отвечать по тексту, голосовым, фото и PDF, а для админов даёт moderation и Dashboard.",
+      details: ["Понимает голосовые, изображения, скриншоты и PDF", "Есть moderation, фильтры и настройки поведения", "Админы управляют ботом через web Dashboard"],
       IconComponent: Shield,
       color: "from-rose-500 to-pink-500"
     }
@@ -52,7 +52,7 @@ export function Architecture() {
             Как работает AI-бот <span className="text-gradient-primary">Cortes</span>
           </h2>
           <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">
-            Трёхуровневая архитектура на базе нейросетей для мгновенного анализа и генерации ответов
+            Три слоя, которые и делают его полезным: observer-логика, память и управляемые действия
           </p>
         </div>
 
@@ -139,10 +139,10 @@ export function Architecture() {
 
         <div ref={metricsRef} className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { label: "Задержка", value: "<300ms", IconComponent: Clock },
-            { label: "Точность", value: "95.2%", IconComponent: CheckCircle },
-            { label: "Контекст", value: "2000+", IconComponent: Brain },
-            { label: "Uptime", value: "99.99%", IconComponent: TrendingUp }
+            { label: "Observer", value: "Не спамит", IconComponent: MessageCircleMore },
+            { label: "Память", value: "Long-term", IconComponent: Brain },
+            { label: "Медиа", value: "Voice + PDF", IconComponent: Mic },
+            { label: "Контроль", value: "Dashboard", IconComponent: LayoutDashboard }
           ].map((metric, i) => (
             <motion.div
               key={i}

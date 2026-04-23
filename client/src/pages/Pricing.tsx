@@ -26,7 +26,7 @@ export default function Pricing() {
                 "Поддержка сообщества"
             ],
             cta: "Добавить бесплатно",
-            href: "https://t.me/thecortesbot?startgroup=add",
+            href: "https://t.me/thecortesbot?startgroup=add&admin=delete_messages+restrict_members+invite_users+pin_messages+manage_topics+manage_chat",
             popular: false,
             icon: Zap,
             gradient: "from-blue-500/20 to-cyan-500/20",
@@ -46,7 +46,7 @@ export default function Pricing() {
                 "Ранний доступ к обновлениям"
             ],
             cta: "Получить Beta-доступ",
-            href: "https://t.me/thecortesbot?startgroup=add",
+            href: "https://t.me/thecortesbot?startgroup=add&admin=delete_messages+restrict_members+invite_users+pin_messages+manage_topics+manage_chat",
             popular: true,
             icon: Sparkles,
             gradient: "from-primary/20 to-purple-500/20",

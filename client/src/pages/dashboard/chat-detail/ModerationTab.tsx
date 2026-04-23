@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { 
   Ban, VolumeX, UserMinus, AlertCircle, Flag, Lock, 
-  AlertTriangle, MessageSquare, Check, Loader2 
+  AlertTriangle, MessageSquare, Check, Loader2, Sparkles
 } from "lucide-react";
 import { Section, SectionTitle, CommandCard } from "./components";
 import { useChatSettings, useUpdateChatSettings } from "@/hooks/use-chats";
@@ -47,6 +47,13 @@ export function ModerationTab({ chatId }: ModerationTabProps) {
   const [kickUsageMessage, setKickUsageMessage] = useState("");
   const [warnUsageMessage, setWarnUsageMessage] = useState("");
   const [reportUsageMessage, setReportUsageMessage] = useState("");
+  const [rpEnabled, setRpEnabled] = useState(true);
+  const [adultEnabled, setAdultEnabled] = useState(false);
+  const [antiRaidEnabled, setAntiRaidEnabled] = useState(false);
+  const [captchaEnabled, setCaptchaEnabled] = useState(false);
+  const [joinThreshold, setJoinThreshold] = useState(4);
+  const [joinWindowSeconds, setJoinWindowSeconds] = useState(60);
+  const [captchaTimeoutSeconds, setCaptchaTimeoutSeconds] = useState(120);
   const [hasChanges, setHasChanges] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -81,6 +88,13 @@ export function ModerationTab({ chatId }: ModerationTabProps) {
       setKickUsageMessage(m.kick_usage_message || "❌ Укажите пользователя: /kick @username [причина]");
       setWarnUsageMessage(m.warn_usage_message || "❌ Укажите пользователя: /warn @username [причина]");
       setReportUsageMessage(m.report_usage_message || "❌ Ответьте на сообщение нарушителя командой /report [причина]");
+      setAntiRaidEnabled(settings.anti_raid?.enabled ?? false);
+      setCaptchaEnabled(settings.anti_raid?.captcha_enabled ?? false);
+      setJoinThreshold(settings.anti_raid?.join_threshold ?? 4);
+      setJoinWindowSeconds(settings.anti_raid?.join_window_seconds ?? 60);
+      setCaptchaTimeoutSeconds(settings.anti_raid?.captcha_timeout_seconds ?? 120);
+      setRpEnabled(settings.entertainment?.rp_enabled ?? true);
+      setAdultEnabled(settings.entertainment?.adult_enabled ?? false);
       setHasChanges(false);
     }
   }, [settings]);
@@ -118,6 +132,17 @@ export function ModerationTab({ chatId }: ModerationTabProps) {
           kick_usage_message: kickUsageMessage,
           warn_usage_message: warnUsageMessage,
           report_usage_message: reportUsageMessage,
+        },
+        entertainment: {
+          rp_enabled: rpEnabled,
+          adult_enabled: adultEnabled,
+        },
+        anti_raid: {
+          enabled: antiRaidEnabled,
+          captcha_enabled: captchaEnabled,
+          join_threshold: joinThreshold,
+          join_window_seconds: joinWindowSeconds,
+          captcha_timeout_seconds: captchaTimeoutSeconds,
         }
       });
       setHasChanges(false);
@@ -182,18 +207,18 @@ export function ModerationTab({ chatId }: ModerationTabProps) {
         <Section>
           <SectionTitle icon={AlertTriangle} title="Система предупреждений" color="text-yellow-400" />
           <div className="space-y-4">
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
                 <label className="text-xs text-muted-foreground mb-1 block">Предов для бана</label>
-                <input type="number" value={warningsForBan} onChange={(e) => { const val = Math.min(10, Math.max(1, parseInt(e.target.value) || 3)); setWarningsForBan(val); markChanged(); }} className="w-full h-10 px-3 rounded-xl bg-white/5 border border-white/10 text-center" min={1} max={10} />
+                <input type="number" value={warningsForBan} onChange={(e) => { const val = Math.min(10, Math.max(1, parseInt(e.target.value) || 3)); setWarningsForBan(val); markChanged(); }} className="w-full h-10 px-3 rounded-xl bg-white/5 border border-white/10 text-center min-w-0" min={1} max={10} />
               </div>
               <div>
                 <label className="text-xs text-muted-foreground mb-1 block">Дней бана</label>
-                <input type="number" value={banDurationDays} onChange={(e) => { setBanDurationDays(parseInt(e.target.value) || 30); markChanged(); }} className="w-full h-10 px-3 rounded-xl bg-white/5 border border-white/10 text-center" min={1} max={365} />
+                <input type="number" value={banDurationDays} onChange={(e) => { setBanDurationDays(parseInt(e.target.value) || 30); markChanged(); }} className="w-full h-10 px-3 rounded-xl bg-white/5 border border-white/10 text-center min-w-0" min={1} max={365} />
               </div>
               <div>
                 <label className="text-xs text-muted-foreground mb-1 block">Сгорание предов</label>
-                <input type="number" value={warningExpireDays} onChange={(e) => { setWarningExpireDays(parseInt(e.target.value) || 14); markChanged(); }} className="w-full h-10 px-3 rounded-xl bg-white/5 border border-white/10 text-center" min={1} max={365} />
+                <input type="number" value={warningExpireDays} onChange={(e) => { setWarningExpireDays(parseInt(e.target.value) || 14); markChanged(); }} className="w-full h-10 px-3 rounded-xl bg-white/5 border border-white/10 text-center min-w-0" min={1} max={365} />
               </div>
             </div>
             <div>
@@ -205,6 +230,103 @@ export function ModerationTab({ chatId }: ModerationTabProps) {
       </div>
 
       <div className="grid lg:grid-cols-2 gap-5">
+        <Section>
+          <SectionTitle icon={Sparkles} title="RP-команды" color="text-pink-400" />
+          <div className="space-y-4">
+            <div className="p-4 rounded-xl bg-pink-500/10 border border-pink-500/20">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <div className="font-medium">Включить RP-команды</div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    Разрешает /rp, plain-text RP и dot-команды в этом чате.
+                  </div>
+                </div>
+                <button onClick={() => { setRpEnabled(!rpEnabled); markChanged(); }} className={`w-11 h-6 rounded-full transition-colors flex items-center px-0.5 shrink-0 ${rpEnabled ? "bg-pink-500" : "bg-white/20"}`}>
+                  <div className={`w-5 h-5 rounded-full bg-white shadow-md transition-transform ${rpEnabled ? "translate-x-5" : "translate-x-0"}`} />
+                </button>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <div className="font-medium">Включить 18+ раздел</div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    По умолчанию выключен. Открывает только взрослую категорию RP.
+                  </div>
+                </div>
+                <button onClick={() => { setAdultEnabled(!adultEnabled); markChanged(); }} className={`w-11 h-6 rounded-full transition-colors flex items-center px-0.5 shrink-0 ${adultEnabled ? "bg-red-500" : "bg-white/20"}`}>
+                  <div className={`w-5 h-5 rounded-full bg-white shadow-md transition-transform ${adultEnabled ? "translate-x-5" : "translate-x-0"}`} />
+                </button>
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
+              <div className="text-xs text-muted-foreground leading-relaxed space-y-1">
+                <div>Команда в чате: <code className="font-mono text-white">/rpconfig</code></div>
+                <div>Быстрое включение: <code className="font-mono text-white">/rpconfig on</code></div>
+                <div>18+ отдельно: <code className="font-mono text-white">/rpconfig adult on</code></div>
+              </div>
+            </div>
+          </div>
+        </Section>
+
+        <Section>
+          <SectionTitle icon={AlertTriangle} title="Anti-raid" color="text-cyan-400" />
+          <div className="space-y-4">
+            <div className="p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/20">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <div className="font-medium">Включить защиту от рейда</div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    Следит за всплеском входов и может запускать капчу для новых участников.
+                  </div>
+                </div>
+                <button onClick={() => { setAntiRaidEnabled(!antiRaidEnabled); markChanged(); }} className={`w-11 h-6 rounded-full transition-colors flex items-center px-0.5 shrink-0 ${antiRaidEnabled ? "bg-cyan-500" : "bg-white/20"}`}>
+                  <div className={`w-5 h-5 rounded-full bg-white shadow-md transition-transform ${antiRaidEnabled ? "translate-x-5" : "translate-x-0"}`} />
+                </button>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-xl bg-blue-500/10 border border-blue-500/20">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <div className="font-medium">Капча для новых участников</div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    Во время рейда новичок сможет писать только после решения примера.
+                  </div>
+                </div>
+                <button onClick={() => { setCaptchaEnabled(!captchaEnabled); markChanged(); }} className={`w-11 h-6 rounded-full transition-colors flex items-center px-0.5 shrink-0 ${captchaEnabled ? "bg-blue-500" : "bg-white/20"}`}>
+                  <div className={`w-5 h-5 rounded-full bg-white shadow-md transition-transform ${captchaEnabled ? "translate-x-5" : "translate-x-0"}`} />
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label className="text-xs text-muted-foreground mb-1 block">Порог входов</label>
+                <input type="number" value={joinThreshold} onChange={(e) => { setJoinThreshold(Math.min(20, Math.max(2, parseInt(e.target.value) || 4))); markChanged(); }} className="w-full h-10 px-3 rounded-xl bg-white/5 border border-white/10 text-center min-w-0" min={2} max={20} />
+              </div>
+              <div>
+                <label className="text-xs text-muted-foreground mb-1 block">Окно, сек</label>
+                <input type="number" value={joinWindowSeconds} onChange={(e) => { setJoinWindowSeconds(Math.min(600, Math.max(15, parseInt(e.target.value) || 60))); markChanged(); }} className="w-full h-10 px-3 rounded-xl bg-white/5 border border-white/10 text-center min-w-0" min={15} max={600} />
+              </div>
+              <div>
+                <label className="text-xs text-muted-foreground mb-1 block">Таймаут капчи, сек</label>
+                <input type="number" value={captchaTimeoutSeconds} onChange={(e) => { setCaptchaTimeoutSeconds(Math.min(600, Math.max(30, parseInt(e.target.value) || 120))); markChanged(); }} className="w-full h-10 px-3 rounded-xl bg-white/5 border border-white/10 text-center min-w-0" min={30} max={600} />
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
+              <div className="text-xs text-muted-foreground leading-relaxed space-y-1">
+                <div>Команда в чате: <code className="font-mono text-white">/raidguard</code></div>
+                <div>Быстрое включение: <code className="font-mono text-white">/raidguard on</code></div>
+                <div>Капча: <code className="font-mono text-white">/raidguard captcha on</code></div>
+              </div>
+            </div>
+          </div>
+        </Section>
+
         <Section>
           <SectionTitle icon={AlertCircle} title="Сообщения об ошибках" color="text-red-400" />
           <div className="space-y-3">
@@ -254,9 +376,9 @@ export function ModerationTab({ chatId }: ModerationTabProps) {
       </div>
 
       {hasChanges && (
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="fixed bottom-6 right-6 z-50">
-          <Button onClick={handleSave} disabled={isSaving} size="lg" className="bg-green-500 hover:bg-green-600 shadow-lg shadow-green-500/25">
-            {isSaving ? <Loader2 size={18} className="mr-2 animate-spin" /> : <Check size={18} className="mr-2" />}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="fixed bottom-28 md:bottom-6 right-4 md:right-6 z-50">
+          <Button onClick={handleSave} disabled={isSaving} size="lg" className="bg-[#3B82F6] hover:bg-[#2563EB] shadow-[0_0_20px_rgba(59,130,246,0.4)] text-white font-cortes-mono text-[10px] uppercase tracking-[0.1em] rounded-2xl h-12 px-6">
+            {isSaving ? <Loader2 size={16} className="mr-2 animate-spin" /> : <Check size={16} className="mr-2" />}
             Сохранить изменения
           </Button>
         </motion.div>

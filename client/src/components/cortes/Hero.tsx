@@ -28,7 +28,7 @@ export function Hero() {
           <span className="block text-gradient">CORTES</span>
           <span
               className="block text-5xl md:text-7xl mt-2 font-bold font-sans bg-gradient-to-r from-primary via-purple-400 to-secondary bg-clip-text text-transparent">
-            Интеллект. Харизма.
+            Память. Такт. Контекст.
           </span>
         </motion.h1>
 
@@ -38,7 +38,7 @@ export function Hero() {
             transition={{duration: 0.8, delay: 0.3}}
             className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed font-light"
         >
-          Интеллектуальный бот на <span className="text-white font-medium">GPT-5.2</span>, который понимает контекст, помогает с модерацией и не тратит ваше время впустую.
+          AI-бот для Telegram-групп, который <span className="text-white font-medium">помнит контекст</span>, отвечает только когда уместно и не превращается в шум.
         </motion.p>
         
         <motion.p
@@ -47,7 +47,7 @@ export function Hero() {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="text-sm text-muted-foreground/70"
         >
-          Бесплатный AI-бот • Команды модерации • Фильтры контента • Мгновенные ответы
+          Память о чате • Observer-логика • Голосовые, фото и PDF • Dashboard для админов
         </motion.p>
 
         <motion.div 
@@ -57,7 +57,7 @@ export function Hero() {
           className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8"
         >
           <a
-            href="https://t.me/thecortesbot?startgroup=add"
+            href="https://t.me/thecortesbot?startgroup=add&admin=delete_messages+restrict_members+invite_users+pin_messages+manage_topics+manage_chat"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -70,9 +70,9 @@ export function Hero() {
               Добавить в чат
             </Button>
           </a>
-          <a href="/dashboard">
+          <a href="#live-demo">
             <Button variant="outline" size="lg" className="h-14 px-8 rounded-full border-white/20 bg-transparent hover:bg-white/5 hover:border-white/40 text-lg transition-all">
-              Войти в Dashboard <ArrowRight className="ml-2 h-5 w-5" />
+              Посмотреть сценарии <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </a>
         </motion.div>

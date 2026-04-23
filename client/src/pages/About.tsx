@@ -1,208 +1,184 @@
-import { motion } from "framer-motion";
-import { Link } from "wouter";
 import { Footer } from "@/components/cortes/Footer";
-import { ArrowLeft, Zap, Shield, Brain, Filter, Sparkles, Image, Volume2 } from "lucide-react";
+import {
+  Reveal,
+  SectionKicker,
+  SiteFrame,
+  SiteHeader,
+  telegramAddUrl,
+} from "@/components/cortes/SiteChrome";
 import { useSEO } from "@/hooks/use-seo";
 
+const principles = [
+  "Не отвечать без пользы, даже если ответить технически можно.",
+  "Держать контекст дольше, чем живёт текущая ветка разговора.",
+  "Оставлять владельцу чата контроль через дашборд, а не магию без рычагов.",
+];
+
+const chapters = [
+  {
+    index: "01",
+    title: "Откуда появилась идея",
+    body: [
+      "Cortes начался с очень простой мысли: большинство Telegram-ботов либо слишком тупые, либо слишком навязчивые. Они умеют реагировать, но не умеют чувствовать границу между полезным участием и лишним шумом.",
+      "Поэтому продукт строился не как “ассистент на все случаи”, а как участник группы, который сначала понимает, нужен ли он здесь вообще.",
+    ],
+  },
+  {
+    index: "02",
+    title: "Что здесь принципиально",
+    body: [
+      "Память нужна не ради красивого слова long-term memory. Она нужна, чтобы не терять людей, решения, локальные мемы, повторяющиеся вопросы и нити разговоров, которые обычно исчезают в потоке.",
+      "Observer-логика нужна не ради необычности, а чтобы бот не ломал культуру чата. Хороший ответ важен, но ещё важнее умение промолчать.",
+    ],
+  },
+  {
+    index: "03",
+    title: "Как проект строится",
+    body: [
+      "Cortes разрабатывается как цельный продукт: бот, память, модерация, дашборд и сайт должны говорить на одном языке. Это не набор случайных фич, а одна система с ясной дисциплиной.",
+      "Проект ведётся одним разработчиком, поэтому каждая итерация проходит через один и тот же фильтр: станет ли продукт чище, умнее и спокойнее, чем был до этого.",
+    ],
+  },
+];
+
+const roadmap = [
+  "Более глубокая память по людям, ролям и повторяющимся темам.",
+  "Расширенные сценарии ручного контроля для групп с высокой чувствительностью к шуму.",
+  "Более интуитивные панели в дашборде для настройки поведения и логов.",
+  "Новые мультимодальные сценарии, где голос, изображения и PDF действительно полезны.",
+];
+
 export default function About() {
-    useSEO({
-        title: "О проекте — История создания умного AI-бота на GPT-5.2",
-        description: "Узнайте историю создания Cortes — AI-бота для Telegram на GPT-5.2. Принципы работы, система модерации, миссия проекта и планы развития от разработчика Шахриёра.",
-        canonical: "/about",
-    });
+  useSEO({
+    title: "О проекте Cortes — AI-бот для Telegram-групп",
+    description:
+      "История Cortes, принципы продукта, память о чате, observer-поведение, moderation и планы развития проекта от разработчика Шахриёра.",
+    canonical: "/about",
+  });
 
-    return (
-        <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
+  return (
+    <SiteFrame>
+      <SiteHeader />
 
-            {/* Header */}
-            <div className="border-b border-white/10 py-6 sticky top-0 z-50 bg-black/50 backdrop-blur-md">
-                <div className="max-w-6xl mx-auto px-4">
-                    <Link href="/">
-                        <a className="flex items-center gap-2 text-muted-foreground hover:text-white transition-colors w-fit">
-                            <ArrowLeft size={20} />
-                            <span>Назад на главную</span>
-                        </a>
-                    </Link>
-                </div>
-            </div>
+      <main>
+        {/* HERO SECTION */}
+        <section className="relative pt-40 pb-20 cortes-shell overflow-hidden">
+          {/* Deep blue orbital glow */}
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#3B82F6]/10 rounded-full blur-[120px] pointer-events-none -translate-y-1/2 translate-x-1/3" />
+          
+          <Reveal>
+            <SectionKicker>О проекте</SectionKicker>
+            <h1 className="mt-8 max-w-5xl font-cortes-display text-[clamp(3.5rem,7vw,6.5rem)] leading-[0.85] tracking-[-0.06em] text-white">
+              Не генератор шума, <br />
+              <span className="text-white/40">а участник чата.</span>
+            </h1>
+            <p className="mt-10 max-w-2xl text-xl leading-relaxed text-white/50">
+              Это продукт про чувство меры: бот должен помнить больше, чем обычный собеседник, но вмешиваться реже, чем большинство существующих AI-ассистентов.
+            </p>
+          </Reveal>
+        </section>
 
-            {/* Hero */}
-            <section className="py-20 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-transparent to-transparent pointer-events-none" />
+        {/* THESIS & PRINCIPLES BENTO */}
+        <section className="cortes-shell py-20 mt-10">
+          <div className="grid lg:grid-cols-[1fr_1.5fr] gap-12 items-start">
+            <Reveal className="lg:sticky lg:top-40">
+              <SectionKicker>Тезис</SectionKicker>
+              <h2 className="mt-6 font-cortes-display text-[clamp(2.5rem,4vw,3.5rem)] leading-[0.9] tracking-[-0.04em] text-white">
+                Понимать границы до того, как демонстрировать интеллект.
+              </h2>
+              <p className="mt-6 text-lg leading-relaxed text-white/40">
+                У Cortes нет цели отвечать чаще всех. Его цель — быть полезным именно тогда,
+                когда людям нужен recall, summary, модерация или аккуратное вмешательство в
+                сложный разговор.
+              </p>
+            </Reveal>
 
-                <div className="max-w-6xl mx-auto px-4 relative z-10 text-center">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
-                    >
-                        <h1 className="text-6xl md:text-7xl font-bold mb-6">
-                            Кто такой <span className="text-gradient-primary">Cortes?</span>
-                        </h1>
-                        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                            Умный Telegram-бот на GPT-5.2, который понимает контекст и помогает с модерацией. Он не спамит, не раздражает, а просто делает ваш чат лучше.
-                        </p>
-                    </motion.div>
-                </div>
-            </section>
-
-            {/* Story */}
-            <section className="py-20 relative">
-                <div className="max-w-4xl mx-auto px-4">
-                    <div className="space-y-12">
-
-                        {/* Origin */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.1 }}
-                            className="p-8 rounded-2xl bg-white/[0.03] border border-white/10"
-                        >
-                            <h2 className="text-3xl font-bold text-white mb-4">История Cortes</h2>
-                            <p className="text-muted-foreground text-lg leading-relaxed mb-4">
-                                Всё началось в 2024 году, когда я, Шахриёр, впервые задумался о том, каким должен быть идеальный Telegram-бот. Идея была простой: создать ИИ на базе GPT-5.2, который не просто отвечает на команды, а реально понимает контекст и становится частью сообщества.
-                            </p>
-                            <p className="text-muted-foreground text-lg leading-relaxed mb-4">
-                                Месяцы разработки, экспериментов и итераций привели к тому, что вы видите сейчас. Cortes — это не просто бот. Это помощник с памятью, который учится у вашего чата, адаптируется к его культуре и предоставляет инструменты модерации для администраторов.
-                            </p>
-                        </motion.div>
-
-                        {/* Philosophy */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.2 }}
-                            className="p-8 rounded-2xl bg-white/[0.03] border border-white/10"
-                        >
-                            <h2 className="text-3xl font-bold text-white mb-6">Принципы</h2>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div>
-                                    <div className="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center text-primary mb-4">
-                                        <Brain size={24} />
-                                    </div>
-                                    <h3 className="text-white font-bold mb-2">Интеллект</h3>
-                                    <p className="text-muted-foreground text-sm">Понимает контекст, культуру чата, историю разговора. Не просто отвечает.</p>
-                                </div>
-                                <div>
-                                    <div className="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center text-primary mb-4">
-                                        <Shield size={24} />
-                                    </div>
-                                    <h3 className="text-white font-bold mb-2">Приватность</h3>
-                                    <p className="text-muted-foreground text-sm">Все данные зашифрованы. История ваших чатов никому не доступна.</p>
-                                </div>
-                                <div>
-                                    <div className="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center text-primary mb-4">
-                                        <Zap size={24} />
-                                    </div>
-                                    <h3 className="text-white font-bold mb-2">Скорость</h3>
-                                    <p className="text-muted-foreground text-sm">Анализирует сообщения за миллисекунды. Мгновенные ответы.</p>
-                                </div>
-                            </div>
-                        </motion.div>
-
-                        {/* Mission */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.3 }}
-                            className="p-8 rounded-2xl bg-gradient-to-br from-primary/20 to-purple-500/20 border border-primary/30"
-                        >
-                            <h2 className="text-3xl font-bold text-white mb-4">Моя миссия</h2>
-                            <p className="text-muted-foreground text-lg leading-relaxed">
-                                Сделать каждый Telegram-чат более живым, интересным и безопасным. Не заменить людей — дополнить их. Cortes — это помощник, который знает, когда говорить, а когда молчать, и предоставляет инструменты для поддержания порядка в чате.
-                            </p>
-                        </motion.div>
-
-                        {/* Developer */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.4 }}
-                            className="p-8 rounded-2xl bg-white/[0.03] border border-white/10"
-                        >
-                            <h2 className="text-3xl font-bold text-white mb-4">Один разработчик</h2>
-                            <p className="text-muted-foreground text-lg leading-relaxed mb-4">
-                                Cortes разрабатывается одним человеком — мной, Шахриёром. Я занимаюсь всем: от архитектуры системы до дизайна интерфейса, от обучения моделей до поддержки пользователей.
-                            </p>
-                            <p className="text-muted-foreground text-lg leading-relaxed">
-                                Это означает, что каждая строка кода, каждое решение — это результат тщательного анализа и глубокой заботы о качестве. Cortes — это мой проект, мой дом, и я хочу, чтобы он был идеальным.
-                            </p>
-                        </motion.div>
-
-                        {/* Roadmap */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.5 }}
-                            className="p-8 rounded-2xl bg-gradient-to-br from-primary/20 to-purple-500/20 border border-primary/30"
-                        >
-                            <h2 className="text-3xl font-bold text-white mb-6">Что дальше?</h2>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div className="flex gap-4">
-                                    <div className="w-10 h-10 rounded-lg bg-primary/30 flex items-center justify-center text-primary flex-shrink-0">
-                                        <Filter size={20} />
-                                    </div>
-                                    <div>
-                                        <h3 className="text-white font-semibold mb-1">Расширенные фильтры</h3>
-                                        <p className="text-muted-foreground text-sm">Больше опций для контроля контента</p>
-                                    </div>
-                                </div>
-
-                                <div className="flex gap-4">
-                                    <div className="w-10 h-10 rounded-lg bg-primary/30 flex items-center justify-center text-primary flex-shrink-0">
-                                        <Sparkles size={20} />
-                                    </div>
-                                    <div>
-                                        <h3 className="text-white font-semibold mb-1">Улучшенная память</h3>
-                                        <p className="text-muted-foreground text-sm">Более глубокое понимание контекста</p>
-                                    </div>
-                                </div>
-
-                                <div className="flex gap-4">
-                                    <div className="w-10 h-10 rounded-lg bg-primary/30 flex items-center justify-center text-primary flex-shrink-0">
-                                        <Image size={20} />
-                                    </div>
-                                    <div>
-                                        <h3 className="text-white font-semibold mb-1">Генерация изображений</h3>
-                                        <p className="text-muted-foreground text-sm">Cortes создаст арт по описанию</p>
-                                    </div>
-                                </div>
-
-                                <div className="flex gap-4">
-                                    <div className="w-10 h-10 rounded-lg bg-primary/30 flex items-center justify-center text-primary flex-shrink-0">
-                                        <Volume2 size={20} />
-                                    </div>
-                                    <div>
-                                        <h3 className="text-white font-semibold mb-1">Голосовые ответы</h3>
-                                        <p className="text-muted-foreground text-sm">Cortes сможет говорить в голосовых чатах</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </motion.div>
-
-                    </div>
-                </div>
-            </section>
-
-            {/* CTA */}
-            <section className="py-20 relative text-center">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5 }}
+            <div className="grid gap-4">
+              {principles.map((principle, index) => (
+                <Reveal
+                  key={index}
+                  delay={index * 0.1}
+                  className="rounded-3xl border border-white/5 bg-white/[0.02] p-8 flex flex-col sm:flex-row gap-6 items-start group transition-colors hover:bg-white/[0.04]"
                 >
-                    <h2 className="text-4xl font-bold text-white mb-4">
-                        Готовы встретить Cortes?
-                    </h2>
-                    <Link href="/">
-                        <a className="inline-block px-8 py-4 bg-white text-black rounded-full font-bold hover:bg-white/90 transition-all no-underline">
-                            Вернуться на главную
-                        </a>
-                    </Link>
-                </motion.div>
-            </section>
+                  <div className="font-cortes-mono text-[10px] uppercase tracking-[0.2em] text-[#8B5CF6] shrink-0 mt-1">
+                    0{index + 1}
+                  </div>
+                  <p className="text-lg leading-relaxed text-white/80 group-hover:text-white transition-colors">
+                    {principle}
+                  </p>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
 
-            <Footer />
-        </div>
-    );
+        {/* CHAPTERS */}
+        <section className="cortes-shell py-20 mt-20">
+          <div className="grid gap-4">
+            {chapters.map((chapter, index) => (
+              <Reveal
+                key={chapter.title}
+                delay={index * 0.1}
+                className="rounded-3xl border border-white/5 bg-gradient-to-b from-[#15110d] to-[#09090b] p-8 md:p-12 relative overflow-hidden"
+              >
+                {/* Decorative fade at the bottom of each card */}
+                <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
+                
+                <div className="grid lg:grid-cols-[120px_1fr_1.2fr] gap-8 lg:gap-12 relative z-10">
+                  <div className="font-cortes-display text-6xl leading-none tracking-[-0.08em] text-[#3B82F6]/50">
+                    {chapter.index}
+                  </div>
+
+                  <h3 className="text-3xl leading-tight text-white md:text-4xl font-cortes-display tracking-tight">
+                    {chapter.title}
+                  </h3>
+
+                  <div className="space-y-6 text-lg leading-relaxed text-white/50">
+                    {chapter.body.map((paragraph, i) => (
+                      <p key={i}>{paragraph}</p>
+                    ))}
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        {/* ROADMAP */}
+        <section className="cortes-shell py-20 mt-20 mb-40">
+          <div className="grid lg:grid-cols-[1fr_1.5fr] gap-12 items-start">
+            <Reveal className="lg:sticky lg:top-40">
+              <SectionKicker>Roadmap</SectionKicker>
+              <h2 className="mt-6 font-cortes-display text-[clamp(2.5rem,4vw,3.5rem)] leading-[0.9] tracking-[-0.04em] text-white">
+                Движение в сторону глубины, а не шума.
+              </h2>
+              <p className="mt-6 text-lg leading-relaxed text-white/40">
+                Дорожная карта Cortes не про бесконечное распухание интерфейса. Она про то,
+                чтобы память, логика наблюдателя и панели управления становились точнее и спокойнее.
+              </p>
+            </Reveal>
+
+            <div className="grid gap-4">
+              {roadmap.map((item, index) => (
+                <Reveal
+                  key={index}
+                  delay={index * 0.1}
+                  className="rounded-3xl border border-white/5 bg-white/[0.02] px-8 py-6 flex items-center gap-6 group"
+                >
+                  <div className="font-cortes-mono text-[10px] uppercase tracking-[0.2em] text-[#3B82F6] shrink-0">
+                    0{index + 1}
+                  </div>
+                  <p className="text-base leading-relaxed text-white/60 group-hover:text-white transition-colors">
+                    {item}
+                  </p>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <Footer />
+    </SiteFrame>
+  );
 }

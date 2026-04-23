@@ -5,24 +5,24 @@ import { useState } from "react";
 const scenarios = [
   {
     id: 1,
-    user: "Ребят, посоветуйте фильм на вечер, чтобы мозг отдохнул.",
-    analysis: ["Анализ контекста: Расслабление", "Триггер: Запрос рекомендации", "Тон: Дружелюбный/Лень"],
-    cortes: "«Отель Гранд Будапешт». Визуально безупречно, сюжет летит, мозг отдыхает, а глаза радуются. Не благодари.",
-    stats: { latency: "0.4s", confidence: "98%" }
+    user: "Cortes, подведи итоги последних 30 минут и скажи, о чём договорились.",
+    analysis: ["Сигнал: прямое обращение", "Задача: summary по недавнему контексту", "Решение: ответить и собрать суть"],
+    cortes: "За последние 30 минут обсуждали дедлайн лендинга, рефералку и тексты для /start. Предварительно договорились сначала добить onboarding и только потом лить трафик.",
+    stats: { decision: "Ответить", reason: "Есть явный запрос и нужен recall" }
   },
   {
     id: 2,
-    user: "Кортес, кто прав в споре про табы и пробелы?",
-    analysis: ["Анализ контекста: Холивар", "Триггер: Прямое обращение", "Тон: Провокация"],
-    cortes: "В 2025 году спорить об этом — моветон. Используйте Prettier и идите писать код, а не комментарии.",
-    stats: { latency: "0.3s", confidence: "99%" }
+    user: "Cortes, помнишь, кто предлагал вынести это в отдельный тред?",
+    analysis: ["Сигнал: запрос к памяти", "Нужен поиск по прошлому контексту", "Решение: ответить с recall"],
+    cortes: "Да, первым это предложил Илья, когда обсуждали перегруз общего чата. Потом Настя поддержала и предложила завести отдельный тред для багов.",
+    stats: { decision: "Ответить", reason: "Нужна память о чате" }
   },
   {
     id: 3,
     user: "Скиньте кто-нибудь презентацию с митапа, плиз.",
-    analysis: ["Анализ контекста: Рабочий запрос", "Релевантность: Низкая для AI", "Действие: Игнорировать"],
+    analysis: ["Сигнал: прямого обращения нет", "Полезность ответа: низкая", "Решение: остаться наблюдателем"],
     cortes: null,
-    stats: { latency: "0.1s", confidence: "100%" }
+    stats: { decision: "Промолчать", reason: "Людям лучше ответить самим" }
   }
 ];
 
@@ -31,11 +31,11 @@ export function ChatDemo() {
   const scenario = scenarios[activeScenario];
 
   return (
-    <section className="py-32 relative overflow-hidden">
+    <section id="live-demo" className="py-32 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4">Мышление <span className="text-gradient-primary">в реальном времени</span></h2>
-          <p className="text-muted-foreground">Посмотрите, как Cortes принимает решения: отвечать или молчать.</p>
+          <p className="text-muted-foreground">Посмотри, как Cortes выбирает: вмешаться, вспомнить контекст или просто не мешать людям.</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -124,8 +124,8 @@ export function ChatDemo() {
                       </div>
                       <p>{scenario.cortes}</p>
                       <div className="mt-3 pt-3 border-t border-white/10 flex gap-4 text-[10px] font-mono opacity-70">
-                        <span>LATENCY: {scenario.stats.latency}</span>
-                        <span>CONFIDENCE: {scenario.stats.confidence}</span>
+                        <span>DECISION: {scenario.stats.decision}</span>
+                        <span>WHY: {scenario.stats.reason}</span>
                       </div>
                     </div>
                   ) : (

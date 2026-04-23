@@ -64,6 +64,7 @@ export interface ChatDetails {
   rules?: string;
   members_count: number;
   created_at?: string;
+  bot_active?: boolean;
   stats: ChatStats;
 }
 
@@ -167,6 +168,17 @@ export interface ChatSettings {
       order: number;
     }>;
     auto_accept_known: boolean;
+  };
+  anti_raid: {
+    enabled: boolean;
+    captcha_enabled: boolean;
+    join_threshold: number;
+    join_window_seconds: number;
+    captcha_timeout_seconds: number;
+  };
+  entertainment: {
+    rp_enabled: boolean;
+    adult_enabled: boolean;
   };
 }
 

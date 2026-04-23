@@ -209,44 +209,44 @@ export function FiltersTab({ chatId }: FiltersTabProps) {
             ))}
           </div>
           <div className="flex gap-2 mb-3">
-            <input value={newWord} onChange={(e) => setNewWord(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && addStopWord()} placeholder="Слова через запятую..." className="flex-1 h-9 px-3 rounded-lg bg-white/5 border border-white/10 text-sm" />
-            <Button size="sm" onClick={addStopWord}><Plus size={14} /></Button>
+            <input value={newWord} onChange={(e) => setNewWord(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && addStopWord()} placeholder="Слова через запятую..." className="flex-1 min-w-0 h-9 px-3 rounded-lg bg-white/5 border border-white/10 text-sm" />
+            <Button size="sm" className="shrink-0" onClick={addStopWord}><Plus size={14} /></Button>
           </div>
-          <input value={stopWordMessage} onChange={(e) => { setStopWordMessage(e.target.value); markChanged(); }} placeholder="Сообщение при удалении" className="w-full h-9 px-3 rounded-lg bg-white/5 border border-white/10 text-sm" />
+          <input value={stopWordMessage} onChange={(e) => { setStopWordMessage(e.target.value); markChanged(); }} placeholder="Сообщение при удалении" className="w-full min-w-0 h-9 px-3 rounded-lg bg-white/5 border border-white/10 text-sm" />
         </CollapsibleSection>
 
         <CollapsibleSection icon={Link2} title="Фильтр каналов" color="text-orange-400" enabled={blockChannelPosts} onToggle={() => { setBlockChannelPosts(!blockChannelPosts); markChanged(); }}>
           <div className="flex flex-wrap gap-2 mb-3">
             {blockedChannels.map((c, i) => (
-              <span key={i} className="px-2 py-1 rounded-lg bg-orange-400/10 text-orange-400 text-sm flex items-center gap-1.5">
+              <span key={i} className="px-2 py-1 rounded-lg bg-orange-400/10 text-orange-400 text-sm flex items-center gap-1.5 break-all">
                 {c}
-                <button onClick={() => removeChannel(i)} className="hover:text-orange-300"><X size={12} /></button>
+                <button onClick={() => removeChannel(i)} className="hover:text-orange-300 shrink-0"><X size={12} /></button>
               </span>
             ))}
           </div>
           <div className="flex gap-2 mb-3">
-            <input value={newChannel} onChange={(e) => setNewChannel(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && addChannel()} placeholder="@channel_name" className="flex-1 h-9 px-3 rounded-lg bg-white/5 border border-white/10 text-sm" />
-            <Button size="sm" onClick={addChannel}><Plus size={14} /></Button>
+            <input value={newChannel} onChange={(e) => setNewChannel(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && addChannel()} placeholder="@channel_name" className="flex-1 min-w-0 h-9 px-3 rounded-lg bg-white/5 border border-white/10 text-sm" />
+            <Button size="sm" className="shrink-0" onClick={addChannel}><Plus size={14} /></Button>
           </div>
-          <input value={channelBlockMessage} onChange={(e) => { setChannelBlockMessage(e.target.value); markChanged(); }} placeholder="Сообщение при блокировке" className="w-full h-9 px-3 rounded-lg bg-white/5 border border-white/10 text-sm" />
+          <input value={channelBlockMessage} onChange={(e) => { setChannelBlockMessage(e.target.value); markChanged(); }} placeholder="Сообщение при блокировке" className="w-full min-w-0 h-9 px-3 rounded-lg bg-white/5 border border-white/10 text-sm" />
         </CollapsibleSection>
 
         <CollapsibleSection icon={MessageSquare} title="Триггер-слова" color="text-purple-400" enabled={triggerWordsEnabled} onToggle={() => { setTriggerWordsEnabled(!triggerWordsEnabled); markChanged(); }} className="lg:col-span-2">
           <p className="text-xs text-muted-foreground mb-2">Бот отправит сообщение при упоминании этих слов/фраз</p>
           <div className="flex flex-wrap gap-2 mb-3">
             {triggerWords.map((w, i) => (
-              <span key={i} className="px-2 py-1 rounded-lg bg-purple-400/10 text-purple-400 text-sm flex items-center gap-1.5">
+              <span key={i} className="px-2 py-1 rounded-lg bg-purple-400/10 text-purple-400 text-sm flex items-center gap-1.5 break-all">
                 {w}
-                <button onClick={() => removeTriggerWord(i)} className="hover:text-purple-300"><X size={12} /></button>
+                <button onClick={() => removeTriggerWord(i)} className="hover:text-purple-300 shrink-0"><X size={12} /></button>
               </span>
             ))}
           </div>
           <div className="grid lg:grid-cols-2 gap-3">
             <div className="flex gap-2">
-              <input value={newTriggerWord} onChange={(e) => setNewTriggerWord(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && addTriggerWords()} placeholder="Слова через запятую..." className="flex-1 h-9 px-3 rounded-lg bg-white/5 border border-white/10 text-sm" />
-              <Button size="sm" onClick={addTriggerWords}><Plus size={14} /></Button>
+              <input value={newTriggerWord} onChange={(e) => setNewTriggerWord(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && addTriggerWords()} placeholder="Слова через запятую..." className="flex-1 min-w-0 h-9 px-3 rounded-lg bg-white/5 border border-white/10 text-sm" />
+              <Button size="sm" className="shrink-0" onClick={addTriggerWords}><Plus size={14} /></Button>
             </div>
-            <textarea value={triggerWordsMessage} onChange={(e) => { setTriggerWordsMessage(e.target.value); markChanged(); }} placeholder="Сообщение. Переменные: {user}, {word}" className="w-full h-9 px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm resize-none" />
+            <textarea value={triggerWordsMessage} onChange={(e) => { setTriggerWordsMessage(e.target.value); markChanged(); }} placeholder="Сообщение. Переменные: {user}, {word}" className="w-full min-w-0 h-9 px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm resize-none" />
           </div>
         </CollapsibleSection>
 
@@ -291,10 +291,10 @@ export function FiltersTab({ chatId }: FiltersTabProps) {
         <motion.div 
           initial={{ opacity: 0, y: 20 }} 
           animate={{ opacity: 1, y: 0 }} 
-          className="fixed bottom-6 right-6 z-50"
+          className="fixed bottom-28 md:bottom-6 right-4 md:right-6 z-50"
         >
-          <Button onClick={handleSave} disabled={isSaving} size="lg" className="bg-green-500 hover:bg-green-600 shadow-lg shadow-green-500/25">
-            {isSaving ? <Loader2 size={18} className="mr-2 animate-spin" /> : <Check size={18} className="mr-2" />}
+          <Button onClick={handleSave} disabled={isSaving} size="lg" className="bg-[#3B82F6] hover:bg-[#2563EB] shadow-[0_0_20px_rgba(59,130,246,0.4)] text-white font-cortes-mono text-[10px] uppercase tracking-[0.1em] rounded-2xl h-12 px-6">
+            {isSaving ? <Loader2 size={16} className="mr-2 animate-spin" /> : <Check size={16} className="mr-2" />}
             Сохранить изменения
           </Button>
         </motion.div>

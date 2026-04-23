@@ -11,7 +11,7 @@ const schemas = {
     "@type": "WebSite",
     "name": "Cortes",
     "url": "https://thecortes.ru",
-    "description": "Умный AI-бот для Telegram с характером",
+    "description": "AI-бот для Telegram-групп, который помнит контекст и не спамит",
     "potentialAction": {
       "@type": "SearchAction",
       "target": "https://thecortes.ru/search?q={search_term_string}",
@@ -29,12 +29,7 @@ const schemas = {
       "price": "0",
       "priceCurrency": "RUB"
     },
-    "description": "Умный AI-бот для Telegram с характером, который понимает контекст и не спамит. Модерация, память, собственное мнение.",
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "ratingCount": "150"
-    },
+    "description": "AI-бот для Telegram-групп, который помнит контекст, отвечает только когда уместно и помогает админам через Dashboard.",
     "author": {
       "@type": "Person",
       "name": "Шахриёр"
@@ -50,7 +45,7 @@ const schemas = {
     "logo": "https://thecortes.ru/favicon.webp",
     "sameAs": [
       "https://t.me/thecortesbot",
-      "https://t.me/TheCortesChat"
+      "https://t.me/TheCortes"
     ],
     "contactPoint": {
       "@type": "ContactPoint",
@@ -76,7 +71,7 @@ const schemas = {
         "name": "Безопасны ли мои данные в Cortes?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Да, все сообщения шифруются end-to-end. Мы не храним историю ваших чатов и не передаем данные третьим лицам. Cortes анализирует сообщения в момент их поступления, а затем они забываются."
+          "text": "Cortes хранит часть истории и извлечённых фактов, чтобы помнить контекст чата и отвечать лучше. Управлять памятью можно через /forget и настройки Dashboard."
         }
       },
       {
@@ -100,7 +95,7 @@ const schemas = {
         "name": "Какие функции есть у Cortes?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Cortes предлагает: контекстное понимание сообщений, память о разговорах, собственное мнение по темам, автоматическую адаптацию к культуре чата, модерацию без спама, молниеносную реакцию."
+          "text": "Cortes предлагает память о чате, summary и recall по прошлым обсуждениям, голосовые, фото и PDF, режимы поведения, moderation и Dashboard для админов."
         }
       }
     ]

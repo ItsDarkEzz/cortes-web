@@ -42,9 +42,9 @@ export function OverviewTab({ chat, onUpdate }: OverviewTabProps) {
             <Button variant="ghost" size="sm" onClick={() => setEditing(true)}><Edit2 size={14} className="mr-2" />Изменить</Button>
           )}
         </div>
-        <div className="space-y-4">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center overflow-hidden">
+        <div className="space-y-6">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
+            <div className="w-16 h-16 rounded-[16px] bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center overflow-hidden shrink-0 shadow-lg border border-white/10">
               <img 
                 src={`${API_BASE}/chats/${chat.id}/avatar`}
                 alt={chat.name}
@@ -57,20 +57,20 @@ export function OverviewTab({ chat, onUpdate }: OverviewTabProps) {
               />
               <span className="fallback-emoji hidden text-2xl">💬</span>
             </div>
-            <div className="flex-1">
-              <label className="text-sm text-muted-foreground">Название чата</label>
+            <div className="flex-1 w-full min-w-0 text-center sm:text-left">
+              <label className="font-cortes-mono text-[10px] uppercase tracking-[0.2em] text-white/40 block mb-2">Название чата</label>
               {editing ? (
                 <input 
                   value={formData.name} 
                   onChange={(e) => setFormData(p => ({ ...p, name: e.target.value }))} 
-                  className="w-full h-10 px-3 mt-1 rounded-xl bg-white/5 border border-white/10" 
+                  className="w-full h-12 px-4 rounded-[16px] bg-black border border-white/20 font-cortes-display text-xl text-white shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)] min-w-0" 
                 />
               ) : (
-                <p className="font-medium mt-1">{chat.name}</p>
+                <p className="font-cortes-display text-2xl tracking-[-0.02em] text-white truncate w-full">{chat.name}</p>
               )}
             </div>
           </div>
-          <div>
+          <div className="w-full min-w-0">
             <label className="text-sm text-muted-foreground">Описание</label>
             {editing ? (
               <textarea 
@@ -89,17 +89,17 @@ export function OverviewTab({ chat, onUpdate }: OverviewTabProps) {
 
       <Section>
         <SectionTitle icon={BarChart3} title="Статистика" color="text-green-400" />
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-2 gap-4">
           {[
             { icon: Users, label: "Участников", value: chat.members_count.toLocaleString(), color: "text-blue-400" },
             { icon: MessageCircle, label: "Сообщений", value: stats.messages_total.toLocaleString(), color: "text-green-400" },
             { icon: Bot, label: "Ответов бота", value: stats.bot_responses_total.toLocaleString(), color: "text-primary" },
             { icon: Clock, label: "Дней активности", value: stats.days_active.toString(), color: "text-yellow-400" }
           ].map((s, i) => (
-            <div key={i} className="p-4 rounded-xl bg-white/5 text-center">
-              <s.icon size={20} className={`mx-auto mb-2 ${s.color}`} />
-              <p className="text-2xl font-bold">{s.value}</p>
-              <p className="text-sm text-muted-foreground">{s.label}</p>
+            <div key={i} className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 text-center min-w-0 overflow-hidden">
+              <s.icon size={20} className={`mx-auto mb-3 ${s.color}`} />
+              <p className="font-cortes-display text-2xl text-white truncate">{s.value}</p>
+              <p className="font-cortes-mono text-[9px] uppercase tracking-[0.1em] text-white/40 truncate">{s.label}</p>
             </div>
           ))}
         </div>

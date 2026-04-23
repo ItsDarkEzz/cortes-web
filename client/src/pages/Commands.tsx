@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { Footer } from "@/components/cortes/Footer";
-import { ArrowLeft, Terminal, Brain, Shield, MessageSquare, Settings, Sparkles } from "lucide-react";
+import { ArrowLeft, Terminal, Brain, Shield, MessageSquare, Settings, Sparkles, HeartHandshake } from "lucide-react";
 import { useSEO } from "@/hooks/use-seo";
 
 export default function Commands() {
@@ -63,6 +63,17 @@ export default function Commands() {
                 { cmd: "/cortes_mode", desc: "Режим работы бота", example: "/cortes_mode passive" },
                 { cmd: "Dashboard", desc: "Настройки через веб-панель", example: "thecortes.ru" }
             ]
+        },
+        {
+            name: "RP и Развлечения",
+            icon: HeartHandshake,
+            color: "text-pink-400",
+            commands: [
+                { cmd: "/rp", desc: "Открыть RP-хаб и категории команд", example: "/rp" },
+                { cmd: "пожать руку @user", desc: "Русский plain-text алиас", example: "пожать руку @user отличный бот" },
+                { cmd: ".обнять @user", desc: "Dot-команда для чата", example: ".обнять @user" },
+                { cmd: "/rpconfig", desc: "Управление RP и 18+ в чате", example: "/rpconfig adult on" }
+            ]
         }
     ];
 
@@ -101,6 +112,14 @@ export default function Commands() {
                         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
                             Полный список команд AI-бота для Telegram. Модерация, настройки и многое другое.
                         </p>
+                        <div className="mt-8">
+                            <Link href="/rp">
+                                <a className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-white/15 text-white/80 hover:text-white hover:bg-white/5 transition-all">
+                                    <HeartHandshake size={16} className="text-pink-400" />
+                                    <span className="text-sm">Открыть RP-гид</span>
+                                </a>
+                            </Link>
+                        </div>
                     </motion.div>
                 </div>
             </section>
@@ -189,7 +208,7 @@ export default function Commands() {
                     </h2>
                     <p className="text-muted-foreground mb-8">Добавьте Cortes в свой чат и начните использовать команды</p>
                     <a
-                        href="https://t.me/thecortesbot?startgroup=add"
+                        href="https://t.me/thecortesbot?startgroup=add&admin=delete_messages+restrict_members+invite_users+pin_messages+manage_topics+manage_chat"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-block px-8 py-4 bg-white text-black rounded-full font-bold hover:bg-white/90 transition-all"

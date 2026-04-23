@@ -37,7 +37,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 
-type ChainKey = "response" | "observer" | "background";
+type ChainKey = "response" | "response_fast" | "observer" | "background";
 
 // Локальный тип с ID для drag-n-drop
 interface ChainItem extends LLMModelEntry {
@@ -453,6 +453,7 @@ export default function OwnerLLMSettings() {
   
   const [chains, setChains] = useState<Record<ChainKey, ChainItem[]>>({
     response: [],
+    response_fast: [],
     observer: [],
     background: [],
   });
@@ -462,6 +463,7 @@ export default function OwnerLLMSettings() {
     if (data && !isLoading) {
       setChains({
         response: data.response.map(x => ({ ...x, id: generateId() })),
+        response_fast: (data.response_fast ?? []).map(x => ({ ...x, id: generateId() })),
         observer: data.observer.map(x => ({ ...x, id: generateId() })),
         background: data.background.map(x => ({ ...x, id: generateId() })),
       });
@@ -473,6 +475,7 @@ export default function OwnerLLMSettings() {
       // Убираем id перед отправкой
       const cleanChains = {
         response: chains.response.map(({ id, ...rest }) => rest),
+        response_fast: chains.response_fast.map(({ id, ...rest }) => rest),
         observer: chains.observer.map(({ id, ...rest }) => rest),
         background: chains.background.map(({ id, ...rest }) => rest),
       };
@@ -488,6 +491,7 @@ export default function OwnerLLMSettings() {
     if (data) {
       setChains({
         response: data.response.map(x => ({ ...x, id: generateId() })),
+        response_fast: (data.response_fast ?? []).map(x => ({ ...x, id: generateId() })),
         observer: data.observer.map(x => ({ ...x, id: generateId() })),
         background: data.background.map(x => ({ ...x, id: generateId() })),
       });
@@ -554,6 +558,13 @@ export default function OwnerLLMSettings() {
                     <Badge variant="secondary" className="ml-2">{chains.response.length}</Badge>
                   </TabsTrigger>
                   <TabsTrigger 
+                    value="response_fast" 
+                    className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none h-full px-0"
+                  >
+                    Быстрые ответы
+                    <Badge variant="secondary" className="ml-2">{chains.response_fast.length}</Badge>
+                  </TabsTrigger>
+                  <TabsTrigger 
                     value="observer" 
                     className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none h-full px-0"
                   >
@@ -590,6 +601,29 @@ export default function OwnerLLMSettings() {
                       </Button>
                     </div>
                     <ChainList items={chains.response} onChange={(items) => setChains(c => ({ ...c, response: items }))} />
+                  </div>
+                </ScrollArea>
+              </TabsContent>
+
+              <TabsContent value="response_fast" className="flex-1 min-h-0 mt-0">
+                <ScrollArea className="h-full">
+                  <div className="p-6 max-w-4xl mx-auto">
+                    <div className="flex items-center justify-between mb-4">
+                      <div>
+                        <h2 className="text-lg font-semibold">Быстрые ответы</h2>
+                        <p className="text-sm text-muted-foreground">
+                          Используется, когда пользователь выбирает режим «Быстрая» в профиле. Обычно сюда ставят самую дешёвую и быструю цепочку.
+                        </p>
+                      </div>
+                      <Button size="sm" onClick={() => addItem('response_fast')}>
+                        <Plus className="w-4 h-4 mr-2" />
+                        Добавить
+                      </Button>
+                    </div>
+                    <ChainList
+                      items={chains.response_fast}
+                      onChange={(items) => setChains(c => ({ ...c, response_fast: items }))}
+                    />
                   </div>
                 </ScrollArea>
               </TabsContent>

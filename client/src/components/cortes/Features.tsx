@@ -1,6 +1,6 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import { Brain, Shield, Zap, BarChart3, MessageCircle } from "lucide-react";
+import { Brain, Shield, Zap, BarChart3, MessageCircle, Mic, FileText } from "lucide-react";
 
 export function Features() {
   const ref = useRef(null);
@@ -9,38 +9,44 @@ export function Features() {
   const features = [
     {
       icon: Brain,
-      title: "Контекстное понимание",
-      description: "Анализирует историю, подтекст и культуру вашего чата. Не просто отвечает — понимает.",
+      title: "Память о людях и темах",
+      description: "Помнит факты, привычки, прошлые обсуждения и важные детали конкретного чата.",
       color: "text-blue-400"
     },
     {
-      icon: Shield,
-      title: "Команды модерации",
-      description: "Баны, муты, кики, предупреждения через команды. Тихий режим и управление правами участников.",
+      icon: Zap,
+      title: "Не спамит без причины",
+      description: "Сначала оценивает контекст, потом решает: отвечать, промолчать или дождаться прямого обращения.",
       color: "text-cyan-400"
     },
     {
-      icon: Zap,
-      title: "Молниеносная реакция",
-      description: "Обрабатывает сообщения за <300ms. Сверхбыстрый анализ на GPT-5.2, мгновенные ответы.",
+      icon: Mic,
+      title: "Голосовые и аудио",
+      description: "Понимает голосовые, расшифровывает аудио и умеет держать контекст даже в мультимодальных диалогах.",
       color: "text-yellow-400"
     },
     {
-      icon: BarChart3,
-      title: "Фильтры контента",
-      description: "Автоматическая блокировка стоп-слов, репостов из каналов, нежелательных символов и медиа.",
+      icon: FileText,
+      title: "Фото, скриншоты и PDF",
+      description: "Разбирает изображения и документы, чтобы отвечать по содержимому, а не только по тексту.",
       color: "text-green-400"
     },
     {
-      icon: Brain,
-      title: "Автоматическая адаптация",
-      description: "Cortes сам подстраивается под культуру, стиль и нормы вашего чата со временем.",
+      icon: Shield,
+      title: "Режимы и moderation",
+      description: "Normal, passive, muted, admins, плюс фильтры, команды и инструменты для наведения порядка.",
       color: "text-purple-400"
     },
     {
+      icon: BarChart3,
+      title: "Dashboard для админов",
+      description: "Настройки поведения, аналитика, логи и контроль над тем, как Cortes живёт внутри чата.",
+      color: "text-pink-400"
+    },
+    {
       icon: MessageCircle,
-      title: "Естественный диалог",
-      description: "Говорит как человек: может спорить, шутить, поддразнивать и поддерживать.",
+      title: "Характер под чат",
+      description: "Можно задать имя, стиль и рамки поведения, чтобы бот чувствовался частью вашей среды.",
       color: "text-pink-400"
     }
   ];
@@ -55,7 +61,7 @@ export function Features() {
             Возможности AI-бота <span className="text-gradient-primary">Cortes</span>
           </h2>
           <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">
-            Всё, что нужно вашему Telegram-чату: от умных ответов до геймификации
+            Всё, за что любят живых чат-ботов: память, контекст, мультимодальность и админский контроль
           </p>
         </div>
 
