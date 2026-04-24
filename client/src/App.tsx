@@ -39,6 +39,7 @@ const OwnerSubscriptions = lazy(() => import("@/pages/dashboard/owner/OwnerSubsc
 const OwnerBroadcast = lazy(() => import("@/pages/dashboard/owner/OwnerBroadcast"));
 const OwnerLLMSettings = lazy(() => import("@/pages/dashboard/owner/OwnerLLMSettings"));
 const OwnerMemory = lazy(() => import("@/pages/dashboard/owner/MemoryPage"));
+const OwnerTokens = lazy(() => import("@/pages/dashboard/owner/OwnerTokens"));
 // const DashboardNotifications = lazy(() => import("@/pages/dashboard/Notifications")); // временно отключено
 const NotFound = lazy(() => import("@/pages/not-found"));
 
@@ -110,6 +111,9 @@ function Router() {
                     </Route>
                     <Route path="/dashboard/owner/memory">
                         <ProtectedRoute><OwnerMemory /></ProtectedRoute>
+                    </Route>
+                    <Route path="/dashboard/owner/tokens">
+                        <ProtectedRoute><OwnerTokens /></ProtectedRoute>
                     </Route>
                     {/* Notifications - временно отключено
                     <Route path="/dashboard/notifications">

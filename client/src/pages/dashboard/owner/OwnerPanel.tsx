@@ -4,7 +4,7 @@ import { Link } from "wouter";
 import { 
   Users, MessageCircle, Bot, Shield, Activity, Clock,
   TrendingUp, DollarSign, Zap, Server, ChevronRight,
-  Ban, Send, CreditCard, BarChart3, Calendar, ShieldAlert
+  Ban, Send, CreditCard, BarChart3, Calendar, ShieldAlert, Coins
 } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Button } from "@/components/ui/button";
@@ -229,6 +229,7 @@ export default function OwnerPanel() {
     { icon: Send, label: "Рассылка", href: "/dashboard/owner/broadcast", color: "text-orange-400" },
     { icon: Zap, label: "Нейросеть", href: "/dashboard/owner/llm", color: "text-yellow-400" },
     { icon: Calendar, label: "Память RAG", href: "/dashboard/owner/memory", color: "text-cyan-400" },
+    { icon: Coins, label: "Токены", href: "/dashboard/owner/tokens", color: "text-amber-400" },
   ];
 
   return (
@@ -261,7 +262,7 @@ export default function OwnerPanel() {
           </div>
 
           {/* Quick Actions */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 mb-8 min-w-0 w-full">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 mb-8 min-w-0 w-full">
             {quickActions.map((action) => (
               <Link key={action.href} href={action.href}>
                 <motion.div

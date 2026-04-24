@@ -222,6 +222,32 @@ export function useBroadcast() {
   });
 }
 
+export function useTokenUsers(params: {
+  page?: number;
+  limit?: number;
+  search?: string;
+} = {}) {
+  return useQuery({
+    queryKey: ['owner', 'tokens', params],
+    queryFn: () => ownerApi.getTokenUsers(params),
+  });
+}
+
+export function useAdjustTokens() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: {
+      telegram_user_id: number;
+      amount: number;
+      reason: string;
+    }) => ownerApi.adjustTokens(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['owner', 'tokens'] });
+    },
+  });
+}
+
 export function useLLMPriority() {
   return useQuery({
     queryKey: ['owner', 'llm-priority'],

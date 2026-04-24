@@ -202,6 +202,37 @@ export interface BroadcastResponse {
   status: string;
 }
 
+export interface TokenUser {
+  telegram_user_id: number;
+  username?: string;
+  first_name?: string;
+  display_name?: string;
+  balance: number;
+  total_earned: number;
+  total_spent: number;
+  standard_credits: number;
+  premium_credits: number;
+  last_transaction_at?: string;
+}
+
+export interface TokenUsersResponse {
+  users: TokenUser[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    pages: number;
+  };
+  total_balance: number;
+}
+
+export interface TokenAdjustResponse {
+  telegram_user_id: number;
+  balance_after: number;
+  amount: number;
+  reason: string;
+}
+
 // Context Debug Types
 export interface ContextClusterMessage {
   id: string;
@@ -415,6 +446,25 @@ export const ownerApi = {
     user_ids?: number[];
     parse_mode?: string;
   }) => apiClient.post<BroadcastResponse>('/owner/broadcast', data),
+
+  getTokenUsers: (params: {
+    page?: number;
+    limit?: number;
+    search?: string;
+  } = {}) => {
+    const searchParams = new URLSearchParams();
+    if (params.page) searchParams.set('page', String(params.page));
+    if (params.limit) searchParams.set('limit', String(params.limit));
+    if (params.search) searchParams.set('search', params.search);
+
+    return apiClient.get<TokenUsersResponse>(`/owner/tokens/users?${searchParams.toString()}`);
+  },
+
+  adjustTokens: (data: {
+    telegram_user_id: number;
+    amount: number;
+    reason: string;
+  }) => apiClient.post<TokenAdjustResponse>('/owner/tokens/adjust', data),
 
   getLLMPriority: () => apiClient.get<LLMChainsResponse>('/owner/llm-priority'),
   updateLLMPriority: (data: Partial<LLMChainsResponse>) =>
