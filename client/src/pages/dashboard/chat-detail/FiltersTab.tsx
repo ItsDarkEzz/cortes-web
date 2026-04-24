@@ -387,6 +387,14 @@ function FaceControlSection({ chatId, onChangesMade }: { chatId: string; onChang
           <SettingRow icon={Image} title="Требовать аватар" desc="Аватар обязателен" enabled={requireAvatar} onToggle={() => { setRequireAvatar(!requireAvatar); markChanged(); }} color="text-green-400" />
           <SettingRow icon={EyeOff} title="NSFW аватар" desc="Проверка аватара" enabled={nsfwAvatarCheck} onToggle={() => { setNsfwAvatarCheck(!nsfwAvatarCheck); markChanged(); }} color="text-pink-400" />
           <SettingRow icon={Users} title="Username" desc="@username обязателен" enabled={requireUsername} onToggle={() => { setRequireUsername(!requireUsername); markChanged(); }} color="text-green-400" />
+          <SettingRow
+            icon={UserCheck}
+            title="Автоприём знакомых"
+            desc="Автоматически принимать тех, кто уже раньше проходил анкету и был одобрен"
+            enabled={autoAcceptKnown}
+            onToggle={() => { setAutoAcceptKnown(!autoAcceptKnown); markChanged(); }}
+            color="text-emerald-400"
+          />
           <div className="flex items-center justify-between p-3 rounded-xl bg-white/5">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-green-400"><FileText size={14} /></div>
